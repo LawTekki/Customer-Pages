@@ -63,7 +63,7 @@ const SelectFilter: React.FC<SelectFilterProps> = ({
             const selected = options.find((o) => o.id === e.target.value);
             if (selected) onAddTag(selected);
           }}
-          className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none [&:not(:focus)]:rounded-none focus:rounded-none rounded-none"
+          className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none rounded-none hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C]"
         >
           <option value="">{placeholder}</option>
           {availableOptions.map((opt) => (
@@ -88,7 +88,7 @@ const SelectFilter: React.FC<SelectFilterProps> = ({
               <span className="text-[#6B047C] text-sm">{tag.label}</span>
               <button
                 onClick={() => onRemoveTag(tag.id)}
-                className="text-[#6B047C] text-sm"
+                className="text-[#6B047C] text-sm hover:text-[#4a0356]"
               >
                 ×
               </button>
@@ -167,18 +167,22 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({ lawyers, onFilterC
   const sliderBackground = `linear-gradient(to right, #6B047C 0%, #6B047C ${(price / 100) * 100}%, #D1B1D6 ${(price / 100) * 100}%, #D1B1D6 100%)`;
 
   return (
-    <div className="bg-white">
+    <div className="w-[280px] bg-[#F4EDF5] text-[#1A011E] pb-4">
       <FilterHeader appliedCount={appliedCount} onClearAll={clearAll} />
 
-      <div className="space-y-6">
+      <div className="text-[10px] uppercase font-medium text-[#666666] px-4 mb-2">
+        FILTER BY:
+      </div>
+
+      <div className="space-y-5">
         <div className="px-4">
           <div className="text-sm font-medium mb-2">Author</div>
           <input
             type="text"
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
-            placeholder="Add Author Names"
-            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] rounded-none focus:outline-none focus:border-[#6B047C]"
+            placeholder="E.g Austin Kelaina"
+            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm placeholder:text-[#999] rounded-none hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C]"
           />
         </div>
 
@@ -188,8 +192,8 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({ lawyers, onFilterC
             type="text"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
-            placeholder="Add Brand Names"
-            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] rounded-none focus:outline-none focus:border-[#6B047C]"
+            placeholder="E.g Austin Kelaina"
+            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm placeholder:text-[#999] rounded-none hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C]"
           />
         </div>
 
@@ -241,7 +245,7 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({ lawyers, onFilterC
             <select
               value={version}
               onChange={(e) => setVersion(e.target.value)}
-              className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none rounded-none focus:outline-none focus:border-[#6B047C]"
+              className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none rounded-none hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C]"
             >
               <option value="">Select version</option>
               <option value="1">Version 1</option>
@@ -257,20 +261,22 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({ lawyers, onFilterC
 
         <div className="px-4">
           <div className="text-sm font-medium mb-2">Cost</div>
-          <div className="flex gap-4">
-            {["All", "Free", "Paid"].map((option) => (
-              <label key={option} className="flex items-center">
-                <input
-                  type="radio"
-                  name="cost"
-                  value={option}
-                  checked={cost === option}
-                  onChange={(e) => setCost(e.target.value)}
-                  className="w-4 h-4 text-[#6B047C] border-[#D1B1D6] focus:ring-[#6B047C] rounded-none"
-                />
-                <span className="ml-2 text-sm text-[#666]">{option}</span>
-              </label>
-            ))}
+          <div className="py-2.5 px-3 bg-white rounded-none">
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
+              {["All", "Free", "Paid", "Discounted"].map((opt) => (
+                <label key={opt} className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="cost"
+                    value={opt}
+                    checked={cost === opt}
+                    onChange={() => setCost(opt)}
+                    className="w-4 h-4 border-gray-300 accent-[#6B047C] rounded-none"
+                  />
+                  <span className="ml-2 text-sm">{opt}</span>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -281,11 +287,11 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({ lawyers, onFilterC
             min="0"
             max="100"
             value={price}
-            onChange={(e) => setPrice(parseInt(e.target.value))}
-            className="w-full h-1 appearance-none bg-[#D1B1D6] rounded-none cursor-pointer"
+            onChange={(e) => setPrice(Number(e.target.value))}
             style={{ background: sliderBackground }}
+            className="w-full h-1 appearance-none cursor-pointer accent-[#6B047C] rounded-none"
           />
-          <div className="text-sm text-[#666] mt-1">${price}</div>
+          <div className="text-xs mt-2">${price}</div>
         </div>
 
         <div className="px-4">
@@ -294,12 +300,10 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({ lawyers, onFilterC
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
+                className="text-2xl text-[#FFD700]"
                 onClick={() => setStarRating(star)}
-                className={`text-2xl ${
-                  star <= starRating ? "text-yellow-400" : "text-[#D1B1D6]"
-                }`}
               >
-                ★
+                {star <= starRating ? "★" : "☆"}
               </button>
             ))}
           </div>
