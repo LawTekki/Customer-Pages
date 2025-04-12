@@ -9,25 +9,48 @@ interface Tag {
 interface FilterHeaderProps {
   appliedCount: number;
   onClearAll?: () => void;
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
 }
 
 const FilterHeader: React.FC<FilterHeaderProps> = ({
   appliedCount,
   onClearAll,
+  selectedCategory,
+  onCategoryChange,
 }) => {
+  const categories = ["Books", "Templates", "Softwares", "Courses"];
+
   return (
-    <div className="flex items-center justify-between mb-8 px-4 pt-6">
-      <div className="text-base font-medium tracking-[-0.32px]">Filters</div>
-      {appliedCount > 0 && (
-        <div className="flex items-center gap-2 bg-[#F0E6F2] px-3 py-1.5">
-          <div className="text-[#6B047C] text-sm">{appliedCount} applied</div>
-          {onClearAll && (
-            <button onClick={onClearAll} className="text-[#6B047C]">
-              ×
-            </button>
-          )}
-        </div>
-      )}
+    <div className="flex flex-col gap-4 mb-8 px-4 pt-6">
+      <div className="flex items-center justify-between">
+        <div className="text-base font-medium tracking-[-0.32px]">Filters</div>
+        {appliedCount > 0 && (
+          <div className="flex items-center gap-2 bg-[#F0E6F2] px-3 py-1.5">
+            <div className="text-[#6B047C] text-sm">{appliedCount} applied</div>
+            {onClearAll && (
+              <button onClick={onClearAll} className="text-[#6B047C]">
+                ×
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => onCategoryChange(category)}
+            className={`px-4 py-2 text-sm rounded-none transition-colors ${
+              selectedCategory === category
+                ? "bg-[#6B047C] text-white"
+                : "bg-white text-[#1A011E] hover:bg-[#F0E6F2]"
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
@@ -103,9 +126,15 @@ const SelectFilter: React.FC<SelectFilterProps> = ({
 interface LawyerFiltersProps {
   lawyers: Lawyer[];
   onFilterChange: (filters: any) => void;
+  onCategoryChange?: (category: string) => void;
 }
 
-export const LawyerFilters: React.FC<LawyerFiltersProps> = ({ lawyers, onFilterChange }) => {
+export const LawyerFilters: React.FC<LawyerFiltersProps> = ({
+  lawyers,
+  onFilterChange,
+  onCategoryChange,
+}) => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("Books");
   const [author, setAuthor] = useState<string>("");
   const [brand, setBrand] = useState<string>("");
   const [selectedSector, setSelectedSector] = useState<Tag[]>([]);
@@ -166,9 +195,21 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({ lawyers, onFilterC
 
   const sliderBackground = `linear-gradient(to right, #6B047C 0%, #6B047C ${(price / 100) * 100}%, #D1B1D6 ${(price / 100) * 100}%, #D1B1D6 100%)`;
 
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    if (onCategoryChange) {
+      onCategoryChange(category);
+    }
+  };
+
   return (
     <div className="w-[280px] bg-[#F4EDF5] text-[#1A011E] pb-4">
-      <FilterHeader appliedCount={appliedCount} onClearAll={clearAll} />
+      <FilterHeader
+        appliedCount={appliedCount}
+        onClearAll={clearAll}
+        selectedCategory={selectedCategory}
+        onCategoryChange={handleCategoryChange}
+      />
 
       <div className="text-[10px] uppercase font-medium text-[#666666] px-4 mb-2">
         FILTER BY:
