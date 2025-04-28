@@ -5,12 +5,12 @@ const navItems = [
     label: "Discover",
     svg: (
       <svg
-        width="21"
-        height="21"
+        width="17"
+        height="17"
         viewBox="0 0 21 21"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-7 h-7 transition-colors duration-300"
+        className="w-5 h-5 transition-colors duration-300"
       >
         <path
           d="M18.8271 10.9522C18.8271 6.34985 15.0961 2.6189 10.4937 2.6189C5.89136 2.6189 2.1604 6.34985 2.1604 10.9522C2.1604 15.5546 5.89136 19.2856 10.4937 19.2856C15.0961 19.2856 18.8271 15.5546 18.8271 10.9522Z"
@@ -35,12 +35,12 @@ const navItems = [
     label: "Home",
     svg: (
       <svg
-        width="13"
-        height="15"
+        width="11"
+        height="13"
         viewBox="0 0 13 15"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-7 h-7 transition-colors duration-300"
+        className="w-5 h-5 transition-colors duration-300"
       >
         <path
           d="M0.6604 7.63333C0.6604 6.50167 0.660401 5.93583 0.888734 5.43833C1.1179 4.94083 1.54707 4.57333 2.40623 3.83667L3.23957 3.1225C4.79373 1.79167 5.56873 1.125 6.49373 1.125C7.41873 1.125 8.19457 1.79083 9.7479 3.12167L10.5812 3.83583C11.4396 4.5725 11.8696 4.94 12.0979 5.4375C12.3271 5.935 12.3271 6.50083 12.3271 7.6325V11.1667C12.3271 12.7383 12.3271 13.5233 11.8387 14.0117C11.3504 14.5 10.5654 14.5 8.99373 14.5H3.99373C2.42207 14.5 1.63707 14.5 1.14873 14.0117C0.6604 13.5233 0.6604 12.7383 0.6604 11.1667V7.63333Z"
@@ -59,12 +59,12 @@ const navItems = [
     label: "Orders",
     svg: (
       <svg
-        width="21"
-        height="20"
+        width="17"
+        height="16"
         viewBox="0 0 21 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-7 h-7 transition-colors duration-300"
+        className="w-5 h-5 transition-colors duration-300"
       >
         <path
           d="M14.1942 17.7898L14.6544 17.2147C15.0587 16.7093 15.9174 16.75 16.259 17.2907C16.6698 17.9412 17.6847 17.8119 17.9661 17.2135C17.9807 17.1824 17.9441 17.2602 17.9754 16.991C18.0067 16.7217 17.9937 16.6603 17.9676 16.5373L16.365 8.97008C15.9622 7.06829 15.7608 6.11738 15.0681 5.55869C14.3754 5 13.3977 5 11.4423 5H9.54499C7.58963 5 6.61194 5 5.9192 5.55869C5.22646 6.11738 5.02508 7.06829 4.62231 8.97008L3.01974 16.5373C2.99369 16.6603 2.98066 16.7217 3.01194 16.991C3.0432 17.2602 3.0066 17.1824 3.02124 17.2135C3.30269 17.8119 4.31745 17.9412 4.72836 17.2907C5.06992 16.75 5.92854 16.7093 6.33289 17.2147L6.7931 17.7898C7.37294 18.5145 8.58381 18.5145 9.16365 17.7898L9.23599 17.6993C9.85124 16.9304 11.1361 16.9304 11.7513 17.6993L11.8237 17.7898C12.4035 18.5145 13.6144 18.5145 14.1942 17.7898Z"
@@ -95,12 +95,12 @@ const navItems = [
     label: "Contacts",
     svg: (
       <svg
-        width="21"
-        height="20"
+        width="17"
+        height="16"
         viewBox="0 0 21 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-7 h-7 transition-colors duration-300"
+        className="w-5 h-5 transition-colors duration-300"
       >
         <path
           d="M10.4937 18.3333C7.15462 18.3333 5.48506 18.3333 4.44773 17.235C3.4104 16.1366 3.4104 14.3688 3.4104 10.8333C3.4104 7.29778 3.4104 5.53001 4.44773 4.43166C5.48506 3.33331 7.15462 3.33331 10.4937 3.33331C13.8328 3.33331 15.5024 3.33331 16.5397 4.43166C17.5771 5.53001 17.5771 7.29778 17.5771 10.8333C17.5771 14.3688 17.5771 16.1366 16.5397 17.235C15.5024 18.3333 13.8328 18.3333 10.4937 18.3333Z"
@@ -137,12 +137,12 @@ const navItems = [
     label: "Proposal",
     svg: (
       <svg
-        width="21"
-        height="20"
+        width="17"
+        height="16"
         viewBox="0 0 21 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-7 h-7 transition-colors duration-300"
+        className="w-5 h-5 transition-colors duration-300"
       >
         <path
           d="M16.9937 9.16667V5.83333C16.9937 3.99238 16.9937 3.07191 16.4215 2.49976C15.8494 1.92762 14.9289 1.92762 13.0879 1.92762H7.89942C6.05847 1.92762 5.138 1.92762 4.56585 2.49976C3.99371 3.07191 3.99371 3.99238 3.99371 5.83333V14.1667C3.99371 16.0076 3.99371 16.9281 4.56585 17.5002C5.138 18.0724 6.05847 18.0724 7.89942 18.0724H11.2328"
@@ -175,12 +175,12 @@ const navItems = [
     label: "Events",
     svg: (
       <svg
-        width="21"
-        height="20"
+        width="17"
+        height="16"
         viewBox="0 0 21 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-7 h-7 transition-colors duration-300"
+        className="w-5 h-5 transition-colors duration-300"
       >
         <path
           d="M10.4937 18.3334C9.81182 18.3334 9.16049 18.0629 7.85776 17.5219C4.61502 16.1751 2.99365 15.5018 2.99365 14.3691V6.45388M10.4937 18.3334C11.1755 18.3334 11.8268 18.0629 13.1296 17.5219C16.3723 16.1751 17.9937 15.5018 17.9937 14.3691V6.45388M10.4937 18.3334V10.1406M2.99365 6.45388C2.99365 6.9571 3.66163 7.27488 4.99759 7.91042L7.43192 9.06852C8.93432 9.78327 9.68557 10.1406 10.4937 10.1406M2.99365 6.45388C2.99365 5.95065 3.66163 5.63289 4.99759 4.99734L6.74365 4.16669M17.9937 6.45388C17.9937 6.9571 17.3257 7.27488 15.9897 7.91042L13.5554 9.06852C12.053 9.78327 11.3017 10.1406 10.4937 10.1406M17.9937 6.45388C17.9937 5.95065 17.3257 5.63289 15.9897 4.99734L14.2437 4.16669M5.49365 10.9599L7.16032 11.7792"
@@ -200,12 +200,12 @@ const navItems = [
     label: "Wallet",
     svg: (
       <svg
-        width="21"
-        height="20"
+        width="17"
+        height="16"
         viewBox="0 0 21 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-7 h-7 transition-colors duration-300"
+        className="w-5 h-5 transition-colors duration-300"
       >
         <path
           d="M12.9937 12.5C12.9937 13.1903 13.5533 13.75 14.2437 13.75C14.934 13.75 15.4937 13.1903 15.4937 12.5C15.4937 11.8097 14.934 11.25 14.2437 11.25C13.5533 11.25 12.9937 11.8097 12.9937 12.5Z"
@@ -229,12 +229,12 @@ const navItems = [
     label: "More",
     svg: (
       <svg
-        width="21"
-        height="20"
+        width="17"
+        height="16"
         viewBox="0 0 21 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-7 h-7 transition-colors duration-300"
+        className="w-5 h-5 transition-colors duration-300"
       >
         <path
           d="M10.4902 10H10.4977"
@@ -270,34 +270,63 @@ export const Sidebar = () => {
   const [activeItem, setActiveItem] = useState("Discover");
 
   return (
-    <nav className="border-r border-[#E6E6E6] bg-white text-xs text-[#808080] font-medium tracking-[-0.24px] pt-10 pb-16 px-5 rounded-tr-lg overflow-hidden max-md:hidden">
-      <div className="flex flex-col items-center space-y-4">
+    <>
+      {/* Desktop Sidebar */}
+      <nav className="border-r border-[#E6E6E6] bg-white text-xs text-[#808080] font-medium tracking-[-0.24px] pt-10 pb-16 px-5 overflow-hidden max-md:hidden">
+        <div className="flex flex-col items-center space-y-4">
+          {navItems.map((item) => {
+            const isActive = activeItem === item.label;
+            return (
+              <div
+                key={item.label}
+                onClick={() => setActiveItem(item.label)}
+                className={`group flex flex-col items-center cursor-pointer transition-all duration-300 ${
+                  isActive ? "text-[#6B047C]" : "text-[#808080] hover:text-[#6B047C]"
+                }`}
+              >
+                {/* The wrapper div adds a uniform rectangular (light-colored) background on hover or active */}
+                <div
+                  className={`p-2 rounded-lg transition-colors duration-300 ${
+                    isActive
+                      ? "bg-[rgba(107,4,124,0.1)]"
+                      : "group-hover:bg-[rgba(107,4,124,0.1)]"
+                  }`}
+                >
+                  {item.svg}
+                </div>
+                <div className="mt-1">{item.label}</div>
+              </div>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* Mobile Sidebar (bottom, icons only) */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#E6E6E6] flex justify-between items-center px-2 py-1 sm:hidden h-14" style={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}>
         {navItems.map((item) => {
           const isActive = activeItem === item.label;
           return (
-            <div
+            <button
               key={item.label}
               onClick={() => setActiveItem(item.label)}
-              className={`group flex flex-col items-center cursor-pointer transition-all duration-300 ${
+              className={`flex flex-col items-center justify-center flex-1 transition-all duration-300 px-1 ${
                 isActive ? "text-[#6B047C]" : "text-[#808080] hover:text-[#6B047C]"
               }`}
+              style={{ minWidth: 0 }}
+              aria-label={item.label}
             >
-              {/* The wrapper div adds a uniform rectangular (light-colored) background on hover or active */}
-              <div
-                className={`p-2 rounded-lg transition-colors duration-300 ${
-                  isActive
-                    ? "bg-[rgba(107,4,124,0.1)]"
-                    : "group-hover:bg-[rgba(107,4,124,0.1)]"
-                }`}
-              >
-                {item.svg}
-              </div>
-              <div className="mt-1">{item.label}</div>
-            </div>
+              <span className={`flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-300 ${
+                isActive ? "bg-[rgba(107,4,124,0.1)]" : "hover:bg-[rgba(107,4,124,0.08)]"
+              }`}>
+                {React.cloneElement(item.svg, {
+                  className: 'w-5 h-5',
+                })}
+              </span>
+            </button>
           );
         })}
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 

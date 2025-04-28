@@ -13,7 +13,7 @@ export const TemplateControls: React.FC<TemplateControlsProps> = ({
     <div className="self-stretch flex min-w-60 items-center gap-4 my-auto max-md:max-w-full">
       <div className="items-center border border-[color:var(--Grey-1,#F2F2F2)] bg-neutral-50 self-stretch flex gap-2.5 text-xs text-[#CCC] font-medium whitespace-nowrap tracking-[-0.24px] leading-[1.3] w-[217px] my-auto px-2 py-2.5 rounded-lg border-solid">
         <img
-          src="https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/e5a7562923566000ba51595becbab71f8db731cf?placeholderIfAbsent=true"
+          src="https://placehold.co/400x300?text=TemplateControl1"
           alt="Search"
           className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
         />
@@ -38,7 +38,7 @@ export const TemplateControls: React.FC<TemplateControlsProps> = ({
           className={viewMode === "grid" ? "opacity-100" : "opacity-50"}
         >
           <img
-            src="https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/88545861428f37631c75d32c0f315a17f98d5392?placeholderIfAbsent=true"
+            src="https://placehold.co/400x300?text=TemplateControl2"
             alt="Grid view"
             className="aspect-[1] object-contain w-6 self-stretch shrink-0 my-auto"
           />
@@ -49,7 +49,7 @@ export const TemplateControls: React.FC<TemplateControlsProps> = ({
           className={viewMode === "list" ? "opacity-100" : "opacity-50"}
         >
           <img
-            src="https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/f66dc0bfb8cd0d02cce51facba60b176b29f4268?placeholderIfAbsent=true"
+            src="https://placehold.co/400x300?text=TemplateControl3"
             alt="List view"
             className="aspect-[1] object-contain w-6 self-stretch shrink-0 my-auto"
           />

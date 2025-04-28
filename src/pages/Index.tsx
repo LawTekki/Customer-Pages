@@ -17,6 +17,7 @@ import { LawyerGrid } from "@/components/lawyer/LawyerGrid";
 import { LawyerFilters } from "@/components/lawyer/LawyerFilters";
 import type { Lawyer } from "@/types/lawyer";
 
+// Sample lawyers data
 const sampleLawyers: Lawyer[] = [
   {
     id: "1",
@@ -24,114 +25,91 @@ const sampleLawyers: Lawyer[] = [
     country: "UK",
     specialties: ["Business Law", "Creative Law", "Human Rights"],
     hourlyRate: 20,
-    imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/9d5db8df77b90ed013f094ceaad43fd2805414e8?placeholderIfAbsent=true",
-    availability: {
-      status: "Available now",
-      isAvailable: true,
-    },
+    imageUrl: "https://placehold.co/400x300?text=Image1",
+    availability: { status: "Available now", isAvailable: true },
   },
   {
     id: "2",
-    name: "Benjamin Kings",
-    country: "UK",
-    specialties: ["Business Law", "Creative Law", "Human Rights"],
-    hourlyRate: 20,
-    imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/a8cd3f3459ea1154e300b27284e080f043c6965e?placeholderIfAbsent=true",
-    availability: {
-      status: "Available now",
-      isAvailable: true,
-    },
+    name: "Sarah Johnson",
+    country: "US",
+    specialties: ["Corporate Law", "Intellectual Property", "Contract Law"],
+    hourlyRate: 25,
+    imageUrl: "https://placehold.co/400x300?text=Image2",
+    availability: { status: "Available now", isAvailable: true },
   },
   {
     id: "3",
-    name: "Benjamin Kings",
-    country: "UK",
-    specialties: ["Business Law", "Creative Law", "Human Rights"],
-    hourlyRate: 20,
-    imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/1e5ee495cdea99099f26cfbbeb3c45a1d0433f47?placeholderIfAbsent=true",
-    availability: {
-      status: "Available now",
-      isAvailable: true,
-    },
+    name: "Michael Chen",
+    country: "CA",
+    specialties: ["Immigration Law", "Family Law", "Civil Rights"],
+    hourlyRate: 22,
+    imageUrl: "https://placehold.co/400x300?text=Image3",
+    availability: { status: "Available in 1 hour", isAvailable: false },
   },
   {
     id: "4",
-    name: "Benjamin Kings",
-    country: "UK",
-    specialties: ["Business Law", "Creative Law", "Human Rights"],
-    hourlyRate: 20,
-    imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/9d5db8df77b90ed013f094ceaad43fd2805414e8?placeholderIfAbsent=true",
-    availability: {
-      status: "Available now",
-      isAvailable: true,
-    },
+    name: "Emma Thompson",
+    country: "AU",
+    specialties: ["Environmental Law", "Property Law", "Business Law"],
+    hourlyRate: 23,
+    imageUrl: "https://placehold.co/400x300?text=Image1",
+    availability: { status: "Available now", isAvailable: true },
   },
   {
     id: "5",
-    name: "Benjamin Kings",
-    country: "UK",
-    specialties: ["Business Law", "Creative Law", "Human Rights"],
-    hourlyRate: 20,
-    imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/9d5db8df77b90ed013f094ceaad43fd2805414e8?placeholderIfAbsent=true",
-    availability: {
-      status: "Available now",
-      isAvailable: true,
-    },
+    name: "David Rodriguez",
+    country: "ES",
+    specialties: ["Criminal Law", "International Law", "Human Rights"],
+    hourlyRate: 21,
+    imageUrl: "https://placehold.co/400x300?text=Image2",
+    availability: { status: "Available now", isAvailable: true },
   },
   {
     id: "6",
-    name: "Benjamin Kings",
-    country: "UK",
-    specialties: ["Business Law", "Creative Law", "Human Rights"],
-    hourlyRate: 20,
-    imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/9d5db8df77b90ed013f094ceaad43fd2805414e8?placeholderIfAbsent=true",
-    availability: {
-      status: "Available now",
-      isAvailable: true,
-    },
+    name: "Sophie Martin",
+    country: "FR",
+    specialties: ["Tax Law", "Corporate Law", "Banking Law"],
+    hourlyRate: 24,
+    imageUrl: "https://placehold.co/400x300?text=Image3",
+    availability: { status: "Available in 2 hours", isAvailable: false },
   },
   {
     id: "7",
-    name: "Benjamin Kings",
+    name: "James Wilson",
     country: "UK",
-    specialties: ["Business Law", "Creative Law", "Human Rights"],
-    hourlyRate: 20,
-    imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/9d5db8df77b90ed013f094ceaad43fd2805414e8?placeholderIfAbsent=true",
-    availability: {
-      status: "Available now",
-      isAvailable: true,
-    },
+    specialties: ["Employment Law", "Civil Litigation", "Contract Law"],
+    hourlyRate: 22,
+    imageUrl: "https://placehold.co/400x300?text=Image1",
+    availability: { status: "Available now", isAvailable: true },
   },
   {
     id: "8",
-    name: "Benjamin Kings",
-    country: "UK",
-    specialties: ["Business Law", "Creative Law", "Human Rights"],
+    name: "Anna Kowalski",
+    country: "PL",
+    specialties: ["Family Law", "Immigration Law", "Human Rights"],
     hourlyRate: 20,
-    imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/9d5db8df77b90ed013f094ceaad43fd2805414e8?placeholderIfAbsent=true",
-    availability: {
-      status: "Available now",
-      isAvailable: true,
-    },
+    imageUrl: "https://placehold.co/400x300?text=Image2",
+    availability: { status: "Available now", isAvailable: true },
   },
   {
     id: "9",
-    name: "Benjamin Kings",
-    country: "UK",
-    specialties: ["Business Law", "Creative Law", "Human Rights"],
-    hourlyRate: 20,
-    imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/9d5db8df77b90ed013f094ceaad43fd2805414e8?placeholderIfAbsent=true",
-    availability: {
-      status: "Available now",
-      isAvailable: true,
-    },
+    name: "Oliver Schmidt",
+    country: "DE",
+    specialties: ["Business Law", "Intellectual Property", "Technology Law"],
+    hourlyRate: 25,
+    imageUrl: "https://placehold.co/400x300?text=Image3",
+    availability: { status: "Available now", isAvailable: true },
   },
 ];
 
 const Index = () => {
+  // Force the default view to be "products" (i.e. Books)
   const [currentView, setCurrentView] = useState("products");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
+  // When a product button is clicked, we update the view.
+  // When Books is selected, the caller should pass "products"
+  // (you may adjust the ProductTabs component to ensure this).
   const handleViewChange = (view: string) => {
     setCurrentView(view);
   };
@@ -140,24 +118,41 @@ const Index = () => {
     setViewMode(mode);
   };
 
+  // Render filters based on the active view.
+  // Here we make sure that if the view is "products" (or "books" if needed)
+  // it returns the ProductFilters component.
   const renderFilters = () => {
+    if (currentView === "products" || currentView === "books") {
+      return <ProductFilters onViewChange={handleViewChange} />;
+    }
     switch (currentView) {
       case "templates":
         return <ProductFilters onViewChange={handleViewChange} />;
       case "software":
-        return <SoftwareFilters />;
+        return <SoftwareFilters onViewChange={handleViewChange} />;
       case "courses":
-        return <CourseFilters />;
+        return <CourseFilters onViewChange={handleViewChange} />;
       case "events":
-        return <EventFilters />;
+        return <EventFilters onViewChange={handleViewChange} />;
       case "talent":
-        return <LawyerFilters lawyers={sampleLawyers} onFilterChange={(filters) => console.log('Filter changed:', filters)} />;
+        return (
+          <LawyerFilters
+            lawyers={sampleLawyers}
+            onFilterChange={(filters) =>
+              console.log("Filter changed:", filters)
+            }
+          />
+        );
       default:
         return <ProductFilters onViewChange={handleViewChange} />;
     }
   };
 
+  // Render the content grid based on the active view.
   const renderContent = () => {
+    if (currentView === "products" || currentView === "books") {
+      return <ProductGrid viewMode={viewMode} />;
+    }
     switch (currentView) {
       case "templates":
         return <TemplateGrid viewMode={viewMode} />;
@@ -175,20 +170,22 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white w-full max-w-full overflow-x-hidden">
       <Header />
-      <div className="flex w-full">
+      <div className="flex w-full overflow-x-hidden">
         <Sidebar />
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-6 pb-14 sm:pb-16 w-full max-w-full overflow-x-auto">
           <div className="max-w-[1417px] mx-auto">
             <SearchBanner />
             <div className="flex gap-6">
-              <aside className="w-[280px] shrink-0">
-                {renderFilters()}
-              </aside>
-              <section className="flex-1">
+              <aside className="hidden md:block w-[280px] shrink-0">{renderFilters()}</aside>
+              <section className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-4 whitespace-nowrap">
-                  <ProductTabs onTalentClick={() => handleViewChange("talent")} onViewChange={handleViewChange} />
+                  {/* Ensure ProductTabs calls handleViewChange("products") when Books is clicked */}
+                  <ProductTabs
+                    onTalentClick={() => handleViewChange("talent")}
+                    onViewChange={handleViewChange}
+                  />
                   <ProductControls onViewModeChange={handleViewModeChange} />
                 </div>
                 {renderContent()}

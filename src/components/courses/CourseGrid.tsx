@@ -2,7 +2,7 @@ import React from "react";
 import { CourseCard } from "./CourseCard";
 
 const courseData = Array(9).fill({
-  imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/57b86d68086c16f2b2bdbcd66624c9e65e8ccbb0",
+  imageUrl: "https://placehold.co/400x300?text=Course",
   title: "Legal Practice Course",
   category: "Business Law | Legal Education",
   price: "$199",

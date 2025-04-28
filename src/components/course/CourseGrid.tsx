@@ -4,7 +4,7 @@ import { CourseCard } from "./CourseCard";
 const courseData = [
   {
     id: 1,
-    imageUrl: "https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/e84e73833f3af2e5b5fe9c7ea4191a4d7e48818f?placeholderIfAbsent=true",
+    imageUrl: "https://placehold.co/400x300?text=Course",
     title: "Playing the winning law",
     description: "Business Law | Creative Law | Huma....",
     price: "$50",

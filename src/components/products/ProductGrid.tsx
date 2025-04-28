@@ -1,13 +1,23 @@
 import React from "react";
 import { ProductCard } from "./ProductCard";
 
-const products = Array(9).fill({
-  type: "PDF",
-  title: "How to win a case",
-  categories: "Business Law | Creative Law | Huma....",
-  price: "$50",
-  stock: "(32 copies left)",
-});
+const products = [
+  {
+    type: "PDF",
+    title: "How to win a case",
+    categories: "Business Law | Creative Law | Huma....",
+    price: "$50",
+    stock: "(32 copies left)",
+    imageSrc: "/Frame 1000008455 (1).jpg"
+  },
+  ...Array(8).fill({
+    type: "PDF",
+    title: "How to win a case",
+    categories: "Business Law | Creative Law | Huma....",
+    price: "$50",
+    stock: "(32 copies left)"
+  })
+];
 
 interface ProductGridProps {
   viewMode?: "grid" | "list";

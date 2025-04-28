@@ -9,48 +9,25 @@ interface Tag {
 interface FilterHeaderProps {
   appliedCount: number;
   onClearAll?: () => void;
-  selectedCategory: string;
-  onCategoryChange: (category: string) => void;
 }
 
 const FilterHeader: React.FC<FilterHeaderProps> = ({
   appliedCount,
   onClearAll,
-  selectedCategory,
-  onCategoryChange,
 }) => {
-  const categories = ["Books", "Templates", "Softwares", "Courses"];
-
   return (
-    <div className="flex flex-col gap-4 mb-8 px-4 pt-6">
-      <div className="flex items-center justify-between">
-        <div className="text-base font-medium tracking-[-0.32px]">Filters</div>
-        {appliedCount > 0 && (
-          <div className="flex items-center gap-2 bg-[#F0E6F2] px-3 py-1.5">
-            <div className="text-[#6B047C] text-sm">{appliedCount} applied</div>
-            {onClearAll && (
-              <button onClick={onClearAll} className="text-[#6B047C]">
-                ×
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => onCategoryChange(category)}
-            className={`px-4 py-2 text-sm rounded-none transition-colors ${
-              selectedCategory === category
-                ? "bg-[#6B047C] text-white"
-                : "bg-white text-[#1A011E] hover:bg-[#F0E6F2]"
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
+    <div className="flex items-center justify-between mb-6 px-4 pt-4">
+      <div className="text-base font-medium tracking-[-0.32px]">Filters</div>
+      {appliedCount > 0 && (
+        <button 
+          onClick={onClearAll} 
+          className="flex items-center gap-2 bg-[#F0E6F2] px-3 py-1.5 text-[#6B047C] text-sm font-medium hover:bg-[#D8B4E2] transition-colors rounded-md shadow-sm"
+          aria-label="Clear all filters"
+        >
+          <span>{appliedCount} applied</span>
+          <span className="hover:text-[#4A0356]">×</span>
+        </button>
+      )}
     </div>
   );
 };
@@ -70,55 +47,113 @@ const SelectFilter: React.FC<SelectFilterProps> = ({
   selectedTags,
   onAddTag,
   onRemoveTag,
-  placeholder = "- select -",
+  placeholder = "Search or select...",
 }) => {
-  const availableOptions = options.filter(
-    (opt) => !selectedTags.find((t) => t.id === opt.id)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+  
+  const filteredOptions = searchTerm
+    ? options.filter(option => 
+        option.label.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : options;
+
+  const availableOptions = filteredOptions.filter(
+    (option) => !selectedTags.some((tag) => tag.id === option.id)
   );
+
+  const handleAddTag = (tag: Tag) => {
+    if (!selectedTags.find(t => t.id === tag.id)) {
+      onAddTag(tag);
+      setSearchTerm("");
+      setIsOpen(false);
+    }
+  };
 
   return (
     <div className="mb-4 px-4">
       <div className="text-sm font-medium mb-2">{label}</div>
-      <div className="relative">
-        <select
-          value=""
-          onChange={(e) => {
-            const selected = options.find((o) => o.id === e.target.value);
-            if (selected) onAddTag(selected);
-          }}
-          className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none rounded-none hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C]"
-        >
-          <option value="">{placeholder}</option>
-          {availableOptions.map((opt) => (
-            <option key={opt.id} value={opt.id}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M2 4L6 8L10 4" stroke="#999" strokeWidth="1.5" />
-          </svg>
-        </div>
-      </div>
-      {selectedTags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
-          {selectedTags.map((tag) => (
-            <div
-              key={tag.id}
-              className="flex items-center gap-1 px-2 py-1 bg-[#F0E6F2] rounded-none"
+      
+      {/* Search input with dropdown */}
+      <div ref={dropdownRef} className="relative">
+        <div className="relative">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onClick={() => setIsOpen(true)}
+            placeholder={placeholder}
+            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none rounded-md hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C] shadow-sm"
+          />
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#6B047C] focus:outline-none"
+            aria-label="Toggle dropdown"
+          >
+            <svg
+              className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <span className="text-[#6B047C] text-sm">{tag.label}</span>
-              <button
-                onClick={() => onRemoveTag(tag.id)}
-                className="text-[#6B047C] text-sm hover:text-[#4a0356]"
-              >
-                ×
-              </button>
-            </div>
-          ))}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
         </div>
-      )}
+
+        {/* Selected tags */}
+        {selectedTags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {selectedTags.map((tag) => (
+              <div 
+                key={tag.id} 
+                className="flex items-center gap-1 px-2 py-1 bg-[#F0E6F2] rounded-md shadow-sm hover:bg-[#D8B4E2] transition-colors text-[#6B047C] text-sm font-medium"
+              >
+                <span>{tag.label}</span>
+                <button 
+                  onClick={() => onRemoveTag(tag.id)}
+                  className="text-[#6B047C] text-sm hover:text-[#4A0356] transition-colors" aria-label="Remove tag"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Options dropdown */}
+        {isOpen && availableOptions.length > 0 && (
+          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
+            {availableOptions.map((option) => (
+              <div
+                key={option.id}
+                onClick={() => handleAddTag(option)}
+                className="px-3 py-2 text-sm cursor-pointer hover:bg-[#F4EDF5]"
+              >
+                {option.label}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -126,15 +161,9 @@ const SelectFilter: React.FC<SelectFilterProps> = ({
 interface LawyerFiltersProps {
   lawyers: Lawyer[];
   onFilterChange: (filters: any) => void;
-  onCategoryChange?: (category: string) => void;
 }
 
-export const LawyerFilters: React.FC<LawyerFiltersProps> = ({
-  lawyers,
-  onFilterChange,
-  onCategoryChange,
-}) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("Books");
+export const LawyerFilters: React.FC<LawyerFiltersProps> = ({ lawyers, onFilterChange }) => {
   const [author, setAuthor] = useState<string>("");
   const [brand, setBrand] = useState<string>("");
   const [selectedSector, setSelectedSector] = useState<Tag[]>([]);
@@ -195,21 +224,9 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({
 
   const sliderBackground = `linear-gradient(to right, #6B047C 0%, #6B047C ${(price / 100) * 100}%, #D1B1D6 ${(price / 100) * 100}%, #D1B1D6 100%)`;
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    if (onCategoryChange) {
-      onCategoryChange(category);
-    }
-  };
-
   return (
     <div className="w-[280px] bg-[#F4EDF5] text-[#1A011E] pb-4">
-      <FilterHeader
-        appliedCount={appliedCount}
-        onClearAll={clearAll}
-        selectedCategory={selectedCategory}
-        onCategoryChange={handleCategoryChange}
-      />
+      <FilterHeader appliedCount={appliedCount} onClearAll={clearAll} />
 
       <div className="text-[10px] uppercase font-medium text-[#666666] px-4 mb-2">
         FILTER BY:
@@ -223,7 +240,7 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             placeholder="E.g Austin Kelaina"
-            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm placeholder:text-[#999] rounded-none hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C]"
+            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none rounded-md hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C] shadow-sm"
           />
         </div>
 
@@ -234,7 +251,7 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
             placeholder="E.g Austin Kelaina"
-            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm placeholder:text-[#999] rounded-none hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C]"
+            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none rounded-md hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C] shadow-sm"
           />
         </div>
 
@@ -271,56 +288,62 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({
         />
 
         <div className="px-4">
-          <div className="text-sm font-medium mb-2">Date</div>
+          <div className="text-sm font-medium mb-2">Date created</div>
           <input
-            type="date"
+            type="text"
             value={dateCreated}
             onChange={(e) => setDateCreated(e.target.value)}
-            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] rounded-none focus:outline-none focus:border-[#6B047C]"
+            placeholder="DD/MM/YYYY"
+            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none rounded-md hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C] shadow-sm"
           />
         </div>
 
         <div className="px-4">
           <div className="text-sm font-medium mb-2">Version</div>
-          <div className="relative">
-            <select
-              value={version}
-              onChange={(e) => setVersion(e.target.value)}
-              className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none rounded-none hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C]"
-            >
-              <option value="">Select version</option>
-              <option value="1">Version 1</option>
-              <option value="2">Version 2</option>
-            </select>
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 4L6 8L10 4" stroke="#999" strokeWidth="1.5" />
-              </svg>
-            </div>
-          </div>
+          <input
+            type="text"
+            value={version}
+            onChange={(e) => setVersion(e.target.value)}
+            placeholder="Enter version"
+            className="w-full h-10 px-3 bg-white border border-[#F2F2F2] text-sm text-[#999] appearance-none rounded-md hover:border-[#6B047C] focus:outline-none focus:border-[#6B047C] shadow-sm"
+          />
         </div>
 
+        {/* Cost Radio Buttons */}
         <div className="px-4">
           <div className="text-sm font-medium mb-2">Cost</div>
-          <div className="py-2.5 px-3 bg-white rounded-none">
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
-              {["All", "Free", "Paid", "Discounted"].map((opt) => (
-                <label key={opt} className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    name="cost"
-                    value={opt}
-                    checked={cost === opt}
-                    onChange={() => setCost(opt)}
-                    className="w-4 h-4 border-gray-300 accent-[#6B047C] rounded-none"
-                  />
-                  <span className="ml-2 text-sm">{opt}</span>
-                </label>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                checked={cost === 'All'}
+                onChange={() => setCost('All')}
+                className="w-4 h-4 accent-[#6B047C] border-[#D1B1D6] focus:ring-[#6B047C]"
+              />
+              <span className="text-sm">All</span>
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                checked={cost === 'Free'}
+                onChange={() => setCost('Free')}
+                className="w-4 h-4 accent-[#6B047C] border-[#D1B1D6] focus:ring-[#6B047C]"
+              />
+              <span className="text-sm">Free</span>
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                checked={cost === 'Paid'}
+                onChange={() => setCost('Paid')}
+                className="w-4 h-4 accent-[#6B047C] border-[#D1B1D6] focus:ring-[#6B047C]"
+              />
+              <span className="text-sm">Paid</span>
+            </label>
           </div>
         </div>
 
+        {/* Price Range Slider */}
         <div className="px-4">
           <div className="text-sm font-medium mb-2">Price range</div>
           <input
@@ -328,23 +351,28 @@ export const LawyerFilters: React.FC<LawyerFiltersProps> = ({
             min="0"
             max="100"
             value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-            style={{ background: sliderBackground }}
-            className="w-full h-1 appearance-none cursor-pointer accent-[#6B047C] rounded-none"
+            onChange={(e) => setPrice(parseInt(e.target.value))}
+            className="w-full h-1 bg-[#F0E6F2] appearance-none cursor-pointer accent-[#6B047C] [&::-webkit-slider-thumb]:bg-[#6B047C] [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#6B047C] [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0"
+            style={{
+              background: sliderBackground
+            }}
           />
-          <div className="text-xs mt-2">${price}</div>
+          <div className="text-sm text-[#666] mt-1">${price}</div>
         </div>
 
+        {/* Star Ratings */}
         <div className="px-4">
           <div className="text-sm font-medium mb-2">Star ratings</div>
           <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
+            {[1, 2, 3, 4, 5].map((rating) => (
               <button
-                key={star}
-                className="text-2xl text-[#FFD700]"
-                onClick={() => setStarRating(star)}
+                key={rating}
+                onClick={() => setStarRating(rating)}
+                className={`text-lg text-[#6B047C] hover:text-[#6B047C] transition-colors ${
+                  rating <= starRating ? 'opacity-100' : 'opacity-30'
+                }`}
               >
-                {star <= starRating ? "★" : "☆"}
+                ⭐
               </button>
             ))}
           </div>
