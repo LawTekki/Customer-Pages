@@ -5,6 +5,7 @@ export interface Lawyer {
   specialties: string[];
   hourlyRate: number;
   imageUrl: string;
+  description?: string;
   availability: {
     status: string;
     isAvailable: boolean;

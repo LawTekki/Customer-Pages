@@ -33,12 +33,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const truncate = (text: string, maxLength: number) =>
     text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 
-  // The special image URL to check against
-  const specialImageUrl = "https://placehold.co/600x400?text=Image";
-
-  // Decide which image to use (fallback to specialImageUrl for now)
-  const imgSrc = imageSrc || specialImageUrl;
-  const isSpecial = imgSrc === specialImageUrl;
+  // Helper for category truncation
+  const renderCategories = () => {
+    const cats = categories.split('|').map(c => c.trim()).filter(Boolean);
+    if (cats.length > 2) {
+      const truncatedThird = cats[2].length > 4 ? cats[2].slice(0, 4) + '...' : cats[2];
+      return cats[0] + ' | ' + cats[1] + ' | ' + truncatedThird;
+    }
+    return cats.join(' | ');
+  };
 
   return (
     <article 
@@ -49,39 +52,30 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* List View */}
         {viewMode === "list" && (
           <div className="flex flex-row w-full items-stretch">
-            <div className={`relative w-[230px] min-w-[230px] ${isSpecial ? 'h-auto py-6' : 'h-[230px]'} flex flex-col items-center justify-center bg-[#F9F5FA] rounded-lg shadow-sm${isSpecial ? '' : ' p-0'}`}>
-              <div className="absolute top-3 right-3 bg-[#6B047C] text-white text-xs font-bold px-2 py-1 rounded">
+            <div className="relative w-[220px] min-w-[220px] h-[220px] bg-[#F9F5FA] rounded-l-lg overflow-hidden">
+              <div className="absolute top-4 right-4 bg-[#6B047C] text-white text-xs font-medium px-2 py-1 rounded z-10">
                 {type}
               </div>
-              <div className={`flex flex-col items-center justify-center w-full h-full${isSpecial ? '' : ' p-0'}`} style={{ background: isSpecial ? '#F9F5FA' : undefined, height: '100%', width: '100%' }}>
+              {imageSrc &&
+                imageSrc !== '/Frame 1000008455 (1).jpg' &&
+                imageSrc !== '/uil_books.svg' &&
+                imageSrc !== 'C:/Users/hamza/OneDrive/Desktop/Dash_Board/public/uil_books.svg' ? (
                 <img
-                  src={imgSrc}
-                  alt="Product icon"
-                  className={`transition-transform duration-300 group-hover:scale-110 mb-2 rounded-lg ${isSpecial ? '' : 'w-full h-full object-cover'}`}
-                  style={isSpecial ? {
-                    maxWidth: '70px',
-                    maxHeight: '70px',
-                    width: '70px',
-                    height: '70px',
-                    objectFit: 'contain',
-                    margin: '40px auto 0 auto',
-                    display: 'block',
-                    background: '#F9F5FA',
-                  } : {
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    borderRadius: '0.5rem',
-                    display: 'block',
-                  }}
+                  src={imageSrc}
+                  alt="Product"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{ objectFit: 'cover' }}
                 />
-                {isSpecial && (
-                  <div
-                    className="text-[#6B047C] text-base font-bold transition-colors duration-300 group-hover:text-[#8A0591]"
-                    style={{ marginTop: '6px' }}
-                  >Books</div>
-                )}
-              </div>
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <img
+                    src="/uil_books.svg"
+                    alt="Product icon"
+                    className="w-20 h-20 transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="text-[#6B047C] text-lg font-semibold mt-4 transition-colors duration-300 group-hover:text-[#8A0591]">{type}</div>
+                </div>
+              )}
             </div>
             <div className="flex-1 bg-white p-4 flex flex-col gap-0 relative justify-between">
               <div className="flex items-start justify-between gap-2">
@@ -132,51 +126,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Grid View */}
         {viewMode === "grid" && (
           <div className="flex flex-col w-full">
-            <div className="relative" style={{ height: '220px' }}>
+            <div className="relative h-[180px] flex flex-col items-center justify-center overflow-hidden">
               <div className="absolute top-2 right-2 bg-[#6B047C] text-white text-xs font-bold px-2 py-1 rounded z-10">
                 {type}
               </div>
-              {isSpecial ? (
-                <div className="flex flex-col items-center justify-center w-full h-full" style={{ background: '#F9F5FA', height: '100%' }}>
-                  <img
-                    src={imgSrc}
-                    alt="Product icon"
-                    className="transition-transform duration-300 group-hover:scale-110"
-                    style={{
-                      maxWidth: '70px',
-                      maxHeight: '70px',
-                      width: '70px',
-                      height: '70px',
-                      objectFit: 'contain',
-                      margin: '40px auto 0 auto',
-                      display: 'block',
-                      background: '#F9F5FA',
-                    }}
-                  />
-                  <div
-                    className="text-[#6B047C] text-base font-bold transition-colors duration-300 group-hover:text-[#8A0591]"
-                    style={{ marginTop: '6px', textAlign: 'center', width: '100%' }}
-                  >Books</div>
-                </div>
+              {imageSrc &&
+                imageSrc !== '/Frame 1000008455 (1).jpg' &&
+                imageSrc !== '/uil_books.svg' &&
+                imageSrc !== 'C:/Users/hamza/OneDrive/Desktop/Dash_Board/public/uil_books.svg' ? (
+                <img
+                  src={imageSrc}
+                  alt="Product"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{ objectFit: 'cover' }}
+                />
               ) : (
-                <div className="w-full h-full flex items-center justify-center relative p-0 m-0 overflow-hidden" style={{height: '100%'}}>
+                <>
                   <img
-                    src={imgSrc}
-                    alt="Product"
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      borderRadius: 0,
-                      zIndex: 0,
-                      margin: 0,
-                      padding: 0
-                    }}
+                    src="/uil_books.svg"
+                    alt="Product icon"
+                    className="w-16 h-16 transition-transform duration-300 group-hover:scale-110 z-10"
                   />
-                </div>
+                  <div className="text-[#6B047C] text-base font-bold mt-2 transition-colors duration-300 group-hover:text-[#8A0591] z-10">{type}</div>
+                </>
               )}
             </div>
             <div className="bg-white p-4 flex flex-col gap-1">
@@ -200,7 +172,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                   textOverflow: 'ellipsis',
                 }}
               >
-                {categories}
+                {renderCategories()}
               </p>
               <div className="hidden sm:flex text-[#1A011E] text-base font-semibold mt-1 truncate max-w-full" style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                 {price} {stock && <span className="text-[#808080] font-normal text-sm ml-1">({stock.replace(/^[()\s]+|[()\s]+$/g, '')})</span>}

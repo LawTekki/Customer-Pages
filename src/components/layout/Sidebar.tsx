@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ProfileDropdown } from "@/components/layout/ProfileDropdown";
 
 const navItems = [
   {
@@ -57,6 +59,7 @@ const navItems = [
   },
   {
     label: "Orders",
+    path: "/orders",
     svg: (
       <svg
         width="17"
@@ -134,65 +137,23 @@ const navItems = [
     ),
   },
   {
-    label: "Proposal",
+    label: "Work Package",
     svg: (
-      <svg
-        width="17"
-        height="16"
-        viewBox="0 0 21 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-5 h-5 transition-colors duration-300"
-      >
-        <path
-          d="M16.9937 9.16667V5.83333C16.9937 3.99238 16.9937 3.07191 16.4215 2.49976C15.8494 1.92762 14.9289 1.92762 13.0879 1.92762H7.89942C6.05847 1.92762 5.138 1.92762 4.56585 2.49976C3.99371 3.07191 3.99371 3.99238 3.99371 5.83333V14.1667C3.99371 16.0076 3.99371 16.9281 4.56585 17.5002C5.138 18.0724 6.05847 18.0724 7.89942 18.0724H11.2328"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M7.49365 6.66669H14.4937"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M7.49365 10H10.4937"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M14.9937 14.1667L16.9937 16.1667L18.9937 14.1667"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none" className="w-5 h-5 transition-colors duration-300">
+        <path d="M10.0447 18.9577C9.36284 18.9577 8.71151 18.6872 7.40879 18.1462C4.16604 16.7994 2.54468 16.1261 2.54468 14.9934V7.07821M10.0447 18.9577C10.7265 18.9577 11.3778 18.6872 12.6806 18.1462C15.9233 16.7994 17.5447 16.1261 17.5447 14.9934V7.07821M10.0447 18.9577V10.7649M2.54468 7.07821C2.54468 7.58143 3.21265 7.89921 4.54861 8.53475L6.98294 9.69285C8.48534 10.4076 9.23659 10.7649 10.0447 10.7649M2.54468 7.07821C2.54468 6.57498 3.21265 6.25722 4.54861 5.62167L6.29468 4.79102M17.5447 7.07821C17.5447 7.58143 16.8767 7.89921 15.5408 8.53475L13.1064 9.69285C11.604 10.4076 10.8528 10.7649 10.0447 10.7649M17.5447 7.07821C17.5447 6.57498 16.8767 6.25722 15.5408 5.62167L13.7947 4.79102M5.04468 11.5842L6.71134 12.4035" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10.0478 2.29102V8.12431M10.0478 8.12431C10.2671 8.12727 10.4833 7.97412 10.6429 7.78713L11.7114 6.50913M10.0478 8.12431C9.8363 8.12145 9.62213 7.96908 9.4528 7.78713L8.37805 6.50913" stroke="currentColor" stroke-linecap="round"/>
       </svg>
     ),
   },
   {
     label: "Events",
     svg: (
-      <svg
-        width="17"
-        height="16"
-        viewBox="0 0 21 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-5 h-5 transition-colors duration-300"
-      >
-        <path
-          d="M10.4937 18.3334C9.81182 18.3334 9.16049 18.0629 7.85776 17.5219C4.61502 16.1751 2.99365 15.5018 2.99365 14.3691V6.45388M10.4937 18.3334C11.1755 18.3334 11.8268 18.0629 13.1296 17.5219C16.3723 16.1751 17.9937 15.5018 17.9937 14.3691V6.45388M10.4937 18.3334V10.1406M2.99365 6.45388C2.99365 6.9571 3.66163 7.27488 4.99759 7.91042L7.43192 9.06852C8.93432 9.78327 9.68557 10.1406 10.4937 10.1406M2.99365 6.45388C2.99365 5.95065 3.66163 5.63289 4.99759 4.99734L6.74365 4.16669M17.9937 6.45388C17.9937 6.9571 17.3257 7.27488 15.9897 7.91042L13.5554 9.06852C12.053 9.78327 11.3017 10.1406 10.4937 10.1406M17.9937 6.45388C17.9937 5.95065 17.3257 5.63289 15.9897 4.99734L14.2437 4.16669M5.49365 10.9599L7.16032 11.7792"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M10.4967 1.66669V7.49998M10.4967 7.49998C10.7159 7.50295 10.9322 7.34979 11.0917 7.1628L12.1602 5.8848M10.4967 7.49998C10.2852 7.49712 10.071 7.34475 9.90165 7.1628L8.8269 5.8848"
-          stroke="currentColor"
-          strokeLinecap="round"
-        />
+      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none" className="w-5 h-5 transition-colors duration-300">
+        <path d="M15.0447 1.79102V3.45768M5.04468 1.79102V3.45768" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10.0409 10.959H10.0484M10.0409 14.2923H10.0484M13.3705 10.959H13.378M6.7113 10.959H6.71878M6.7113 14.2923H6.71878" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2.9613 6.79102H17.128" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2.12805 10.3277C2.12805 6.69662 2.12805 4.88107 3.17149 3.75303C4.21492 2.625 5.89429 2.625 9.25305 2.625H10.8364C14.1951 2.625 15.8746 2.625 16.918 3.75303C17.9614 4.88107 17.9614 6.69662 17.9614 10.3277V10.7557C17.9614 14.3867 17.9614 16.2022 16.918 17.3303C15.8746 18.4583 14.1951 18.4583 10.8364 18.4583H9.25305C5.89429 18.4583 4.21492 18.4583 3.17149 17.3303C2.12805 16.2022 2.12805 14.3867 2.12805 10.7557V10.3277Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2.54468 6.79102H17.5447" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     ),
   },
@@ -266,8 +227,86 @@ const navItems = [
   },
 ];
 
+
 export const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState("Discover");
+  const [activeItem, setActiveItem] = useState<string>("");
+  const location = useLocation();
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const navigate = useNavigate();
+
+  // Function to get the active item based on the current route
+  const getActiveItemFromRoute = (path: string): string => {
+    const routeToItem = {
+      '/': 'Discover',
+      '/home': 'Home',
+      '/contacts': 'Contacts',
+      '/events': 'Events',
+      '/wallet': 'Wallet',
+      '/work-package': 'Work Package',
+      '/dispute': 'Dispute',
+      '/help-and-support': 'Help and support',
+      '/orders': 'Orders'
+    };
+
+    const matchingItem = Object.entries(routeToItem).find(([route, item]) => 
+      path === route || path.startsWith(route + '/')
+    );
+
+    if (matchingItem) {
+      return matchingItem[1];
+    }
+
+    // If no match found, check if we're on the root path
+    if (path === '/') {
+      return 'Discover';
+    }
+
+    return "";
+  };
+
+  // Update active item when location changes
+  useEffect(() => {
+    const newActiveItem = getActiveItemFromRoute(location.pathname);
+    if (newActiveItem !== activeItem) {
+      setActiveItem(newActiveItem);
+    }
+  }, [location]);
+
+  // Update active item when clicking nav items
+  const navigateTo = (path: string) => {
+    navigate(path);
+  };
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+
+  const handleNav = (label: string) => {
+    setActiveItem(label);
+    if (label === "More") {
+      setShowProfileDropdown((prev) => !prev);
+      return;
+    }
+    setShowProfileDropdown(false);
+    
+    // Navigate based on the label
+    const routeMap = {
+      "Discover": "/",
+      "Contacts": "/contacts",
+      "Events": "/events",
+      "Home": "/home",
+      "Wallet": "/wallet",
+      "Work Package": "/work-package",
+      "Dispute": "/dispute",
+      "Help and support": "/help-and-support",
+      "Orders": "/orders"
+    };
+
+    const route = routeMap[label];
+    if (route) {
+      navigate(route);
+    }
+  };
 
   return (
     <>
@@ -276,15 +315,39 @@ export const Sidebar = () => {
         <div className="flex flex-col items-center space-y-4">
           {navItems.map((item) => {
             const isActive = activeItem === item.label;
+            if (item.label === "More") {
+              return (
+                <div
+                  key={item.label}
+                  className={`group flex flex-col items-center cursor-pointer transition-all duration-300 ${
+                    isActive ? "text-[#6B047C]" : "text-[#808080] hover:text-[#6B047C]"
+                  }`}
+                >
+                  <div
+                    className={`p-2 rounded-lg transition-colors duration-300 ${
+                      isActive
+                        ? "bg-[rgba(107,4,124,0.1)]"
+                        : "group-hover:bg-[rgba(107,4,124,0.1)]"
+                    }`}
+                    onClick={() => handleNav(item.label)}
+                  >
+                    {React.cloneElement(item.svg, {
+                      className: `w-5 h-5 transition-colors duration-300 ${isActive ? 'stroke-[#6B047C] fill-[#6B047C]' : 'stroke-[#808080] hover:stroke-[#6B047C] hover:fill-[#6B047C]'}`,
+                    })}
+                  </div>
+                  <div className="mt-1">{item.label}</div>
+                  <ProfileDropdown isOpen={showProfileDropdown} onClose={() => setShowProfileDropdown(false)} />
+                </div>
+              );
+            }
             return (
               <div
                 key={item.label}
-                onClick={() => setActiveItem(item.label)}
+                onClick={() => handleNav(item.label)}
                 className={`group flex flex-col items-center cursor-pointer transition-all duration-300 ${
                   isActive ? "text-[#6B047C]" : "text-[#808080] hover:text-[#6B047C]"
                 }`}
               >
-                {/* The wrapper div adds a uniform rectangular (light-colored) background on hover or active */}
                 <div
                   className={`p-2 rounded-lg transition-colors duration-300 ${
                     isActive
@@ -308,7 +371,7 @@ export const Sidebar = () => {
           return (
             <button
               key={item.label}
-              onClick={() => setActiveItem(item.label)}
+              onClick={() => handleNav(item.label)}
               className={`flex flex-col items-center justify-center flex-1 transition-all duration-300 px-1 ${
                 isActive ? "text-[#6B047C]" : "text-[#808080] hover:text-[#6B047C]"
               }`}

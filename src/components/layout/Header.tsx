@@ -29,13 +29,11 @@ export const Header: React.FC = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMessages, setShowMessages] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
-  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -48,16 +46,12 @@ export const Header: React.FC = () => {
       if (messagesRef.current && !messagesRef.current.contains(e.target as Node)) {
         setShowMessages(false);
       }
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
-        setShowProfile(false);
-      }
     };
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setShowDropdown(false);
         setShowNotifications(false);
         setShowMessages(false);
-        setShowProfile(false);
         setMobileMenuOpen(false);
       }
     };
@@ -69,20 +63,22 @@ export const Header: React.FC = () => {
     };
   }, []);
 
+  const toggleDropdown = () => {
+    setShowDropdown((v) => !v);
+    setShowNotifications(false);
+    setShowMessages(false);
+  };
+
   const toggleNotifications = () => {
     setShowNotifications((v) => !v);
     setShowMessages(false);
     setShowDropdown(false);
   };
+
   const toggleMessages = () => {
     setShowMessages((v) => !v);
     setShowNotifications(false);
     setShowDropdown(false);
-  };
-  const toggleDropdown = () => {
-    setShowDropdown((v) => !v);
-    setShowNotifications(false);
-    setShowMessages(false);
   };
 
   const messages: Message[] = [
@@ -327,9 +323,9 @@ export const Header: React.FC = () => {
           <div className="flex-1 min-w-0 mx-0 max-w-[200px] sm:max-w-[320px] md:max-w-[420px] lg:max-w-[400px] xl:max-w-[480px] ml-2">
             <div className="flex items-center w-full border border-[#F2F2F2] bg-[#FAFAFA] rounded-lg px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 md:py-1.5 gap-1 sm:gap-1.5 focus-within:border-[#6B047C] transition-colors">
               <img
-                src="https://placehold.co/400x300?text=Header"
+                src="/search-01.svg"
                 alt="Search icon"
-                className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0"
+                className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 self-stretch shrink-0 my-auto"
               />
               <input
                 type="text"
@@ -439,14 +435,8 @@ export const Header: React.FC = () => {
           </div>
 
           {/* Profile */}
-          <div ref={profileRef} className="relative">
+          <div className="relative">
             <button
-              onClick={() => {
-                setShowProfile(!showProfile);
-                setShowDropdown(false);
-                setShowNotifications(false);
-                setShowMessages(false);
-              }}
               className="focus:outline-none"
             >
               <img
@@ -455,35 +445,6 @@ export const Header: React.FC = () => {
                 className="w-6 sm:w-8 md:w-10 h-6 sm:h-8 md:h-10 rounded-lg object-cover cursor-pointer"
               />
             </button>
-            {showProfile && (
-              <div className="absolute right-0 top-full mt-1 w-64 sm:w-[290px]
-                              bg-white rounded-lg shadow-lg py-2 px-3 z-50">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 p-2 hover:bg-[#F9F5FA] rounded-lg cursor-pointer group">
-                    <img src="/Frame 106.png" alt="Profile" className="w-8 h-8 rounded-lg object-cover" />
-                    <div className="flex flex-col">
-                      <span className="text-[#1A011E] group-hover:text-[#6B047C] text-sm font-medium transition-colors">
-                        Wisdom Umanah
-                      </span>
-                      <span className="text-[#808080] text-xs group-hover:text-[#6B047C] transition-colors">
-                        My profile
-                      </span>
-                    </div>
-                  </div>
-                  {profileActions.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center p-2 hover:bg-[#F9F5FA] rounded-lg cursor-pointer gap-3"
-                    >
-                      <img src={item.icon} alt={item.label + ' icon'} className="w-6 h-6" />
-                      <span className="text-[#808080] group-hover:text-[#6B047C] text-sm transition-colors">
-                        {item.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Quick Actions */}

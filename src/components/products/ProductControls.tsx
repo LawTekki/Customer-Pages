@@ -27,9 +27,9 @@ export const ProductControls: React.FC<ProductControlsProps> = ({ onViewModeChan
       {/* Mobile search box - only show on mobile, right next to filter button and slightly raised */}
       <div className="flex sm:hidden items-center gap-1 px-2 py-1 bg-white rounded-lg border border-[#F2F2F2] max-w-[130px] w-full order-1 -mt-1" style={{alignSelf: 'flex-start', position: 'relative', left: '-25px'}}>
         <img
-          src="https://placehold.co/400x300?text=ProductControl1"
+          src="/search-01.svg"
           alt="Search"
-          className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
+          className="aspect-[1] object-contain w-4 h-4 self-stretch shrink-0 my-auto"
         />
         <input
           type="text"
@@ -40,9 +40,9 @@ export const ProductControls: React.FC<ProductControlsProps> = ({ onViewModeChan
       {/* Only show the search box on desktop and tablet, hide on mobile */}
       <div className="hidden sm:flex items-center gap-1 md:gap-2 px-1 md:px-3 py-1 md:py-2.5 bg-white rounded-lg border border-[#F2F2F2] min-w-0 order-1 md:order-none" style={{ minWidth: '0' }}>
         <img
-          src="https://placehold.co/400x300?text=ProductControl2"
+          src="/search-01.svg"
           alt="Search"
-          className="aspect-[1] object-contain w-3 md:w-4 self-stretch shrink-0 my-auto"
+          className="aspect-[1] object-contain w-3 h-3 md:w-4 md:h-4 self-stretch shrink-0 my-auto"
         />
         <input
           type="text"
@@ -71,7 +71,7 @@ export const ProductControls: React.FC<ProductControlsProps> = ({ onViewModeChan
           className={`p-0.5 md:p-2 rounded-lg ${viewMode === "grid" ? "bg-[#F0E6F2]" : "hover:bg-gray-50"}`}
         >
           <img
-            src="https://placehold.co/400x300?text=ProductControl3"
+            src="/flowbite_grid-solid.svg"
             alt="Grid view"
             className="aspect-[1] object-contain w-3 md:w-6 self-stretch shrink-0 my-auto"
           />
