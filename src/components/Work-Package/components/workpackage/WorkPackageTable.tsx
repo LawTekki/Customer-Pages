@@ -1,23 +1,16 @@
 
-import React from 'react';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import React, { useMemo, useState } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table";
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationEllipsis, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
-} from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
+import { useFilter } from '../../context/FilterContext';
+import { Pagination } from './Pagination';
 
 type StatusType = 'Ongoing' | 'Concluded' | 'Cancelled' | 'Pending';
 
@@ -62,29 +55,31 @@ const getMobileStatusClass = (status: StatusType): string => {
   }
 };
 
+// Define specific work packages for the first page
 const workPackages: WorkPackage[] = [
   {
     id: 1,
-    title: 'Curating a customize agreement between landlord and tenant',
+    title: 'Curating a customize agreement betwcen\nlandlond and tenant',
     responses: 24,
     talentHired: null,
+    talentImage: 'https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/7742ca1ee319b52420c3d7f07578f2bf884ef5e0?placeholderIfAbsent=true',
     postedDate: 'July 27, 2024 | 12:42pm',
     status: 'Ongoing',
-    budget: '$300'
+    budget: '$4900'
   },
   {
     id: 2,
-    title: 'Curating a customize agreement between landlord and tenant',
+    title: 'Curating a customize agreement\nbetweon landlord and tenant',
     responses: 24,
     talentHired: 'Morgan Jules',
     talentImage: 'https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/7742ca1ee319b52420c3d7f07578f2bf884ef5e0?placeholderIfAbsent=true',
     postedDate: 'July 27, 2024 | 12:42pm',
     status: 'Concluded',
-    budget: '$300'
+    budget: '$1300'
   },
   {
     id: 3,
-    title: 'Curating a customize agreement between landlord and tenant',
+    title: 'Cursting a custemize agreement\nbetween landlerd and tenant',
     responses: 24,
     talentHired: 'Morgan Jules',
     talentImage: 'https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/7742ca1ee319b52420c3d7f07578f2bf884ef5e0?placeholderIfAbsent=true',
@@ -94,7 +89,7 @@ const workPackages: WorkPackage[] = [
   },
   {
     id: 4,
-    title: 'Curating a customize agreement between landlord and tenant',
+    title: 'Curating a customize agreemant\nbetween langlord and tenart',
     responses: 24,
     talentHired: 'Morgan Jules',
     talentImage: 'https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/7742ca1ee319b52420c3d7f07578f2bf884ef5e0?placeholderIfAbsent=true',
@@ -104,7 +99,7 @@ const workPackages: WorkPackage[] = [
   },
   {
     id: 5,
-    title: 'Curating a customize agreement between landlord and tenant',
+    title: 'Cutating a cutomize agruemant\nbetwen landlord and tenant',
     responses: 24,
     talentHired: 'Morgan Jules',
     talentImage: 'https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/7742ca1ee319b52420c3d7f07578f2bf884ef5e0?placeholderIfAbsent=true',
@@ -114,77 +109,102 @@ const workPackages: WorkPackage[] = [
   },
   {
     id: 6,
-    title: 'Curating a customize agreement between landlord and tenant',
+    title: 'Curatiag a customize agreemont\nbatween landlerd and tenant',
     responses: 24,
     talentHired: 'Morgan Jules',
     talentImage: 'https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/7742ca1ee319b52420c3d7f07578f2bf884ef5e0?placeholderIfAbsent=true',
     postedDate: 'July 27, 2024 | 12:42pm',
     status: 'Pending',
-    budget: '$300'
+    budget: '$900'
   }
 ];
 
 export const WorkPackageTable = () => {
-  const [currentPage, setCurrentPage] = React.useState(3);
-  
+  const { filterStatus } = useFilter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const packagesPerPage = 5;
+
+  const filteredWorkPackages = useMemo(() => {
+    if (filterStatus === 'Any') {
+      return workPackages;
+    }
+    return workPackages.filter(pkg => pkg.status === filterStatus);
+  }, [filterStatus]);
+
+  // Calculate pagination
+  const indexOfLastPackage = currentPage * packagesPerPage;
+  const indexOfFirstPackage = indexOfLastPackage - packagesPerPage;
+  const currentPackages = filteredWorkPackages.slice(indexOfFirstPackage, indexOfLastPackage);
+  const totalPages = Math.ceil(filteredWorkPackages.length / packagesPerPage);
+
   return (
     <div className="mt-6">
       <div className="hidden max-md:block">
-        {workPackages.map((pkg) => (
+        {currentPackages.map((pkg) => (
           <div
             key={pkg.id}
-            className="bg-white rounded-lg p-3 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors max-w-[360px] mx-auto mt-4"
+            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors max-w-[360px] mx-auto mt-4"
           >
-            <div className="flex items-center gap-4 mb-3">
-              <span className="text-[#1A011E] font-medium text-base">#{pkg.id}</span>
-              <h3 className="text-[#1A011E] font-medium text-base">{pkg.title}</h3>
+            {/* Title Section */}
+            <div className="mb-3">
+              <h3 className="text-black font-bold text-sm line-clamp-2">#{pkg.id} {pkg.title}</h3>
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-3">
-              <div>
-                <p className="text-[#808080] text-xs">Responses</p>
-                <p className="text-[#1A011E] text-sm">{pkg.responses}</p>
-              </div>
-              <div>
-                <p className="text-[#808080] text-xs">Posted date</p>
-                <p className="text-[#1A011E] text-sm">{pkg.postedDate}</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mb-3">
-              <div>
-                <p className="text-[#808080] text-xs">Talent hired</p>
-                <div className="flex items-center gap-3">
+
+            <div className="flex mb-3">
+              {/* Left Column - Talent hired and Posted date */}
+              <div className="w-1/2">
+                <div className="mb-2">
+                  <p className="text-[#808080] text-xs mb-1">Talent hired</p>
                   {pkg.talentHired ? (
-                    <>
-                      <img 
-                        src={pkg.talentImage} 
-                        alt={pkg.talentHired} 
-                        className="w-8 h-8 rounded-full" 
+                    <div className="flex items-center">
+                      <img
+                        src={pkg.talentImage}
+                        alt={pkg.talentHired}
+                        className="w-5 h-5 rounded-full mr-1"
                       />
-                      <span className="ml-2">{pkg.talentHired}</span>
-                    </>
+                      <span className="text-[#1A011E] text-xs font-medium">{pkg.talentHired}</span>
+                    </div>
                   ) : (
-                    <span className="text-[#808080]">None yet</span>
+                    <span className="text-[#808080] text-xs">None yet</span>
                   )}
                 </div>
+
+                <div>
+                  <p className="text-[#808080] text-xs mb-1">Posted date</p>
+                  <p className="text-[#1A011E] text-xs font-medium whitespace-nowrap">{pkg.postedDate}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-[#808080] text-xs">Status</p>
-                <div className="flex items-center gap-2">
-                  <span className={`text-xs ${getStatusClass(pkg.status)} max-md:text-xs max-md:bg-transparent max-md:rounded-none max-md:px-0 max-md:py-0 max-md:${getMobileStatusClass(pkg.status)}`}>
+
+              {/* Right Column - Status and Responses */}
+              <div className="w-1/2 pl-10">
+                <div className="mb-2">
+                  <p className="text-[#808080] text-xs mb-1">Status</p>
+                  <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full inline-block ${getStatusClass(pkg.status)}`}>
                     {pkg.status}
                   </span>
                 </div>
+
+                <div>
+                  <p className="text-[#808080] text-xs mb-1">Responses</p>
+                  <p className="text-[#1A011E] text-xs font-medium">{pkg.responses}</p>
+                </div>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-3">
+
+            {/* Third Row - Budget and View Button */}
+            <div className="flex justify-between items-center">
               <div>
-                <p className="text-[#808080] text-xs">Budget</p>
-                <p className="text-[#1A011E] text-sm">{pkg.budget}</p>
+                <p className="text-[#808080] text-xs mb-1">Budget</p>
+                <p className="text-[#1A011E] text-xs font-medium">{pkg.budget}</p>
               </div>
-              <div>
-                <Button 
-                  variant="outline" 
-                  className="w-full text-[#6B047C] border-[#6B047C] px-3 py-1.5 rounded-lg text-xs flex items-center justify-center gap-2 hover:bg-purple-50 transition-colors"
+              <div className="w-[60%]">
+                <Button
+                  variant="outline"
+                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors w-full ${
+                    pkg.status === 'Cancelled'
+                      ? 'text-[#808080] border-[#808080] hover:bg-gray-50'
+                      : 'text-[#6B047C] border-[#6B047C] hover:bg-purple-50'
+                  }`}
                 >
                   View
                 </Button>
@@ -209,18 +229,22 @@ export const WorkPackageTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {workPackages.map((pkg) => (
+            {currentPackages.map((pkg) => (
               <TableRow key={pkg.id}>
                 <TableCell>{pkg.id}</TableCell>
-                <TableCell>{pkg.title}</TableCell>
+                <TableCell>
+                  <div className="max-w-[300px]">
+                    <p className="line-clamp-2 text-sm">{pkg.title}</p>
+                  </div>
+                </TableCell>
                 <TableCell>{pkg.responses}</TableCell>
                 <TableCell>
                   {pkg.talentHired ? (
                     <div className="flex items-center gap-2">
-                      <img 
-                        src={pkg.talentImage} 
-                        alt={pkg.talentHired} 
-                        className="w-7 h-7 rounded-full" 
+                      <img
+                        src={pkg.talentImage}
+                        alt={pkg.talentHired}
+                        className="w-7 h-7 rounded-full"
                       />
                       <span>{pkg.talentHired}</span>
                     </div>
@@ -228,7 +252,9 @@ export const WorkPackageTable = () => {
                     "None yet"
                   )}
                 </TableCell>
-                <TableCell>{pkg.postedDate}</TableCell>
+                <TableCell>
+                  <div className="whitespace-nowrap text-sm">{pkg.postedDate}</div>
+                </TableCell>
                 <TableCell>
                   <span className={`rounded-full px-3 py-1 text-xs ${getStatusClass(pkg.status)}`}>
                     {pkg.status}
@@ -236,9 +262,13 @@ export const WorkPackageTable = () => {
                 </TableCell>
                 <TableCell>{pkg.budget}</TableCell>
                 <TableCell>
-                  <Button 
-                    variant="outline" 
-                    className="text-[#6B047C] border-[#6B047C] hover:bg-[#6B047C] hover:text-white"
+                  <Button
+                    variant="outline"
+                    className={`${
+                      pkg.status === 'Cancelled'
+                        ? 'text-[#808080] border-[#808080] hover:bg-gray-50'
+                        : 'text-[#6B047C] border-[#6B047C] hover:bg-[#6B047C] hover:text-white'
+                    }`}
                   >
                     View
                   </Button>
@@ -250,43 +280,13 @@ export const WorkPackageTable = () => {
       </div>
 
       <div className="mt-4 flex justify-center">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                className="border rounded-md" 
-                href="#"
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">4</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">5</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">6</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext 
-                className="border rounded-md" 
-                href="#" 
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        {totalPages > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );

@@ -8,43 +8,61 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export const Pagination = ({
+export const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
-}: PaginationProps) => {
+}) => {
+  const renderPageNumbers = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - 1 && i <= currentPage + 1)
+      ) {
+        pages.push(
+          <button
+            key={i}
+            onClick={() => onPageChange(i)}
+            className={`w-9 h-9 text-sm font-normal leading-5 cursor-pointer bg-white rounded-md border ${
+              currentPage === i
+                ? "text-[#6B047C] border-2 border-[#6B047C] font-medium"
+                : "text-[#808080] border-[#E6E6E6] hover:border-[#6B047C] hover:text-[#6B047C]"
+            }`}
+          >
+            {i}
+          </button>
+        );
+      } else if (i === currentPage - 2 || i === currentPage + 2) {
+        pages.push(
+          <div
+            key={`ellipsis-${i}`}
+            className="w-9 h-9 text-[#808080] text-sm font-normal leading-5 bg-white rounded-md border border-[#E6E6E6] flex items-center justify-center"
+          >
+            …
+          </div>
+        );
+      }
+    }
+    return pages;
+  };
+
   return (
-    <div className="self-center flex items-center justify-center gap-2 my-6">
+    <div className="flex justify-center items-center gap-2 mt-5 mb-6">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="justify-center items-center border border-[#E6E6E6] flex w-9 h-9 bg-white rounded-md border-solid disabled:opacity-50"
+        className="flex justify-center items-center border cursor-pointer bg-white p-2 rounded-md border-solid border-[#E6E6E6] disabled:opacity-50 hover:border-[#6B047C] disabled:hover:border-[#E6E6E6]"
         aria-label="Previous page"
       >
         <ChevronLeft className="h-4 w-4 text-[#808080]" />
       </button>
-
-      <div className="flex gap-2 text-sm whitespace-nowrap">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => onPageChange(page)}
-            className={cn(
-              "flex items-center justify-center min-h-9 w-9 rounded-md",
-              currentPage === page
-                ? "text-[#6B047C] border border-[#6B047C] bg-white font-medium"
-                : "text-[#808080] bg-white border border-[#E6E6E6]"
-            )}
-          >
-            {page}
-          </button>
-        ))}
-      </div>
-
+      {renderPageNumbers()}
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="justify-center items-center border border-[#E6E6E6] flex w-9 h-9 bg-white rounded-md border-solid disabled:opacity-50"
+        className="flex justify-center items-center border cursor-pointer bg-white p-2 rounded-md border-solid border-[#E6E6E6] disabled:opacity-50 hover:border-[#6B047C] disabled:hover:border-[#E6E6E6]"
         aria-label="Next page"
       >
         <ChevronRight className="h-4 w-4 text-[#808080]" />

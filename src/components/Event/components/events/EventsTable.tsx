@@ -1,23 +1,17 @@
 
-import React, { useState } from "react";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import React, { useState, useMemo } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table";
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
-} from "@/components/ui/pagination";
+import { Pagination } from "./Pagination";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useFilter } from "../../context/FilterContext";
 
 interface Event {
   id: number;
@@ -35,10 +29,13 @@ interface Event {
     count: number;
     images: string[];
   };
+  status: 'Ongoing' | 'Concluded' | 'Cancelled' | 'Pending';
 }
 
 export const EventsTable = () => {
-  const [currentPage, setCurrentPage] = useState(3);
+  const [currentPage, setCurrentPage] = useState(1);
+  const { filterStatus } = useFilter();
+  const packagesPerPage = 5;
 
   const events: Event[] = [
     {
@@ -50,7 +47,8 @@ export const EventsTable = () => {
       venue: "Google meet",
       fee: "Free",
       time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] }
+      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+      status: "Ongoing"
     },
     {
       id: 2,
@@ -61,7 +59,8 @@ export const EventsTable = () => {
       venue: "Google meet",
       fee: "$30",
       time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] }
+      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+      status: "Pending"
     },
     {
       id: 3,
@@ -72,7 +71,8 @@ export const EventsTable = () => {
       venue: "Google meet",
       fee: "$300",
       time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] }
+      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+      status: "Concluded"
     },
     {
       id: 4,
@@ -83,7 +83,8 @@ export const EventsTable = () => {
       venue: "Google meet",
       fee: "$300",
       time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] }
+      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+      status: "Cancelled"
     },
     {
       id: 5,
@@ -94,7 +95,8 @@ export const EventsTable = () => {
       venue: "Google meet",
       fee: "$300",
       time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] }
+      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+      status: "Ongoing"
     },
     {
       id: 6,
@@ -105,75 +107,113 @@ export const EventsTable = () => {
       venue: "Google meet",
       fee: "$300",
       time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] }
+      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+      status: "Pending"
     },
   ];
 
+  const filteredEvents = useMemo(() => {
+    if (filterStatus === 'Any') {
+      return events;
+    }
+    return events.filter(event => event.status === filterStatus);
+  }, [events, filterStatus]);
+
+  // Calculate pagination
+  const indexOfLastEvent = currentPage * packagesPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - packagesPerPage;
+  const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent);
+  const totalPages = Math.ceil(filteredEvents.length / packagesPerPage);
+
   return (
     <div className="mt-6">
+
       <div className="hidden max-md:block">
-        {events.map((event) => (
+        {currentEvents.map((event) => (
           <div
             key={event.id}
-            className="bg-white rounded-lg p-3 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors max-w-[360px] mx-auto mt-4"
+            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors w-full max-w-[360px] mx-auto mt-4"
           >
-            <div className="flex items-center gap-4 mb-3">
-              <span className="text-[#1A011E] font-medium text-base">#{event.id}</span>
-              <h3 className="text-[#1A011E] font-medium text-base">{event.title}</h3>
+            {/* Title Section */}
+            <div className="mb-3">
+              <h3 className="text-black font-bold text-sm line-clamp-2">#{event.id} {event.title}</h3>
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-3">
-              <div>
-                <p className="text-[#808080] text-xs">Host</p>
-                <div className="flex items-center">
-                  <Avatar className="h-8 w-8 mr-2">
-                    <AvatarImage src={event.host.image} alt={event.host.name} />
-                    <AvatarFallback>{event.host.name.substring(0, 2)}</AvatarFallback>
-                  </Avatar>
-                  <span className="whitespace-nowrap">{event.host.name}</span>
+
+            {/* First Row - Host and Date */}
+            <div className="flex mb-3">
+              <div className="w-1/2">
+                <div className="mb-2">
+                  <p className="text-[#808080] text-xs mb-1">Host</p>
+                  <div className="flex items-center">
+                    <Avatar className="h-5 w-5 mr-1">
+                      <AvatarImage src={event.host.image} alt={event.host.name} />
+                      <AvatarFallback>{event.host.name.substring(0, 2)}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-[#1A011E] text-xs font-medium whitespace-nowrap">{event.host.name}</span>
+                  </div>
                 </div>
               </div>
-              <div>
-                <p className="text-[#808080] text-xs">Date</p>
-                <p className="text-[#1A011E] text-sm">{event.date}</p>
+              <div className="w-1/2 pl-4">
+                <div className="mb-2">
+                  <p className="text-[#808080] text-xs mb-1">Date</p>
+                  <p className="text-[#1A011E] text-xs font-medium whitespace-nowrap">{event.date}</p>
+                </div>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-3">
-              <div>
-                <p className="text-[#808080] text-xs">Event type</p>
-                <p className="text-[#1A011E] text-sm">{event.eventType}</p>
+
+            {/* Second Row - Event Type and Venue */}
+            <div className="flex mb-3">
+              <div className="w-1/2">
+                <div className="mb-2">
+                  <p className="text-[#808080] text-xs mb-1">Event type</p>
+                  <p className="text-[#1A011E] text-xs font-medium">{event.eventType}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-[#808080] text-xs">Venue</p>
-                <p className="text-[#1A011E] text-sm">{event.venue}</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mb-3">
-              <div>
-                <p className="text-[#808080] text-xs">Fee</p>
-                <p className="text-[#1A011E] text-sm">{event.fee}</p>
-              </div>
-              <div>
-                <p className="text-[#808080] text-xs">Time</p>
-                <p className="text-[#1A011E] text-sm">{event.time}</p>
+              <div className="w-1/2 pl-4">
+                <div className="mb-2">
+                  <p className="text-[#808080] text-xs mb-1">Venue</p>
+                  <p className="text-[#1A011E] text-xs font-medium">{event.venue}</p>
+                </div>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-3">
+
+            {/* Third Row - Fee and Time */}
+            <div className="flex mb-3">
+              <div className="w-1/2">
+                <div className="mb-2">
+                  <p className="text-[#808080] text-xs mb-1">Fee</p>
+                  <p className="text-[#1A011E] text-xs font-medium">{event.fee}</p>
+                </div>
+              </div>
+              <div className="w-1/2 pl-4">
+                <div className="mb-2">
+                  <p className="text-[#808080] text-xs mb-1">Time</p>
+                  <p className="text-[#1A011E] text-xs font-medium">{event.time}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Fourth Row - Attendees and View Button */}
+            <div className="flex justify-between items-center">
               <div>
-                <p className="text-[#808080] text-xs">Attendees</p>
+                <p className="text-[#808080] text-xs mb-1">Attendees</p>
                 <div className="flex items-center">
                   <div className="flex -space-x-2 mr-2">
                     {event.attendees.images.map((img, idx) => (
-                      <Avatar key={idx} className="h-6 w-6 border-2 border-white">
+                      <Avatar key={idx} className="h-5 w-5 border-2 border-white">
                         <AvatarImage src={img} />
                         <AvatarFallback>A</AvatarFallback>
                       </Avatar>
                     ))}
                   </div>
-                  <span className="text-sm text-[#6B047C] whitespace-nowrap">{event.attendees.count} +</span>
+                  <span className="text-xs text-[#6B047C] whitespace-nowrap">{event.attendees.count} +</span>
                 </div>
               </div>
-              <div>
-                <Button variant="outline" size="sm" className="border-[#6B047C] text-[#6B047C] hover:bg-[#F5EDFC] hover:text-[#6B047C] whitespace-nowrap">
+              <div className="w-[60%]">
+                <Button
+                  variant="outline"
+                  className="px-4 py-1.5 rounded-md text-sm font-medium transition-colors w-full text-[#6B047C] border-[#6B047C] hover:bg-purple-50"
+                >
                   View
                 </Button>
               </div>
@@ -198,11 +238,11 @@ export const EventsTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {events.map((event) => (
+            {currentEvents.map((event) => (
               <TableRow key={event.id} className="hover:bg-[#FAFAFA]">
                 <TableCell className="text-center font-medium py-3">{event.id}</TableCell>
                 <TableCell className="whitespace-nowrap overflow-hidden text-ellipsis py-3">
-                  <span className="block truncate">{event.title}</span>
+                  <span className="block truncate max-w-[180px]">{event.title}</span>
                 </TableCell>
                 <TableCell className="py-3">
                   <div className="flex items-center">
@@ -244,33 +284,13 @@ export const EventsTable = () => {
 
       {/* Pagination */}
       <div className="flex justify-center mt-6">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                href="#" 
-                className="border border-[#E6E6E6] rounded-md"
-              />
-            </PaginationItem>
-            {[1, 2, 3, 4, 5, 6].map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink 
-                  href="#" 
-                  isActive={currentPage === page}
-                  className={`${currentPage === page ? 'bg-[#6B047C] text-white' : 'border border-[#E6E6E6]'} rounded-md h-8 w-8 p-0 flex items-center justify-center`}
-                >
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationNext 
-                href="#" 
-                className="border border-[#E6E6E6] rounded-md"
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        {totalPages > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );

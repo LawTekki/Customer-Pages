@@ -17,12 +17,12 @@ export const StatusBadge = ({ status, className }: StatusBadgeProps) => {
   return (
     <div
       className={cn(
-        "px-3 py-1 rounded-xl text-xs font-medium inline-block text-center w-20",
+        "px-3 py-1 rounded-md text-xs font-medium inline-block text-center w-20",
         statusStyles[status],
         className,
       )}
     >
-      {status === "received" ? "Recieved" : status.charAt(0).toUpperCase() + status.slice(1)}
+      {status === "received" ? "Received" : status.charAt(0).toUpperCase() + status.slice(1)}
     </div>
   );
 };

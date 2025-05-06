@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { ProfileModal } from '@/components/Profile/components/profile/ProfileModal';
+import { ProfileDropdown } from '@/components/layout/ProfileDropdown';
 
 interface QuickAction {
   label: string;
@@ -30,6 +32,7 @@ export const Header: React.FC = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMessages, setShowMessages] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
@@ -188,7 +191,7 @@ export const Header: React.FC = () => {
       onClick={() => { setMobileMenuOpen(false); setMobileTab('none'); }}
     >
       <div
-        className={`fixed top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-2xl p-0 flex flex-col relative overflow-hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} sm:hidden`}
+        className={`fixed top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-2xl p-0 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} sm:hidden`}
         style={{ borderRadius: 0 }}
         onClick={e => e.stopPropagation()}
       >
@@ -263,7 +266,15 @@ export const Header: React.FC = () => {
           {mobileTab==='profile' && (
             <div className="bg-[#F9F5FA] px-5 pb-4 animate-fadein" style={{ borderRadius: 0 }}>
               <div className="flex flex-col gap-2 mt-6">
-                <div className="flex items-center gap-3 p-3 bg-white shadow-sm cursor-pointer" style={{ borderRadius: 0 }}>
+                <div
+                  className="flex items-center gap-3 p-3 bg-white shadow-sm cursor-pointer"
+                  style={{ borderRadius: 0 }}
+                  onClick={() => {
+                    setShowProfileModal(true);
+                    setMobileMenuOpen(false);
+                    setMobileTab('none');
+                  }}
+                >
                   <img src="/Frame 106.png" alt="Profile" className="w-8 h-8 rounded-lg object-cover" />
                   <div className="flex flex-col">
                     <span className="text-[#1A011E] text-sm font-semibold">Wisdom Umanah</span>
@@ -325,7 +336,7 @@ export const Header: React.FC = () => {
               <img
                 src="/search-01.svg"
                 alt="Search icon"
-                className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 self-stretch shrink-0 my-auto"
+                className="w-3 h-3 sm:w-4 sm:h-4 shrink-0 self-stretch my-auto"
               />
               <input
                 type="text"
@@ -352,7 +363,7 @@ export const Header: React.FC = () => {
                 className="w-4 sm:w-5 h-4 sm:h-5"
               />
               <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px]
-                                 bg-red-500 text-white flex items-center justify-center 
+                                 bg-red-500 text-white flex items-center justify-center
                                  rounded-full">
                 2
               </span>
@@ -400,7 +411,7 @@ export const Header: React.FC = () => {
                 className="w-4 sm:w-5 h-4 sm:h-5"
               />
               <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px]
-                                 bg-red-500 text-white flex items-center justify-center 
+                                 bg-red-500 text-white flex items-center justify-center
                                  rounded-full">
                 1
               </span>
@@ -438,6 +449,7 @@ export const Header: React.FC = () => {
           <div className="relative">
             <button
               className="focus:outline-none"
+              onClick={() => setShowProfileModal(true)}
             >
               <img
                 src="/Frame 106.png"
@@ -489,6 +501,7 @@ export const Header: React.FC = () => {
         </div>
       </div>
       {MobileMenu}
+      <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
     </header>
   );
 };

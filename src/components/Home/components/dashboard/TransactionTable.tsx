@@ -47,7 +47,7 @@ const transactions = [
 
 export const TransactionTable = () => {
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm mb-6 mx-[12px] sm:mx-0">
+    <div className="bg-white rounded-lg p-4 shadow-sm mb-6 mx-[12px] sm:mx-0 border" style={{ borderColor: '#F2F2F2' }}>
       <h3 className="text-gray-900 font-semibold text-base mb-4">
         Transaction history
       </h3>

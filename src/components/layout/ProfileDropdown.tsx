@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 interface ProfileDropdownProps {
   isOpen: boolean;
   onClose: () => void;
+  onProfileClick: () => void;
 }
 
-export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClose }) => {
+export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClose, onProfileClick }) => {
   const navigate = useNavigate();
 
   const handleDisputeClick = () => {
@@ -23,6 +24,11 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClos
     navigate('/setting');
     onClose();
   };
+
+  const handleProfileClick = () => {
+    onProfileClick();
+    onClose();
+  };
   if (!isOpen) return null;
 
   // Profile actions with their icons
@@ -35,12 +41,15 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClos
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" onClick={onClose}>
-      <div 
+      <div
         className="bg-white rounded-lg shadow-lg py-2 px-3 w-64 sm:w-[290px] max-w-[90vw]"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the dropdown
       >
         <div className="space-y-2">
-          <div className="flex items-center gap-2 p-2 hover:bg-[#F9F5FA] rounded-lg cursor-pointer group">
+          <div
+            className="flex items-center gap-2 p-2 hover:bg-[#F9F5FA] rounded-lg cursor-pointer group"
+            onClick={handleProfileClick}
+          >
             <img src="/Frame 106.png" alt="Profile" className="w-8 h-8 rounded-lg object-cover" />
             <div className="flex flex-col">
               <span className="text-black text-sm font-medium">

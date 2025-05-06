@@ -1,36 +1,49 @@
 
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
-import { EventsTable } from "@/components/Event/components/events/EventsTable";
+import { Button } from "@/components/ui/button";
+import { EventsStats } from "../components/events/EventsStats";
+import { EventsTabs } from "../components/events/EventsTabs";
+import { EventsTable } from "../components/events/EventsTable";
+import { FilterProvider } from "../context/FilterContext";
 
 const Events = () => {
+  const [activeTab, setActiveTab] = useState('upcoming');
+
   return (
-    <div className="bg-white w-full overflow-hidden max-md:max-w-full">
-      <Header />
-      <div className="flex w-full max-w-[1416px] items-stretch gap-[31px] flex-wrap max-md:max-w-full">
-        <Sidebar />
-        <main className="flex flex-col items-stretch grow shrink-0 basis-0 w-fit my-auto max-md:max-w-full">
-          <div className="flex justify-between mt-12">
-            <div className="min-w-60 w-[583px] max-md:w-[360px] max-md:ml-[12px]">
-              <h1 className="text-[#1A011E] text-[32px] font-semibold leading-[1.3] tracking-[-0.64px] max-md:text-2xl max-md:leading-[1.3]">
-                Events
-              </h1>
-              <p className="text-[#808080] text-sm font-medium leading-[18px] tracking-[-0.28px] mt-2 max-md:text-xs">
-                This is the list of all the events you have posted or are involved in.
-              </p>
+    <FilterProvider>
+      <div className="bg-white w-full overflow-hidden">
+        <Header />
+        <div className="flex w-full items-stretch gap-[31px]">
+          <Sidebar />
+          <main className="flex flex-col flex-grow px-6 py-8 max-w-[1200px]">
+            <div className="flex justify-between items-start">
+              <div>
+                <h1 className="text-[32px] font-semibold text-[#1A011E]">
+                  Events
+                </h1>
+                <p className="text-sm text-gray-500 mt-2 max-w-[650px]">
+                  This is the list of all the jobs you have posted to the
+                  community for freelancers, institutions, organizations and
+                  others to propose for
+                </p>
+              </div>
+              <Button className="bg-[#6B047C] hover:bg-[#5A036B] text-white px-4">
+                Explore events
+              </Button>
             </div>
-          </div>
 
-          <h2 className="text-[#1A011E] text-xl font-medium leading-[1.3] tracking-[-0.4px] mt-8 max-md:text-lg max-md:ml-[12px]">
-            Events you are managing
-          </h2>
-
-          <EventsTable />
-        </main>
+            <EventsStats />
+            <EventsTabs
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+            <EventsTable />
+          </main>
+        </div>
       </div>
-    </div>
+    </FilterProvider>
   );
 };
 

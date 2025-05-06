@@ -131,10 +131,9 @@ export const ContactsTable = () => {
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious 
+              <PaginationPrevious
                 className="border border-[#B3B3B3] h-9 w-9 p-0 flex items-center justify-center"
                 onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
               />
             </PaginationItem>
             
@@ -162,8 +161,7 @@ export const ContactsTable = () => {
               <PaginationNext
                 className="border border-[#B3B3B3] h-9 w-9 p-0 flex items-center justify-center"
                 onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              />
+             />
             </PaginationItem>
           </PaginationContent>
         </Pagination>

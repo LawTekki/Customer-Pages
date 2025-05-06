@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Pagination } from "./Pagination";
+import { ChevronDown } from "lucide-react";
 
 interface Transaction {
   id: number;
@@ -12,87 +13,163 @@ interface Transaction {
   status: "Successful" | "Failed";
 }
 
-const transactions: Transaction[] = [
-  {
-    id: 1,
-    accountName: "Nelson Kings",
-    bankName: "Providus bank",
-    accountNumber: "324352352323",
-    type: "Withdrawal",
-    amount: "$400",
-    date: "27/09/2024 | 4:42 am",
-    status: "Successful",
-  },
-  {
-    id: 2,
-    accountName: "Nelson Kings",
-    bankName: "Providus bank",
-    accountNumber: "324352352323",
-    type: "Withdrawal",
-    amount: "$400",
-    date: "27/09/2024 | 4:42 am",
-    status: "Successful",
-  },
-  {
-    id: 3,
-    accountName: "Nelson Kings",
-    bankName: "Providus bank",
-    accountNumber: "324352352323",
-    type: "Withdrawal",
-    amount: "$400",
-    date: "27/09/2024 | 4:42 am",
-    status: "Failed",
-  },
-  {
-    id: 4,
-    accountName: "Nelson Kings",
-    bankName: "Providus bank",
-    accountNumber: "324352352323",
-    type: "Withdrawal",
-    amount: "$400",
-    date: "27/09/2024 | 4:42 am",
-    status: "Successful",
-  },
-];
+// Custom hook for detecting mobile viewport
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
+
+  return isMobile;
+};
 
 export const TransactionTable: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<number>(3);
-  const totalPages = 6;
+  const isMobile = useIsMobile();
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState<string>("All");
-  
+  const [selectedFilter, setSelectedFilter] = useState<string>("Transaction type");
+  const [filterType, setFilterType] = useState<string | null>(null);
+
   const filterOptions = ["All", "Withdrawal", "Deposit", "Transfer"];
-  
+
+  // All transaction data
+  const allTransactions: Transaction[] = [
+    // Withdrawal transactions
+    {
+      id: 1,
+      accountName: "Nelson Kings",
+      bankName: "Providus bank",
+      accountNumber: "324352352323",
+      type: "Withdrawal",
+      amount: "$400",
+      date: "27/09/2024 4:42 am",
+      status: "Successful",
+    },
+    {
+      id: 2,
+      accountName: "Nelson Kings",
+      bankName: "Providus bank",
+      accountNumber: "324352352323",
+      type: "Withdrawal",
+      amount: "$400",
+      date: "27/09/2024 4:42 am",
+      status: "Successful",
+    },
+    {
+      id: 3,
+      accountName: "Nelson Kings",
+      bankName: "Providus bank",
+      accountNumber: "324352352323",
+      type: "Withdrawal",
+      amount: "$400",
+      date: "27/09/2024 4:42 am",
+      status: "Failed",
+    },
+    {
+      id: 4,
+      accountName: "Nelson Kings",
+      bankName: "Providus bank",
+      accountNumber: "324352352323",
+      type: "Withdrawal",
+      amount: "$400",
+      date: "27/09/2024 4:42 am",
+      status: "Successful",
+    },
+    // Deposit transactions
+    {
+      id: 5,
+      accountName: "Nelson Kings",
+      bankName: "First bank",
+      accountNumber: "324352352323",
+      type: "Deposit",
+      amount: "$600",
+      date: "26/09/2024 2:30 pm",
+      status: "Successful",
+    },
+    {
+      id: 6,
+      accountName: "Nelson Kings",
+      bankName: "First bank",
+      accountNumber: "324352352323",
+      type: "Deposit",
+      amount: "$800",
+      date: "25/09/2024 1:15 pm",
+      status: "Successful",
+    },
+    // Transfer transactions
+    {
+      id: 7,
+      accountName: "Nelson Kings",
+      bankName: "GTB",
+      accountNumber: "324352352323",
+      type: "Transfer",
+      amount: "$500",
+      date: "24/09/2024 10:20 am",
+      status: "Successful",
+    },
+    {
+      id: 8,
+      accountName: "Nelson Kings",
+      bankName: "GTB",
+      accountNumber: "324352352323",
+      type: "Transfer",
+      amount: "$300",
+      date: "23/09/2024 9:45 am",
+      status: "Failed",
+    },
+  ];
+
+  // Handle filter selection
   const handleFilterSelect = (option: string) => {
-    setSelectedFilter(option);
+    setSelectedFilter(option === "All" ? "Transaction type" : option);
+    setFilterType(option === "All" ? null : option);
     setFilterOpen(false);
+    setCurrentPage(1); // Reset to first page when filter changes
   };
+
+  // Filter transactions based on selected filter
+  const filteredTransactions = filterType
+    ? allTransactions.filter(transaction => transaction.type === filterType)
+    : allTransactions;
+
+  // Get current page transactions
+  const itemsPerPage = 4;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentTransactions = filteredTransactions.slice(startIndex, startIndex + itemsPerPage);
+
+  // Calculate total pages
+  const totalPages = Math.max(Math.ceil(filteredTransactions.length / itemsPerPage), 1);
   return (
-    <div className="justify-end items-stretch border border-[color:var(--Grey-2,#E6E6E6)] flex w-full flex-col overflow-hidden bg-white pt-[23px] pb-3 rounded-lg border-solid max-md:max-w-full">
-      <div className="min-h-[330px] w-full text-sm font-medium leading-[1.3] max-md:max-w-full">
-        <div className="flex w-full items-center justify-end text-center px-4 max-md:max-w-full">
-          <div className="self-stretch flex items-center gap-4 justify-center my-auto relative">
-            <div className="text-[#CCC] self-stretch my-auto">Filter By :</div>
-            <div 
-              className="items-center rounded border border-[color:var(--Grey-2,#E6E6E6)] self-stretch flex gap-2 text-[#808080] bg-white my-auto p-2 border-solid cursor-pointer"
+    <div className="w-full bg-white rounded-lg overflow-hidden border border-[#E6E6E6]">
+      {/* Filter Header */}
+      <div className="flex justify-end items-center p-4 border-b border-[#E6E6E6]">
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-[#CCC]">Filter By :</span>
+          <div className="relative">
+            <div
+              className={`flex items-center gap-2 border border-[#E6E6E6] rounded ${isMobile ? 'px-2 py-1' : 'px-3 py-1.5'} cursor-pointer`}
               onClick={() => setFilterOpen(!filterOpen)}
             >
-              <div className="text-[#808080] self-stretch my-auto">
-                Transaction type
-              </div>
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/6d6775384ccd46a982a7cf80d05dc013/62428704438c0f308b2f0283dcd75b1e832c071f?placeholderIfAbsent=true"
-                className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
-                alt="Filter"
-              />
+              <span className={`text-[#808080] ${isMobile ? 'text-xs' : 'text-sm'}`}>{selectedFilter}</span>
+              <ChevronDown className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'} text-[#808080]`} />
             </div>
-            
+
             {filterOpen && (
-              <div className="absolute top-full right-0 mt-1 bg-white border border-[#E6E6E6] rounded-lg shadow-md z-10 w-48">
+              <div className={`absolute top-full ${isMobile ? 'right-0 left-0' : 'right-0'} mt-1 bg-white border border-[#E6E6E6] rounded-lg shadow-md z-10 ${isMobile ? 'w-full' : 'w-48'}`}>
                 {filterOptions.map((option) => (
-                  <div 
-                    key={option} 
-                    className="p-2 hover:bg-[#F5F5F5] cursor-pointer text-left"
+                  <div
+                    key={option}
+                    className={`${isMobile ? 'p-1.5 text-xs' : 'p-2 text-sm'} hover:bg-[#F5F5F5] cursor-pointer text-left text-[#808080]`}
                     onClick={() => handleFilterSelect(option)}
                   >
                     {option}
@@ -102,83 +179,117 @@ export const TransactionTable: React.FC = () => {
             )}
           </div>
         </div>
-        <div className="justify-center items-stretch border border-[color:var(--Grey-2,#E6E6E6)] flex w-full flex-col overflow-hidden text-[#808080] tracking-[-0.28px] bg-white mt-4 border-solid max-md:max-w-full">
+      </div>
+
+      {/* Desktop Table View */}
+      {!isMobile && (
+        <div className="overflow-hidden">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-neutral-50 text-[#1A011E] text-xs tracking-[-0.24px]">
-                <th className="px-1.5 py-5 text-left border-b border-[#E6E6E6]">
-                  S/N
-                </th>
-                <th className="px-[15px] py-5 text-left border-b border-[#E6E6E6]">
-                  Account name
-                </th>
-                <th className="px-[13px] py-5 text-left border-b border-[#E6E6E6]">
-                  Bank name
-                </th>
-                <th className="px-4 py-5 text-left border-b border-[#E6E6E6]">
-                  Account number
-                </th>
-                <th className="px-[15px] py-5 text-left border-b border-[#E6E6E6]">
-                  Transaction type
-                </th>
-                <th className="px-[11px] py-5 text-left border-b border-[#E6E6E6]">
-                  Amount
-                </th>
-                <th className="px-4 py-5 text-left border-b border-[#E6E6E6]">
-                  Date
-                </th>
-                <th className="px-4 py-5 text-left border-b border-[#E6E6E6]">
-                  Status
-                </th>
+              <tr className="bg-[#E6E6E6] text-[#808080] text-sm">
+                <th className="py-3 px-4 text-left font-medium border-b border-[#E6E6E6]">S/N</th>
+                <th className="py-3 px-4 text-left font-medium border-b border-[#E6E6E6]">Account name</th>
+                <th className="py-3 px-4 text-left font-medium border-b border-[#E6E6E6]">Bank name</th>
+                <th className="py-3 px-4 text-left font-medium border-b border-[#E6E6E6]">Account number</th>
+                <th className="py-3 px-4 text-left font-medium border-b border-[#E6E6E6]">Transaction type</th>
+                <th className="py-3 px-4 text-left font-medium border-b border-[#E6E6E6]">Amount</th>
+                <th className="py-3 px-4 text-left font-medium border-b border-[#E6E6E6]">Date</th>
+                <th className="py-3 px-4 text-left font-medium border-b border-[#E6E6E6]">Status</th>
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction) => (
-                <tr key={transaction.id} className="border-b border-[#F2F2F2]">
-                  <td className="px-1.5 py-5 text-xs">{transaction.id}</td>
-                  <td className="px-[15px] py-[19px]">
-                    {transaction.accountName}
-                  </td>
-                  <td className="px-[13px] py-[19px]">
-                    {transaction.bankName}
-                  </td>
-                  <td className="px-4 py-[19px]">
-                    {transaction.accountNumber}
-                  </td>
-                  <td className="px-[15px] py-[19px]">{transaction.type}</td>
-                  <td className="px-[11px] py-[19px]">{transaction.amount}</td>
-                  <td className="px-4 py-[19px]">
-                    {transaction.date.split("|").map((part, index) => (
-                      <span key={index}>
-                        {index > 0 && <span className="text-[#D9D9D9]">|</span>}
-                        {part}
-                      </span>
-                    ))}
-                  </td>
-                  <td className="px-4 py-[13px]">
-                    <div
-                      className={`rounded p-1.5 ${
+              {currentTransactions.map((transaction: Transaction) => (
+                <tr key={transaction.id} className="border-b border-[#E6E6E6]">
+                  <td className="py-4 px-4 text-sm text-[#808080]">{transaction.id}</td>
+                  <td className="py-4 px-4 text-sm text-[#808080]">{transaction.accountName}</td>
+                  <td className="py-4 px-4 text-sm text-[#808080]">{transaction.bankName}</td>
+                  <td className="py-4 px-4 text-sm text-[#808080]">{transaction.accountNumber}</td>
+                  <td className="py-4 px-4 text-sm text-[#808080]">{transaction.type}</td>
+                  <td className="py-4 px-4 text-sm text-[#808080]">{transaction.amount}</td>
+                  <td className="py-4 px-4 text-sm text-[#808080]">{transaction.date}</td>
+                  <td className="py-4 px-4">
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${
                         transaction.status === "Successful"
-                          ? "bg-[rgba(235,255,246,1)] text-[#1C7C04]"
-                          : "bg-[rgba(255,240,235,1)] text-[#D43705]"
+                          ? "bg-[#EBFFF6] text-[#1C7C04]"
+                          : "bg-[#FFF0EB] text-[#D43705]"
                       }`}
                     >
                       {transaction.status}
-                    </div>
+                    </span>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="flex justify-center border-t border-[#F2F2F2] py-4">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
         </div>
-      </div>
+      )}
+
+      {/* Mobile Card View */}
+      {isMobile && (
+        <div className="px-4 py-2">
+          {currentTransactions.map((transaction) => (
+            <div
+              key={transaction.id}
+              className="border border-[#E6E6E6] rounded-lg p-3 mb-3"
+            >
+              <div className="flex justify-between items-center mb-2">
+                <div className="text-sm font-medium text-[#1A011E]">
+                  {transaction.accountName}
+                </div>
+                <div className="text-sm text-[#808080]">
+                  {transaction.amount}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 mb-2">
+                <div>
+                  <p className="text-xs text-[#808080]">Bank name</p>
+                  <p className="text-sm text-[#808080]">{transaction.bankName}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-[#808080]">Account number</p>
+                  <p className="text-sm text-[#808080]">{transaction.accountNumber}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 mb-2">
+                <div>
+                  <p className="text-xs text-[#808080]">Transaction type</p>
+                  <p className="text-sm text-[#808080]">{transaction.type}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-[#808080]">Date</p>
+                  <p className="text-sm text-[#808080]">{transaction.date}</p>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-xs text-[#808080]">S/N</p>
+                  <p className="text-sm text-[#808080]">{transaction.id}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-[#808080]">Status</p>
+                  <p className={`text-sm ${
+                    transaction.status === "Successful"
+                      ? "text-[#1C7C04]"
+                      : "text-[#D43705]"
+                  }`}>
+                    {transaction.status}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };

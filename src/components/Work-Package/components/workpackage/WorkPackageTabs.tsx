@@ -1,5 +1,7 @@
 
 import React from 'react';
+import { useFilter } from '../../context/FilterContext';
+import { CustomDropdown } from './CustomDropdown';
 
 interface TabProps {
   title: string;
@@ -11,49 +13,57 @@ interface TabProps {
 const Tab = ({ title, count, active = false, onClick }: TabProps) => (
   <button
     onClick={onClick}
-    className={`px-4 py-2 font-medium relative ${
-      active ? 'text-[#6B047C] border-b-2 border-[#6B047C]' : 'text-gray-600'
+    className={`px-4 py-2 font-medium relative max-md:px-1.5 max-md:py-1 max-md:text-xs min-w-[100px] max-md:min-w-0 ${
+      active ? 'text-[#6B047C] border-b-2 border-[#6B047C] max-md:border-b max-md:border-[#6B047C]' : 'text-gray-600 max-md:border-b-0'
     }`}
   >
-    {title} <span className="ml-2 text-sm">{count}</span>
+    <span className="max-md:inline max-md:text-[9px] whitespace-nowrap">{title}</span>
+    <span className="ml-1 bg-[#F2F2F2] px-1.5 py-0.5 rounded-[4px] text-xs max-md:ml-0.5 max-md:text-[9px] max-md:px-1 max-md:py-0">{count}</span>
   </button>
 );
 
-export const WorkPackageTabs = () => {
-  const [activeTab, setActiveTab] = React.useState('posted');
+interface WorkPackageTabsProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
+
+export const WorkPackageTabs: React.FC<WorkPackageTabsProps> = ({
+  activeTab,
+  setActiveTab
+}) => {
+  const { filterStatus, setFilterStatus } = useFilter();
 
   return (
-    <div className="border-b flex items-center justify-between">
-      <div className="flex">
-        <Tab 
-          title="Posted work package" 
-          count={124} 
-          active={activeTab === 'posted'} 
+    <div className="flex items-center justify-between w-full max-md:flex-wrap max-md:gap-2">
+      <div className="flex items-center border-b border-[#E6E6E6] overflow-x-auto whitespace-nowrap flex-nowrap max-md:w-full">
+        <Tab
+          title="Posted work package"
+          count={124}
+          active={activeTab === 'posted'}
           onClick={() => setActiveTab('posted')}
         />
-        <Tab 
-          title="Draft" 
-          count={43} 
-          active={activeTab === 'draft'} 
+        <Tab
+          title="Draft"
+          count={43}
+          active={activeTab === 'draft'}
           onClick={() => setActiveTab('draft')}
         />
       </div>
-      
-      <div className="flex items-center gap-3">
-        <span className="text-gray-500 text-sm">Filter status:</span>
-        <div className="relative">
-          <select className="border rounded-md py-1 px-3 pr-8 text-sm appearance-none bg-white">
-            <option>Ongoing</option>
-            <option>Concluded</option>
-            <option>Cancelled</option>
-            <option>Pending</option>
-          </select>
-          <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-        </div>
+
+      <div className="flex items-center gap-1 max-md:ml-0 max-md:mt-2 max-md:w-full max-md:justify-between">
+        <span className="text-[#98A2B3] text-sm font-normal max-md:text-xs whitespace-nowrap md:hidden">Filter Status</span>
+        <span className="text-[#98A2B3] text-sm font-normal max-md:hidden whitespace-nowrap">Filter:</span>
+        <CustomDropdown
+          options={[
+            { value: 'Any', label: 'Select All' },
+            { value: 'Ongoing', label: 'Ongoing' },
+            { value: 'Concluded', label: 'Concluded' },
+            { value: 'Cancelled', label: 'Cancelled' },
+            { value: 'Pending', label: 'Pending' }
+          ]}
+          value={filterStatus}
+          onChange={(value) => setFilterStatus(value as any)}
+        />
       </div>
     </div>
   );

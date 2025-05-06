@@ -1,14 +1,6 @@
 
 import React, { useState } from "react";
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationPrevious, 
-  PaginationNext, 
-  PaginationEllipsis 
-} from "@/components/ui/pagination";
+import { Pagination } from "../ui/pagination";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { MessageSquare } from "lucide-react";
@@ -38,13 +30,13 @@ export const ContactsTable = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const contactsPerPage = 8;
-  
+
   // Calculate pagination
   const indexOfLastContact = currentPage * contactsPerPage;
   const indexOfFirstContact = indexOfLastContact - contactsPerPage;
   const currentContacts = mockContacts.slice(indexOfFirstContact, indexOfLastContact);
   const totalPages = Math.ceil(mockContacts.length / contactsPerPage);
-  
+
   // Handle message button click
   const handleMessageClick = (contactName: string) => {
     toast({
@@ -53,30 +45,8 @@ export const ContactsTable = () => {
     });
     console.log(`Messaging ${contactName}`);
   };
-  
-  // Generate page numbers for pagination
-  const getPageNumbers = () => {
-    const pages = [];
-    
-    if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        // If current page is among the first 3, show first 3, ellipsis, and last 3
-        pages.push(1, 2, 3, "ellipsis", totalPages - 2, totalPages - 1, totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        // If current page is among the last 3, show first 1, ellipsis, and last 3
-        pages.push(1, "ellipsis", totalPages - 2, totalPages - 1, totalPages);
-      } else {
-        // Show first, ellipsis, current-1, current, current+1, ellipsis, last
-        pages.push(1, "ellipsis", currentPage - 1, currentPage, currentPage + 1, "ellipsis", totalPages);
-      }
-    }
-    
-    return pages;
-  };
+
+
 
   return (
     <div className="items-stretch rounded bg-neutral-50 flex w-full flex-col overflow-hidden mt-[21px] pb-2 max-md:max-w-full">
@@ -113,7 +83,7 @@ export const ContactsTable = () => {
                 <td className="px-6 py-4">{contact.amountSpent}</td>
                 <td className="px-6 py-4">{contact.lastDealDate}</td>
                 <td className="px-[23px] py-[15px]">
-                  <button 
+                  <button
                     className="w-full text-[#6B047C] border border-[#6B047C] px-4 py-2 rounded-lg text-sm flex items-center justify-center gap-2 hover:bg-purple-50 transition-colors"
                     onClick={() => handleMessageClick(contact.name)}
                   >
@@ -126,47 +96,13 @@ export const ContactsTable = () => {
           </tbody>
         </table>
       </div>
-      
+
       <div className="mt-6">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                className="border border-[#B3B3B3] h-9 w-9 p-0 flex items-center justify-center"
-                onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-              />
-            </PaginationItem>
-            
-            {getPageNumbers().map((page, index) => (
-              <PaginationItem key={index}>
-                {page === "ellipsis" ? (
-                  <PaginationEllipsis />
-                ) : (
-                  <PaginationLink
-                    className={`h-9 w-9 p-0 flex items-center justify-center ${
-                      page === currentPage 
-                        ? "border border-[#6B047C] text-[#6B047C]" 
-                        : "text-[#CCC]"
-                    }`}
-                    isActive={page === currentPage}
-                    onClick={() => typeof page === "number" && setCurrentPage(page)}
-                  >
-                    {page}
-                  </PaginationLink>
-                )}
-              </PaginationItem>
-            ))}
-            
-            <PaginationItem>
-              <PaginationNext
-                className="border border-[#B3B3B3] h-9 w-9 p-0 flex items-center justify-center"
-                onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

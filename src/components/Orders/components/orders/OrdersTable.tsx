@@ -2,14 +2,38 @@
 import { StatusBadge } from "../common/StatusBadge";
 import { Pagination } from "../common/Pagination";
 import { Order } from "../../types/orders";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useFilter } from "../../context/FilterContext";
 
 interface OrdersTableProps {
   orders: Order[];
 }
 
+// Custom hook for detecting mobile viewport
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
+
+  return isMobile;
+};
+
 export const OrdersTable = ({ orders }: OrdersTableProps) => {
-  const [currentPage, setCurrentPage] = useState(3);
+  const { filterStatus } = useFilter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 5;
+  const isMobile = useIsMobile();
   const mockOrders: Order[] = [
     {
       id: "1",
@@ -91,61 +115,151 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
     },
   ];
 
+  // Filter orders based on selected filter status
+  const filteredOrders = useMemo(() => {
+    if (filterStatus === 'All') {
+      return mockOrders;
+    }
+
+    // Map the filter status to the corresponding order status
+    const statusMap: Record<string, string> = {
+      'Ongoing': 'active',
+      'Pending': 'pending',
+      'Cancelled': 'cancelled',
+      'Concluded': 'received'
+    };
+
+    const orderStatus = statusMap[filterStatus] || '';
+    return mockOrders.filter(order => order.status === orderStatus);
+  }, [filterStatus]);
+
+  // Calculate pagination
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+
   return (
-    <div className="w-full rounded-lg overflow-hidden bg-white mt-6 shadow-sm border border-[#F2F2F2]">
-      <div className="w-full overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-[#FAFAFA] border-b border-[#E6E6E6]">
-              <th className="p-4 text-left text-xs font-medium text-[#1A011E]">S/N</th>
-              <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Item</th>
-              <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Order ID</th>
-              <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Amount</th>
-              <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Item category and type</th>
-              <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Status</th>
-              <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Order date</th>
-              <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Due date</th>
-              <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mockOrders.map((order, index) => (
-              <tr key={order.id} className="border-b border-[#F2F2F2]">
-                <td className="p-4 text-xs text-[#808080]">{index + 1}</td>
-                <td className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-14 h-8 rounded overflow-hidden">
-                      <img
-                        src={order.item.image}
-                        alt={order.item.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <span className="text-xs text-[#808080]">{order.item.name}</span>
-                  </div>
-                </td>
-                <td className="p-4 text-xs text-[#808080]">{order.orderId}</td>
-                <td className="p-4 text-xs text-[#808080]">{order.amount}</td>
-                <td className="p-4 text-xs text-[#808080]">{order.category}</td>
-                <td className="p-4">
-                  <StatusBadge status={order.status} />
-                </td>
-                <td className="p-4 text-xs text-[#808080]">{order.orderDate}</td>
-                <td className="p-4 text-xs text-[#808080]">{order.dueDate}</td>
-                <td className="p-4">
-                  <button className="text-[#6B047C] border border-[#6B047C] px-4 py-1.5 rounded-lg text-sm font-medium w-20">
-                    {order.status === "received" ? "Reorder" : "View"}
-                  </button>
-                </td>
+    <div className={`w-full ${!isMobile ? "rounded-lg overflow-hidden bg-white mt-6 shadow-sm border border-[#F2F2F2]" : "mt-6"}`}>
+      {/* Desktop Table View */}
+      {!isMobile && (
+        <div className="w-full overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-[#FAFAFA] border-b border-[#E6E6E6]">
+                <th className="p-4 text-left text-xs font-medium text-[#1A011E]">S/N</th>
+                <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Item</th>
+                <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Order ID</th>
+                <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Amount</th>
+                <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Item category and type</th>
+                <th className="p-4 pl-10 text-left text-xs font-medium text-[#1A011E]">Status</th>
+                <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Order date</th>
+                <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Due date</th>
+                <th className="p-4 text-left text-xs font-medium text-[#1A011E]">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {currentOrders.map((order, index) => (
+                <tr key={order.id} className="border-b border-[#F2F2F2]">
+                  <td className="p-4 text-xs text-[#808080]">{indexOfFirstOrder + index + 1}</td>
+                  <td className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-14 h-8 rounded overflow-hidden">
+                        <img
+                          src={order.item.image}
+                          alt={order.item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <span className="text-xs text-[#808080]">{order.item.name}</span>
+                    </div>
+                  </td>
+                  <td className="p-4 text-xs text-[#808080]">{order.orderId}</td>
+                  <td className="p-4 text-xs text-[#808080]">{order.amount}</td>
+                  <td className="p-4 text-xs text-[#808080]">{order.category}</td>
+                  <td className="p-4 text-left">
+                    <StatusBadge status={order.status} />
+                  </td>
+                  <td className="p-4 text-xs text-[#808080]">{order.orderDate}</td>
+                  <td className="p-4 text-xs text-[#808080]">{order.dueDate}</td>
+                  <td className="p-4">
+                    <button className="text-[#6B047C] border border-[#6B047C] px-4 py-1.5 rounded-lg text-sm font-medium w-20">
+                      {order.status === "received" ? "Reorder" : "View"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Mobile Card View */}
+      {isMobile && (
+        <div className="py-2">
+          {currentOrders.map((order, index) => (
+            <div
+              key={order.id}
+              className="bg-white border border-[#F2F2F2] rounded-lg p-3 mb-3 mx-auto"
+            >
+              <div className="flex justify-between items-center mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-14 h-14 rounded overflow-hidden flex items-center justify-center">
+                    <img
+                      src={order.item.image}
+                      alt={order.item.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div>
+                    <div className="text-xs font-medium text-[#1A011E]">{order.item.name}</div>
+                    <div className="text-xs text-[#808080]">{order.orderId}</div>
+                  </div>
+                </div>
+                <StatusBadge status={order.status} />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <div>
+                  <p className="text-xs text-[#808080]">Amount</p>
+                  <p className="text-xs font-medium">{order.amount}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-[#808080]">Category</p>
+                  <p className="text-xs font-medium">{order.category}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <div>
+                  <p className="text-xs text-[#808080]">Order date</p>
+                  <p className="text-xs font-medium">{order.orderDate}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-[#808080]">Due date</p>
+                  <p className="text-xs font-medium">{order.dueDate}</p>
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <button className={`border px-4 py-1.5 rounded-md text-xs font-medium w-20 ${
+                  order.status === "received"
+                    ? "text-[#6B047C] border-[#6B047C]"
+                    : order.status === "cancelled"
+                      ? "text-[#808080] border-[#E6E6E6]"
+                      : "text-[#6B047C] border-[#6B047C]"
+                }`}>
+                  {order.status === "received" ? "Reorder" : "View"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <Pagination
         currentPage={currentPage}
-        totalPages={6}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
     </div>

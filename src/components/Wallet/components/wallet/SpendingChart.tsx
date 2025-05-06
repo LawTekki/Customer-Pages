@@ -1,9 +1,7 @@
-
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
-  ComposedChart,
+  AreaChart,
   Area,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -18,187 +16,375 @@ interface SpendingData {
 }
 
 type TabType = "wallet" | "credit";
+type TimeFilterType = "This week" | "This month" | "Last month" | "Last 3 months";
+
+// Custom hook for detecting mobile viewport
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
+
+  return isMobile;
+};
 
 export const SpendingChart: React.FC = () => {
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+
+  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<TabType>("wallet");
-  const [timeFilter, setTimeFilter] = useState<string>("This week");
-  const [timeFilterOpen, setTimeFilterOpen] = useState<boolean>(false);
-  
-  const timeFilterOptions = ["This week", "This month", "Last month", "Last 3 months", "Custom"];
+  const [timeFilter, setTimeFilter] = useState<TimeFilterType>("This week");
+  const [timeFilterOpen, setTimeFilterOpen] = useState(false);
 
-  // Sample spending data for wallet - matching the chart in the design
-  const walletData: SpendingData[] = [
-    { name: "Monday", amount: 42000 },
-    { name: "Tuesday", amount: 42000 },
-    { name: "Wednesday", amount: 48000 },
-    { name: "Thursday", amount: 39000 },
-    { name: "Friday", amount: 48000 },
-    { name: "Saturday", amount: 45000 },
-    { name: "Sunday", amount: 42000 },
-  ];
-  
-  // Sample spending data for credit
-  const creditData: SpendingData[] = [
-    { name: "Monday", amount: 38000 },
-    { name: "Tuesday", amount: 40000 },
-    { name: "Wednesday", amount: 45000 },
-    { name: "Thursday", amount: 35000 },
-    { name: "Friday", amount: 46000 },
-    { name: "Saturday", amount: 42000 },
-    { name: "Sunday", amount: 42000 },
+  const timeFilterOptions: TimeFilterType[] = [
+    "This week",
+    "This month",
+    "Last month",
+    "Last 3 months",
   ];
 
-  // Get the active data based on selected tab
-  const data = activeTab === "wallet" ? walletData : creditData;
+  const walletData: Record<TimeFilterType, SpendingData[]> = {
+    "This week": [
+      { name: "Monday", amount: 30000 },
+      { name: "Tuesday", amount: 42000 },
+      { name: "Wednesday", amount: 48000 },
+      { name: "Thursday", amount: 25000 },
+      { name: "Friday", amount: 45000 },
+      { name: "Saturday", amount: 30000 },
+      { name: "Sunday", amount: 45000 },
+    ],
+    "This month": [
+      { name: "Week 1", amount: 35000 },
+      { name: "Week 2", amount: 45000 },
+      { name: "Week 3", amount: 42000 },
+      { name: "Week 4", amount: 48000 },
+    ],
+    "Last month": [
+      { name: "Week 1", amount: 32000 },
+      { name: "Week 2", amount: 45000 },
+      { name: "Week 3", amount: 38000 },
+      { name: "Week 4", amount: 47000 },
+    ],
+    "Last 3 months": [
+      { name: "Jan", amount: 38000 },
+      { name: "Feb", amount: 42000 },
+      { name: "Mar", amount: 46000 },
+    ],
+  };
+
+  const creditData: Record<TimeFilterType, SpendingData[]> = {
+    "This week": [
+      { name: "Monday", amount: 28000 },
+      { name: "Tuesday", amount: 40000 },
+      { name: "Wednesday", amount: 45000 },
+      { name: "Thursday", amount: 30000 },
+      { name: "Friday", amount: 42000 },
+      { name: "Saturday", amount: 30000 },
+      { name: "Sunday", amount: 38000 },
+    ],
+    "This month": [
+      { name: "Week 1", amount: 32000 },
+      { name: "Week 2", amount: 42000 },
+      { name: "Week 3", amount: 38000 },
+      { name: "Week 4", amount: 45000 },
+    ],
+    "Last month": [
+      { name: "Week 1", amount: 30000 },
+      { name: "Week 2", amount: 40000 },
+      { name: "Week 3", amount: 35000 },
+      { name: "Week 4", amount: 42000 },
+    ],
+    "Last 3 months": [
+      { name: "Jan", amount: 35000 },
+      { name: "Feb", amount: 40000 },
+      { name: "Mar", amount: 43000 },
+    ],
+  };
+
+  const data = useMemo(
+    () =>
+      activeTab === "wallet"
+        ? walletData[timeFilter]
+        : creditData[timeFilter],
+    [activeTab, timeFilter]
+  );
 
   return (
-    <div className="border border-[#F2F2F2] w-full overflow-hidden text-[#808080] font-medium leading-[1.3] bg-white mx-auto px-5 py-4 mt-16 rounded-lg border-solid max-md:max-w-full">
-      <div className="flex w-full items-center gap-2 text-xs justify-between mb-3 max-md:max-w-full">
-        {/* Title */}
-        <div className="text-[#1A011E] text-lg tracking-[-0.4px] font-semibold whitespace-nowrap">
-          Spending
-        </div>
-        
-        {/* Toggle buttons for Wallet and Lawtrolley credit */}
-        <div className="items-stretch flex overflow-hidden tracking-[-0.28px] justify-center bg-[#F2F2F2] p-0.5 rounded-lg">
-          <div className="flex w-full items-center">
-            <button 
-              className={`text-[#808080] self-stretch rounded gap-1 whitespace-nowrap px-2 py-1 ${activeTab === "wallet" ? "bg-white" : ""}`}
-              onClick={() => setActiveTab("wallet")}
-            >
-              Wallet
-            </button>
-            <button 
-              className={`text-[#808080] self-stretch rounded gap-1 px-2 py-1 ${activeTab === "credit" ? "bg-white" : ""}`}
-              onClick={() => setActiveTab("credit")}
-            >
-              Lawtrolley credit
-            </button>
-          </div>
-        </div>
-        
-        {/* Time filter dropdown */}
-        <div className="relative">
-          <div 
-            className="items-center rounded border border-[#E6E6E6] flex gap-1 text-center bg-white my-auto px-2 py-1 border-solid cursor-pointer"
-            onClick={() => setTimeFilterOpen(!timeFilterOpen)}
-          >
-            <span className="text-[#808080] self-stretch my-auto">{timeFilter}</span>
-            <ChevronDown className="h-3 w-3 text-[#808080]" />
-          </div>
-          
-          {timeFilterOpen && (
-            <div className="absolute top-full right-0 mt-1 bg-white border border-[#E6E6E6] rounded-lg shadow-md z-10 w-48">
-              {timeFilterOptions.map((option) => (
-                <div 
-                  key={option} 
-                  className="p-2 hover:bg-[#F5F5F5] cursor-pointer text-left"
-                  onClick={() => {
-                    setTimeFilter(option);
-                    setTimeFilterOpen(false);
-                  }}
-                >
-                  {option}
-                </div>
-              ))}
+    <div className="w-full p-4 pt-0">
+      {/* HEADER - Desktop */}
+      {!isMobile && (
+        <div className="flex items-center mb-4">
+          <h2 className="text-2xl font-semibold text-[#1A011E] w-1/3">
+            Spending
+          </h2>
+
+          <div className="flex-grow flex justify-center">
+            <div className="inline-flex bg-[#F5F5F5] rounded-lg">
+              <button
+                className={`px-4 py-2 text-sm rounded-md ${
+                  activeTab === "wallet"
+                    ? "bg-white shadow-sm text-[#808080]"
+                    : "text-[#808080]"
+                }`}
+                onClick={() => setActiveTab("wallet")}
+              >
+                Wallet
+              </button>
+              <button
+                className={`px-4 py-2 text-sm rounded-md ${
+                  activeTab === "credit"
+                    ? "bg-white shadow-sm text-[#808080]"
+                    : "text-[#808080]"
+                }`}
+                onClick={() => setActiveTab("credit")}
+              >
+                Lawtrolley credit
+              </button>
             </div>
+          </div>
+
+          <div className="w-1/3 flex justify-end relative">
+            <div
+              className="flex items-center gap-2 px-3 py-2 cursor-pointer border border-[#E6E6E6] rounded-lg"
+              onClick={() => setTimeFilterOpen((o) => !o)}
+            >
+              <span className="text-[#808080] text-sm">{timeFilter}</span>
+              <ChevronDown className="h-4 w-4 text-[#808080]" />
+            </div>
+            {timeFilterOpen && (
+              <>
+                {/* Backdrop */}
+                <div className="fixed inset-0 z-30 bg-black bg-opacity-0" />
+                <div ref={dropdownRef} className="absolute right-0 mt-2 bg-white rounded-lg shadow-md z-40 w-40 transition-opacity opacity-100">
+                  {timeFilterOptions.map((opt) => (
+                    <div
+                      key={opt}
+                      className={`px-4 py-2 text-sm cursor-pointer ${
+                        timeFilter === opt
+                          ? "text-[#6B047C]"
+                          : "text-[#808080] hover:bg-[#F5F5F5]"
+                      }`}
+                      onClick={() => {
+                        setTimeFilter(opt);
+                        setTimeFilterOpen(false);
+                      }}
+                    >
+                      {opt}
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* HEADER - Mobile */}
+      {isMobile && (
+        <div className="mb-4">
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-xl font-semibold text-[#1A011E]">
+              Spending
+            </h2>
+            <div
+              className="flex items-center gap-1 px-2 py-1 cursor-pointer border border-[#E6E6E6] rounded-lg"
+              onClick={() => setTimeFilterOpen((o) => !o)}
+            >
+              <span className="text-[#808080] text-xs">{timeFilter}</span>
+              <ChevronDown className="h-3 w-3 text-[#808080]" />
+            </div>
+          </div>
+
+          <div className="flex justify-center w-full mb-3">
+            <div className="inline-flex bg-[#F5F5F5] rounded-lg w-full justify-center">
+              <button
+                className={`flex-1 py-1.5 text-xs rounded-md ${
+                  activeTab === "wallet"
+                    ? "bg-white shadow-sm text-[#808080]"
+                    : "text-[#808080]"
+                }`}
+                onClick={() => setActiveTab("wallet")}
+              >
+                Wallet
+              </button>
+              <button
+                className={`flex-1 py-1.5 text-xs rounded-md ${
+                  activeTab === "credit"
+                    ? "bg-white shadow-sm text-[#808080]"
+                    : "text-[#808080]"
+                }`}
+                onClick={() => setActiveTab("credit")}
+              >
+                Lawtrolley credit
+              </button>
+            </div>
+          </div>
+
+          {timeFilterOpen && (
+            <>
+              {/* Backdrop */}
+              <div className="fixed inset-0 z-30 bg-black bg-opacity-0" />
+              <div ref={dropdownRef} className="absolute left-0 right-0 mt-1 mx-4 bg-white rounded-lg shadow-md z-40 border border-[#E6E6E6] transition-opacity opacity-100">
+                {timeFilterOptions.map((opt) => (
+                  <div
+                    key={opt}
+                    className={`px-4 py-2 text-sm cursor-pointer ${
+                      timeFilter === opt
+                        ? "text-[#6B047C]"
+                        : "text-[#808080] hover:bg-[#F5F5F5]"
+                    }`}
+                    onClick={() => {
+                      setTimeFilter(opt);
+                      setTimeFilterOpen(false);
+                    }}
+                  >
+                    {opt}
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
-      </div>
-        
-      {/* Chart container */}
-      <div className="flex items-stretch gap-3 text-xs whitespace-nowrap tracking-[-0.24px]">
-        {/* Y-axis labels with precise positioning */}
-        <div className="w-8 h-[100px] relative">
-          <div className="text-[#808080] text-right pr-2 absolute top-0 right-0 transform -translate-y-1/2">50k</div>
-          <div className="text-[#808080] text-right pr-2 absolute top-[25%] right-0 transform -translate-y-1/2">40k</div>
-          <div className="text-[#808080] text-right pr-2 absolute top-[50%] right-0 transform -translate-y-1/2">30k</div>
-          <div className="text-[#808080] text-right pr-2 absolute top-[75%] right-0 transform -translate-y-1/2">20k</div>
-          <div className="text-[#808080] text-right pr-2 absolute top-[100%] right-0 transform -translate-y-1/2">10k</div>
-        </div>
-        
-        {/* Chart area */}
-        <div className="grow shrink-0 basis-0 w-full overflow-visible">
-          <div className="h-[110px] w-full overflow-visible pl-2 pr-2">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart
-                data={data}
-                margin={{ top: 5, right: 15, left: 15, bottom: 15 }}
-              >
-                <defs>
-                  <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#4ADE80" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="#4ADE80" stopOpacity={0.2} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid 
-                  vertical={false} 
-                  horizontal={true}
-                  stroke="#f2f2f2" 
-                  strokeDasharray="3 3" 
-                  horizontalPoints={[0, 25, 50, 75, 100]}
-                />
-                <XAxis 
-                  dataKey="name" 
-                  axisLine={false}
-                  tickLine={false}
-                  tick={false}
-                />
-                <YAxis 
-                  hide={true} 
-                  domain={[10000, 55000]}
-                  ticks={[10000, 20000, 30000, 40000, 50000]}
-                  type="number"
-                  allowDecimals={false}
-                  interval="preserveStartEnd"
-                />
-                <Tooltip 
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <div className="bg-white p-2 border border-[#E6E6E6] rounded-lg text-xs">
-                          <p className="text-[#808080] mb-1">{payload[0].payload.name}</p>
-                          <p className="text-[#4ADE80]">Amount: ${payload[0].value}</p>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="amount" 
-                  strokeWidth={0}
-                  stroke="transparent"
-                  fill="url(#colorAmount)" 
-                  fillOpacity={1}
-                  animationDuration={1000}
-                  baseValue={10000}
-                  isAnimationActive={false}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="amount" 
-                  stroke="#4ADE80" 
-                  strokeWidth={2}
-                  dot={{ fill: "#4ADE80", r: 4, strokeWidth: 0 }}
-                  activeDot={{ r: 6, stroke: "#4ADE80" }}
-                  isAnimationActive={true}
-                  connectNulls={true}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-          
-          {/* X-axis day labels */}
-          <div className="flex justify-between mt-6 max-md:max-w-full text-xs text-[#808080] pb-1 px-2">
-            {data.map((day, index) => (
-              <div key={index} className="text-[#808080] text-center">
-                {day.name}
-              </div>
-            ))}
-          </div>
-        </div>
+      )}
+
+      {/* CHART */}
+      <div
+        className={`h-[200px] -mb-6 ${isMobile ? 'mx-[-4px] px-0' : ''}`}
+        style={{ zIndex: 30, position: 'relative', overflow: 'visible' }}
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={data}
+            margin={isMobile
+              ? { top: 10, right: 5, left: 0, bottom: 10 }
+              : { top: 10, right: 10, left: 0, bottom: 0 }
+            }
+          >
+            <defs>
+              <linearGradient id="colorAmt" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#3FFD7E" stopOpacity={0.8} />
+                <stop offset="20%" stopColor="#3FFD7E" stopOpacity={0.6} />
+                <stop offset="50%" stopColor="#BCFFD2" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#BCFFD2" stopOpacity={0.05} />
+              </linearGradient>
+            </defs>
+
+            <CartesianGrid vertical={false} stroke="#E6E6E6" strokeDasharray="3 3" />
+
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={props => {
+                const { x, y, payload } = props;
+                // For mobile, abbreviate long day names
+                let displayName = payload.value;
+                if (isMobile && timeFilter === "This week") {
+                  const dayMap: Record<string, string> = {
+                    "Monday": "Mon",
+                    "Tuesday": "Tue",
+                    "Wednesday": "Wed",
+                    "Thursday": "Thu",
+                    "Friday": "Fri",
+                    "Saturday": "Sat",
+                    "Sunday": "Sun"
+                  };
+                  displayName = dayMap[payload.value] || payload.value;
+                }
+
+                return (
+                  <g transform={`translate(${x},${y})`}>
+                    <text
+                      x={0}
+                      y={0}
+                      dy={16}
+                      textAnchor="middle"
+                      fill="#808080"
+                      fontSize={isMobile ? 9 : 12}
+                    >
+                      {displayName}
+                    </text>
+                  </g>
+                );
+              }}
+              height={isMobile ? 35 : 30}
+              padding={{ left: isMobile ? 5 : 10, right: isMobile ? 5 : 10 }}
+              interval={0}
+              minTickGap={isMobile ? 5 : 10}
+            />
+
+            <YAxis
+              type="number"
+              scale="linear"
+              domain={[0, 50000]}
+              ticks={[10000, 20000, 30000, 40000, 50000]}
+              tickFormatter={(v) => `${v / 1000}k`}
+              axisLine={false}
+              tickLine={false}
+              tick={props => {
+                const { x, y, payload } = props;
+                return (
+                  <g transform={`translate(${x},${y})`}>
+                    <text
+                      x={0}
+                      y={0}
+                      dx={isMobile ? -1 : 0}
+                      textAnchor="end"
+                      fill="#808080"
+                      fontSize={isMobile ? 9 : 12}
+                    >
+                      {`${payload.value / 1000}k`}
+                    </text>
+                  </g>
+                );
+              }}
+              width={isMobile ? 35 : 30}
+              tickMargin={isMobile ? 3 : 5}
+            />
+
+            <Tooltip
+              content={({ active, payload }) =>
+                active && payload && payload.length ? (
+                  <div className="bg-white p-2 border border-[#E6E6E6] rounded-lg shadow-md text-xs">
+                    <p className="text-[#808080] mb-1">
+                      {payload[0].payload.name}
+                    </p>
+                    <p className="text-[#3FFD7E] font-medium">
+                      ${payload[0].value.toLocaleString()}
+                    </p>
+                  </div>
+                ) : null
+              }
+            />
+
+            <Area
+              type="linear"
+              dataKey="amount"
+              stroke="#3FFD7E"
+              strokeWidth={2}
+              fill="url(#colorAmt)"
+              dot={{ r: isMobile ? 2 : 3, stroke: "#fff", strokeWidth: 2, fill: "#3FFD7E" }}
+              activeDot={{
+                r: isMobile ? 4 : 5,
+                stroke: "#fff",
+                strokeWidth: 2,
+                fill: "#3FFD7E",
+              }}
+              isAnimationActive={false}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

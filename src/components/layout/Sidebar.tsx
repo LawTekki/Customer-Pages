@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ProfileDropdown } from "@/components/layout/ProfileDropdown";
+import { ProfileModal } from '@/components/Profile/components/profile/ProfileModal';
 
 const navItems = [
   {
@@ -221,6 +222,7 @@ const navItems = [
         <path
           d="M18.8271 9.99996C18.8271 5.39758 15.0961 1.66663 10.4937 1.66663C5.89136 1.66663 2.1604 5.39758 2.1604 9.99996C2.1604 14.6023 5.89136 18.3333 10.4937 18.3333C15.0961 18.3333 18.8271 14.6023 18.8271 9.99996Z"
           stroke="currentColor"
+          fill="none"
         />
       </svg>
     ),
@@ -232,6 +234,7 @@ export const Sidebar = () => {
   const [activeItem, setActiveItem] = useState<string>("");
   const location = useLocation();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const navigate = useNavigate();
 
   // Function to get the active item based on the current route
@@ -248,7 +251,7 @@ export const Sidebar = () => {
       '/orders': 'Orders'
     };
 
-    const matchingItem = Object.entries(routeToItem).find(([route, item]) => 
+    const matchingItem = Object.entries(routeToItem).find(([route, item]) =>
       path === route || path.startsWith(route + '/')
     );
 
@@ -288,7 +291,7 @@ export const Sidebar = () => {
       return;
     }
     setShowProfileDropdown(false);
-    
+
     // Navigate based on the label
     const routeMap = {
       "Discover": "/",
@@ -311,7 +314,7 @@ export const Sidebar = () => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <nav className="border-r border-[#E6E6E6] bg-white text-xs text-[#808080] font-medium tracking-[-0.24px] pt-10 pb-16 px-5 overflow-hidden max-md:hidden">
+      <nav className="border-r border-[#E6E6E6] bg-white text-xs text-[#808080] font-medium tracking-[-0.24px] pt-10 pb-16 px-5 overflow-hidden max-md:hidden w-[120px] min-w-[120px]">
         <div className="flex flex-col items-center space-y-4">
           {navItems.map((item) => {
             const isActive = activeItem === item.label;
@@ -332,11 +335,15 @@ export const Sidebar = () => {
                     onClick={() => handleNav(item.label)}
                   >
                     {React.cloneElement(item.svg, {
-                      className: `w-5 h-5 transition-colors duration-300 ${isActive ? 'stroke-[#6B047C] fill-[#6B047C]' : 'stroke-[#808080] hover:stroke-[#6B047C] hover:fill-[#6B047C]'}`,
+                      className: `w-5 h-5 transition-colors duration-300 ${isActive ? 'stroke-[#6B047C]' : 'stroke-[#808080] hover:stroke-[#6B047C]'}`,
                     })}
                   </div>
-                  <div className="mt-1">{item.label}</div>
-                  <ProfileDropdown isOpen={showProfileDropdown} onClose={() => setShowProfileDropdown(false)} />
+                  <div className="mt-1 whitespace-nowrap">{item.label}</div>
+                  <ProfileDropdown
+                    isOpen={showProfileDropdown}
+                    onClose={() => setShowProfileDropdown(false)}
+                    onProfileClick={() => setShowProfileModal(true)}
+                  />
                 </div>
               );
             }
@@ -355,9 +362,11 @@ export const Sidebar = () => {
                       : "group-hover:bg-[rgba(107,4,124,0.1)]"
                   }`}
                 >
-                  {item.svg}
+                  {React.cloneElement(item.svg, {
+                    className: `w-5 h-5 transition-colors duration-300 ${isActive ? 'stroke-[#6B047C]' : 'stroke-[#808080] hover:stroke-[#6B047C]'}`,
+                  })}
                 </div>
-                <div className="mt-1">{item.label}</div>
+                <div className="mt-1 whitespace-nowrap">{item.label}</div>
               </div>
             );
           })}
@@ -368,6 +377,34 @@ export const Sidebar = () => {
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#E6E6E6] flex justify-between items-center px-2 py-1 sm:hidden h-14" style={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}>
         {navItems.map((item) => {
           const isActive = activeItem === item.label;
+          if (item.label === "More") {
+            return (
+              <div key={item.label} className="flex-1 flex flex-col items-center justify-center">
+                <button
+                  onClick={() => handleNav(item.label)}
+                  className={`flex flex-col items-center justify-center w-full transition-all duration-300 px-1 ${
+                    isActive ? "text-[#6B047C]" : "text-[#808080] hover:text-[#6B047C]"
+                  }`}
+                  style={{ minWidth: 0 }}
+                  aria-label={item.label}
+                >
+                  <span className={`flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-300 ${
+                    isActive ? "bg-[rgba(107,4,124,0.1)]" : "hover:bg-[rgba(107,4,124,0.08)]"
+                  }`}>
+                    {React.cloneElement(item.svg, {
+                      className: `w-5 h-5 ${isActive ? 'stroke-[#6B047C]' : 'stroke-[#808080]'}`,
+                    })}
+                  </span>
+                </button>
+                {/* Show dropdown on mobile if More is active */}
+                <ProfileDropdown
+                  isOpen={showProfileDropdown}
+                  onClose={() => setShowProfileDropdown(false)}
+                  onProfileClick={() => setShowProfileModal(true)}
+                />
+              </div>
+            );
+          }
           return (
             <button
               key={item.label}
@@ -382,13 +419,16 @@ export const Sidebar = () => {
                 isActive ? "bg-[rgba(107,4,124,0.1)]" : "hover:bg-[rgba(107,4,124,0.08)]"
               }`}>
                 {React.cloneElement(item.svg, {
-                  className: 'w-5 h-5',
+                  className: `w-5 h-5 ${isActive ? 'stroke-[#6B047C]' : 'stroke-[#808080]'}`,
                 })}
               </span>
             </button>
           );
         })}
       </nav>
+
+      {/* Profile Modal */}
+      <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
     </>
   );
 };

@@ -8,23 +8,21 @@ import { TransactionHistory } from "@/components/Wallet/components/wallet/Transa
 
 const Wallet: React.FC = () => {
   return (
-    <div className="bg-white overflow-hidden">
+    <div className="bg-white w-full overflow-hidden">
       <Header />
-      <div className="flex w-full max-w-[1416px] items-stretch gap-8 flex-wrap max-md:max-w-full">
+      <div className="flex w-full items-stretch gap-[31px]">
         <Sidebar />
-        <div className="grow shrink-0 basis-0 w-fit my-auto max-md:max-w-full">
-          <div className="max-md:max-w-full">
-            <div className="flex gap-4 max-md:flex-col max-md:items-stretch">
-              <div className="w-[30%] max-md:w-full max-md:ml-0">
-                <WalletBalances />
-              </div>
-              <div className="w-[70%] max-md:w-full max-md:ml-0">
-                <SpendingChart />
-              </div>
+        <main className="flex flex-col flex-grow px-6 py-4 max-w-[1200px] pt-24 max-md:px-4 max-md:pt-20">
+          <div className="flex gap-6 max-md:flex-col">
+            <div className="w-1/3 max-md:w-full">
+              <WalletBalances />
+            </div>
+            <div className="w-2/3 max-md:w-full border border-[#F2F2F2] rounded-lg p-3">
+              <SpendingChart />
             </div>
           </div>
           <TransactionHistory />
-        </div>
+        </main>
       </div>
     </div>
   );

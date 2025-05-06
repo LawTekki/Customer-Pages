@@ -1,11 +1,12 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { OrderStatsDisplay } from "../components/orders/OrderStats";
 import { OrdersTable } from "../components/orders/OrdersTable";
 import type { Order, OrderStats } from "../types/orders";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronUp, Check } from "lucide-react";
+import { FilterProvider, useFilter } from "../context/FilterContext";
 
 const mockStats: OrderStats = {
   totalOrders: 56,
@@ -31,7 +32,65 @@ const mockOrders: Order[] = [
   // Add more mock orders as needed...
 ];
 
-export default function Index() {
+// Filter dropdown component
+const FilterDropdown = () => {
+  const { filterStatus, setFilterStatus } = useFilter();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const filterOptions = ['All', 'Ongoing', 'Pending', 'Cancelled', 'Concluded'];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <div
+        className="flex items-center gap-0 border border-[#E6E6E6] rounded px-2 py-1 text-sm text-[#808080] cursor-pointer hover:border-[#6B047C] max-md:min-w-[80px] max-md:w-[80px] max-md:justify-between max-md:px-1 max-md:py-0.5 max-md:text-xs"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="max-md:mr-0">{filterStatus}</span>
+        {isOpen ? (
+          <ChevronUp className="w-4 h-4 text-[#808080] max-md:w-2.5 max-md:h-2.5" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-[#808080] max-md:w-2.5 max-md:h-2.5" />
+        )}
+      </div>
+
+      {isOpen && (
+        <div className="absolute right-0 mt-1 w-40 bg-white border border-[#E6E6E6] rounded-md shadow-sm z-10 max-md:w-[80px]">
+          {filterOptions.map((option) => (
+            <div
+              key={option}
+              className={`px-3 py-2 text-sm cursor-pointer flex items-center justify-between max-md:px-1 max-md:py-0.5 max-md:text-[10px] ${
+                filterStatus === option
+                  ? 'bg-[#F9F5FA] text-[#6B047C]'
+                  : 'text-[#808080] hover:bg-[#F9F5FA] hover:text-[#6B047C]'
+              }`}
+              onClick={() => {
+                setFilterStatus(option as any);
+                setIsOpen(false);
+              }}
+            >
+              <span>{option}</span>
+              {filterStatus === option && <Check className="w-4 h-4 max-md:w-2.5 max-md:h-2.5" />}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const OrdersContent = () => {
   const [activeTab, setActiveTab] = useState("all");
 
   return (
@@ -40,10 +99,10 @@ export default function Index() {
         <Header />
         <div className="flex w-full max-w-[1416px] items-stretch gap-[31px] flex-wrap max-md:max-w-full">
           <Sidebar />
-          <main className="flex flex-col items-stretch grow shrink-0 basis-0 w-fit my-auto max-md:max-w-full">
-            <div className="flex justify-between mt-12">
-              <div className="min-w-60 w-[583px] max-md:w-[360px] max-md:ml-[12px]">
-                <h1 className="text-[#1A011E] text-[32px] font-semibold leading-[1.3] tracking-[-0.64px] max-md:text-2xl max-md:leading-[1.3]">
+          <main className="flex flex-col items-stretch grow shrink-0 basis-0 w-fit my-auto max-md:max-w-full max-md:px-4 mr-4">
+            <div className="flex justify-between items-center mt-12 max-md:mt-6">
+              <div className="min-w-60 w-[583px] max-md:w-[65%] max-md:min-w-0 max-md:ml-0">
+                <h1 className="text-[#1A011E] text-[32px] font-semibold leading-[1.3] tracking-[-0.64px] max-md:text-xl max-md:leading-[1.3]">
                   Orders
                 </h1>
                 <p className="text-[#808080] text-sm font-medium leading-[18px] tracking-[-0.28px] mt-2 max-md:text-xs">
@@ -51,98 +110,100 @@ export default function Index() {
                 </p>
               </div>
 
-            <button className="bg-[#6B047C] text-white px-5 py-3 rounded text-sm font-medium">
+            <button className="bg-[#6B047C] text-white px-5 py-3 rounded text-sm font-medium max-md:px-3 max-md:py-2 max-md:text-xs max-md:whitespace-nowrap">
               Order an item
             </button>
           </div>
 
           <OrderStatsDisplay stats={mockStats} />
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-[#808080] text-sm font-medium">
-                Status
-              </span>
-              <button
-                className="flex items-center gap-2 px-4 py-2 bg-[#F5F5F5] rounded text-[#808080] text-sm font-medium"
-                onClick={() => {
-                  // Add status filter logic here
-                }}
-              >
-                All
-                <ChevronDown className="w-4 h-4" />
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
+          <div className="w-full mt-8">
+            <div className="flex items-center justify-between max-md:flex-col max-md:items-start">
+              <div className="flex items-center max-md:w-full max-md:pb-0 max-md:overflow-visible max-md:justify-between border-b border-[#E6E6E6]">
                 <button
-                  onClick={() => setActiveTab("received")}
-                  className={`flex items-center gap-2 py-1 ${
-                    activeTab === "received" ? "text-[#6B047C]" : "text-[#808080]"
+                  onClick={() => setActiveTab("all")}
+                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap max-md:mr-2 ${
+                    activeTab === "all"
+                      ? "border-[#6B047C] text-[#6B047C]"
+                      : "border-transparent text-[#808080]"
                   }`}
                 >
-                  <span className="font-medium">Received order</span>
-                  <span
-                    className={`text-xs px-2 py-0.5 rounded ${
-                      activeTab === "received" ? "bg-[#F9F5FA]" : "bg-[#F2F2F2]"
-                    }`}
-                  >
+                  <span className="font-medium max-md:text-[10px]">All</span>
+                  <span className={`text-xs px-2 py-0.5 rounded max-md:text-[8px] max-md:px-1 max-md:py-0 max-md:inline-flex max-md:items-center max-md:justify-center ${
+                    activeTab === "all" ? "bg-[#F9F5FA]" : "bg-[#F2F2F2]"
+                  }`}>
+                    124
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("active")}
+                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap max-md:mr-2 ${
+                    activeTab === "active"
+                      ? "border-[#6B047C] text-[#6B047C]"
+                      : "border-transparent text-[#808080]"
+                  }`}
+                >
+                  <span className="font-medium max-md:text-[10px]">Active</span>
+                  <span className={`text-xs px-2 py-0.5 rounded max-md:text-[8px] max-md:px-1 max-md:py-0 max-md:inline-flex max-md:items-center max-md:justify-center ${
+                    activeTab === "active" ? "bg-[#F9F5FA]" : "bg-[#F2F2F2]"
+                  }`}>
+                    43
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("received")}
+                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap max-md:mr-2 ${
+                    activeTab === "received"
+                      ? "border-[#6B047C] text-[#6B047C]"
+                      : "border-transparent text-[#808080]"
+                  }`}
+                >
+                  <span className="font-medium max-md:text-[10px]">Received</span>
+                  <span className={`text-xs px-2 py-0.5 rounded max-md:text-[8px] max-md:px-1 max-md:py-0 max-md:inline-flex max-md:items-center max-md:justify-center ${
+                    activeTab === "received" ? "bg-[#F9F5FA]" : "bg-[#F2F2F2]"
+                  }`}>
                     43
                   </span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab("cancelled")}
-                  className={`flex items-center gap-2 py-1 ${
-                    activeTab === "cancelled" ? "text-[#6B047C]" : "text-[#808080]"
+                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap ${
+                    activeTab === "cancelled"
+                      ? "border-[#6B047C] text-[#6B047C]"
+                      : "border-transparent text-[#808080]"
                   }`}
                 >
-                  <span className="font-medium">Cancelled orders</span>
-                  <span
-                    className={`text-xs px-2 py-0.5 rounded ${
-                      activeTab === "cancelled" ? "bg-[#F9F5FA]" : "bg-[#F2F2F2]"
-                    }`}
-                  >
+                  <span className="font-medium max-md:text-[10px]">Cancelled</span>
+                  <span className={`text-xs px-2 py-0.5 rounded max-md:text-[8px] max-md:px-1 max-md:py-0 max-md:inline-flex max-md:items-center max-md:justify-center ${
+                    activeTab === "cancelled" ? "bg-[#F9F5FA]" : "bg-[#F2F2F2]"
+                  }`}>
                     43
                   </span>
                 </button>
               </div>
-              <div className="flex items-center gap-2">
-                <button className="px-4 py-2 bg-[#F5F5F5] rounded text-[#808080] text-sm font-medium">
-                  Today
-                </button>
-                <button className="px-4 py-2 bg-[#F5F5F5] rounded text-[#808080] text-sm font-medium">
-                  Last 7 days
-                </button>
-                <button className="px-4 py-2 bg-[#F5F5F5] rounded text-[#808080] text-sm font-medium">
-                  Last 30 days
-                </button>
-              </div>
-              <button
-                onClick={() => setActiveTab("cancelled")}
-                className={`flex items-center gap-2 py-1 ${
-                  activeTab === "cancelled" ? "text-[#6B047C]" : "text-[#808080]"
-                }`}
-              >
-                <span className="font-medium">Cancelled orders</span>
-                <span className={`text-xs px-2 py-0.5 rounded ${
-                  activeTab === "cancelled" ? "bg-[#F9F5FA]" : "bg-[#F2F2F2]"
-                }`}>
-                  43
-                </span>
-              </button>
-            </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-[#CCC]">Filter status:</span>
-              <div className="flex items-center gap-1 border border-[#E6E6E6] rounded px-3 py-1.5 text-sm text-[#808080]">
-                <span>Ongoing</span>
+              <div className="flex items-center gap-2 max-md:mt-4 max-md:mb-2 max-md:w-full max-md:justify-between max-md:gap-1">
+                <span className="text-sm text-[#808080] max-md:text-xs">Filter status:</span>
+                <FilterDropdown />
               </div>
             </div>
+          </div>
 
             <OrdersTable orders={mockOrders} />
           </main>
         </div>
       </div>
     </>
+  );
+};
+
+export default function Index() {
+  return (
+    <FilterProvider>
+      <OrdersContent />
+    </FilterProvider>
   );
 }

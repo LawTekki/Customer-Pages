@@ -8,7 +8,7 @@ const messages = [
 
 export const RecentMessages = () => {
   return (
-    <div className="bg-white rounded-lg p-4 mb-6 shadow-sm">
+    <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border" style={{ borderColor: '#F2F2F2' }}>
       <h3 className="text-gray-900 font-semibold text-base mb-4">
         Recent message
       </h3>

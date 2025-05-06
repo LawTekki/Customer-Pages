@@ -1,21 +1,21 @@
 
 import React from 'react';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table";
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationEllipsis, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 
@@ -44,6 +44,21 @@ const getStatusClass = (status: StatusType): string => {
       return 'bg-yellow-400 text-black';
     default:
       return 'bg-gray-200';
+  }
+};
+
+const getMobileStatusClass = (status: StatusType): string => {
+  switch (status) {
+    case 'Ongoing':
+      return 'text-blue-500';
+    case 'Concluded':
+      return 'text-green-700';
+    case 'Cancelled':
+      return 'text-red-600';
+    case 'Pending':
+      return 'text-yellow-400';
+    default:
+      return 'text-gray-200';
   }
 };
 
@@ -111,10 +126,75 @@ const workPackages: WorkPackage[] = [
 
 export const WorkPackageTable = () => {
   const [currentPage, setCurrentPage] = React.useState(3);
-  
+
   return (
     <div className="mt-6">
-      <div className="rounded-md border">
+      <div className="hidden max-md:block">
+        {workPackages.map((pkg) => (
+          <div
+            key={pkg.id}
+            className="bg-white rounded-lg p-3 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors max-w-[360px] mx-auto mt-4"
+          >
+            <div className="flex items-center gap-4 mb-3">
+              <span className="text-[#1A011E] font-medium text-base">#{pkg.id}</span>
+              <h3 className="text-[#1A011E] font-medium text-base">{pkg.title}</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-3">
+              <div>
+                <p className="text-[#808080] text-xs">Responses</p>
+                <p className="text-[#1A011E] text-sm">{pkg.responses}</p>
+              </div>
+              <div>
+                <p className="text-[#808080] text-xs">Posted date</p>
+                <p className="text-[#1A011E] text-sm">{pkg.postedDate}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-3">
+              <div>
+                <p className="text-[#808080] text-xs">Talent hired</p>
+                <div className="flex items-center gap-3">
+                  {pkg.talentHired ? (
+                    <>
+                      <img
+                        src={pkg.talentImage}
+                        alt={pkg.talentHired}
+                        className="w-8 h-8 rounded-full"
+                      />
+                      <span className="ml-2">{pkg.talentHired}</span>
+                    </>
+                  ) : (
+                    <span className="text-[#808080]">None yet</span>
+                  )}
+                </div>
+              </div>
+              <div>
+                <p className="text-[#808080] text-xs">Status</p>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs ${getStatusClass(pkg.status)} max-md:text-xs max-md:bg-transparent max-md:rounded-none max-md:px-0 max-md:py-0 max-md:${getMobileStatusClass(pkg.status)}`}>
+                    {pkg.status}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-3">
+              <div>
+                <p className="text-[#808080] text-xs">Budget</p>
+                <p className="text-[#1A011E] text-sm">{pkg.budget}</p>
+              </div>
+              <div>
+                <Button
+                  variant="outline"
+                  className="w-full text-[#6B047C] border-[#6B047C] px-3 py-1.5 rounded-lg text-xs flex items-center justify-center gap-2 hover:bg-purple-50 transition-colors"
+                >
+                  View
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-md border max-md:hidden">
         <Table>
           <TableHeader>
             <TableRow className="bg-gray-50">
@@ -137,10 +217,10 @@ export const WorkPackageTable = () => {
                 <TableCell>
                   {pkg.talentHired ? (
                     <div className="flex items-center gap-2">
-                      <img 
-                        src={pkg.talentImage} 
-                        alt={pkg.talentHired} 
-                        className="w-7 h-7 rounded-full" 
+                      <img
+                        src={pkg.talentImage}
+                        alt={pkg.talentHired}
+                        className="w-7 h-7 rounded-full"
                       />
                       <span>{pkg.talentHired}</span>
                     </div>
@@ -156,8 +236,8 @@ export const WorkPackageTable = () => {
                 </TableCell>
                 <TableCell>{pkg.budget}</TableCell>
                 <TableCell>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="text-[#6B047C] border-[#6B047C] hover:bg-[#6B047C] hover:text-white"
                   >
                     View
@@ -173,8 +253,8 @@ export const WorkPackageTable = () => {
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious 
-                className="border rounded-md" 
+              <PaginationPrevious
+                className="border rounded-md"
                 href="#"
               />
             </PaginationItem>
@@ -200,9 +280,9 @@ export const WorkPackageTable = () => {
               <PaginationLink href="#">6</PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationNext 
-                className="border rounded-md" 
-                href="#" 
+              <PaginationNext
+                className="border rounded-md"
+                href="#"
               />
             </PaginationItem>
           </PaginationContent>

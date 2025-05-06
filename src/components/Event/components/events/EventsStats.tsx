@@ -1,52 +1,58 @@
 
-import React from "react";
-import { Card } from "@/components/ui/card";
+import React from 'react';
 
 export const EventsStats = () => {
-  const stats = [
-    {
-      number: 56,
-      label: "Event attended",
-      iconBg: "#FFF9E8",
-      iconColor: "#FFD85D",
-      icon: "/Frame 1000008082.svg"
-    },
-    {
-      number: 56,
-      label: "Upcoming event",
-      iconBg: "#FEEFF1",
-      iconColor: "#FF6B81",
-      icon: "/Frame 1000008082 (1).svg"
-    },
-    {
-      number: 56,
-      label: "Cancelled event",
-      iconBg: "#F0F9F0",
-      iconColor: "#4CD964",
-      icon: "/Frame 1000008082 (2).svg"
-    },
-    {
-      number: "$40,00",
-      label: "Cash spent",
-      iconBg: "#F5EDFC",
-      iconColor: "#6B047C",
-      icon: "/Frame 1000008082 (3).svg"
-    },
-  ];
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-      {stats.map((stat, index) => (
-        <Card key={index} className="flex border border-[#F2F2F2] px-5 py-6 rounded-lg">
-          <div className={`w-14 h-14 rounded-lg flex items-center justify-center`} style={{ backgroundColor: stat.iconBg }}>
-            <img src={stat.icon} alt={stat.label} width="32" height="32" />
+    <div className="flex mt-8 border border-gray-100 rounded-lg max-md:flex-col max-md:border-0 max-md:gap-2 w-full bg-white">
+      {/* Posted work package */}
+      <div className="flex items-center px-5 py-5 max-md:border max-md:border-gray-100 max-md:rounded-md max-md:bg-white flex-1">
+        <div className="flex items-center">
+          <img src="/Frame 1000008082 (5).svg" alt="Posted work package" className="w-10 h-10 mr-3" />
+          <div>
+            <div className="text-xl font-medium">56</div>
+            <div className="text-sm text-gray-600">Posted work package</div>
           </div>
-          <div className="ml-5">
-            <p className="text-xl font-semibold text-[#1A011E]">{stat.number}</p>
-            <p className="text-sm text-[#808080] font-medium">{stat.label}</p>
+        </div>
+      </div>
+
+      <div className="w-px bg-gray-200 max-md:hidden h-16 self-center"></div>
+
+      {/* Drafted work package */}
+      <div className="flex items-center px-5 py-5 max-md:border max-md:border-gray-100 max-md:rounded-md max-md:bg-white flex-1">
+        <div className="flex items-center">
+          <img src="/Frame 1000008082 (1).svg" alt="Drafted work package" className="w-10 h-10 mr-3" />
+          <div>
+            <div className="text-xl font-medium">56</div>
+            <div className="text-sm text-gray-600">Drafted work package</div>
           </div>
-        </Card>
-      ))}
+        </div>
+      </div>
+
+      <div className="w-px bg-gray-200 max-md:hidden h-16 self-center"></div>
+
+      {/* Talent hired */}
+      <div className="flex items-center px-5 py-5 max-md:border max-md:border-gray-100 max-md:rounded-md max-md:bg-white flex-1">
+        <div className="flex items-center">
+          <img src="/Frame 1000008082 (2).svg" alt="Talent hired" className="w-10 h-10 mr-3" />
+          <div>
+            <div className="text-xl font-medium">56</div>
+            <div className="text-sm text-gray-600">Talent hired</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-px bg-gray-200 max-md:hidden h-14 self-center mx-1"></div>
+
+      {/* Cash spent */}
+      <div className="flex items-center px-5 py-5 max-md:border max-md:border-gray-100 max-md:rounded-md max-md:bg-white flex-1">
+        <div className="flex items-center">
+          <img src="/Frame 1000008082 (3).svg" alt="Cash spent" className="w-10 h-10 mr-3" />
+          <div>
+            <div className="text-xl font-medium">$40.00</div>
+            <div className="text-sm text-gray-600">Cash spent</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

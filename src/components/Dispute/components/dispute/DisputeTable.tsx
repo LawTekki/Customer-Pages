@@ -1,21 +1,14 @@
 
 import React, { useState } from "react";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table";
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
-} from "@/components/ui/pagination";
+import { Pagination } from "@/components/Dispute/components/common/Pagination";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
@@ -34,12 +27,7 @@ interface Dispute {
 }
 
 export const DisputeTable = () => {
-  const [currentPage, setCurrentPage] = useState(3);
-  const [totalPages] = useState(6);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const [currentPage, setCurrentPage] = useState(1);
 
   const disputes: Dispute[] = [
     {
@@ -98,13 +86,26 @@ export const DisputeTable = () => {
     },
   ];
 
+  // Items per page
+  const disputesPerPage = 5;
+
+  // Calculate pagination
+  const indexOfLastDispute = currentPage * disputesPerPage;
+  const indexOfFirstDispute = indexOfLastDispute - disputesPerPage;
+  const currentDisputes = disputes.slice(indexOfFirstDispute, indexOfLastDispute);
+  const totalPages = Math.ceil(disputes.length / disputesPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
-    <div className="mt-6">
+    <div className="mt-6 max-md:px-4">
       <div className="hidden max-md:block">
-        {disputes.map((dispute) => (
+        {currentDisputes.map((dispute) => (
           <div
             key={dispute.id}
-            className="bg-white rounded-lg p-3 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors max-w-[360px] mx-auto mt-4 max-md:ml-[12px]"
+            className="bg-white rounded-lg p-3 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors max-w-[360px] mx-auto mt-4"
           >
             <div className="flex items-center gap-4 mb-3">
               <span className="text-[#1A011E] font-medium text-base">#{dispute.id}</span>
@@ -112,36 +113,40 @@ export const DisputeTable = () => {
             </div>
             <div className="grid grid-cols-2 gap-4 mb-3">
               <div>
-                <p className="text-[#808080] text-xs">Supplier</p>
-                <div className="flex items-center">
+                <p className="text-[#808080] text-xs pl-2">Supplier</p>
+                <div className="flex items-center pl-2">
                   <Avatar className="h-8 w-8 mr-2">
                     <AvatarImage src={dispute.supplier.image} alt={dispute.supplier.name} />
-                    <AvatarFallback>{dispute.supplier.name.substring(0, 2)}</AvatarFallback>
+                    <AvatarFallback>
+                      <img src="/Frame 1000008098 (2).jpg" alt="Fallback" className="h-full w-full object-cover" />
+                    </AvatarFallback>
                   </Avatar>
                   <span className="whitespace-nowrap">{dispute.supplier.name}</span>
                 </div>
               </div>
               <div>
-                <p className="text-[#808080] text-xs">Category</p>
-                <p className="text-[#1A011E] text-sm">{dispute.category}</p>
+                <p className="text-[#808080] text-xs pl-2">Category</p>
+                <p className="text-[#1A011E] text-sm pl-2">{dispute.category}</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 mb-3">
               <div>
-                <p className="text-[#808080] text-xs">Date</p>
-                <p className="text-[#1A011E] text-sm">{dispute.date}</p>
+                <p className="text-[#808080] text-xs pl-2">Date</p>
+                <p className="text-[#1A011E] text-sm pl-2">{dispute.date}</p>
               </div>
               <div>
-                <p className="text-[#808080] text-xs">Status</p>
-                <span className="bg-[#FFD85D] text-white text-xs px-4 py-1.5 rounded-full">
-                  {dispute.status}
-                </span>
+                <p className="text-[#808080] text-xs pl-2">Status</p>
+                <div className="pl-2">
+                  <span className="bg-[#FDC721] text-white text-xs px-4 py-1.5 rounded-full">
+                    {dispute.status}
+                  </span>
+                </div>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 mb-3">
               <div>
-                <p className="text-[#808080] text-xs">Documents</p>
-                <div className="flex items-center">
+                <p className="text-[#808080] text-xs pl-2">Documents</p>
+                <div className="flex items-center pl-2">
                   <div className="bg-[#F44336] p-1 rounded mr-2">
                     <FileText className="h-4 w-4 text-white" />
                   </div>
@@ -151,7 +156,7 @@ export const DisputeTable = () => {
                   </div>
                 </div>
               </div>
-              <div>
+              <div className="pl-2 flex justify-end">
                 <Button variant="outline" size="sm" className="border-[#6B047C] text-[#6B047C] hover:bg-[#F5EDFC] hover:text-[#6B047C] whitespace-nowrap">
                   View
                 </Button>
@@ -160,7 +165,7 @@ export const DisputeTable = () => {
           </div>
         ))}
       </div>
-      <div className="rounded-md border border-[#F2F2F2] max-md:hidden max-md:ml-[12px]">
+      <div className="rounded-md border border-[#F2F2F2] max-md:hidden">
         <Table>
           <TableHeader>
             <TableRow className="bg-[#FAFAFA]">
@@ -175,15 +180,17 @@ export const DisputeTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {disputes.map((dispute) => (
+            {currentDisputes.map((dispute, index) => (
               <TableRow key={dispute.id} className="hover:bg-[#FAFAFA]">
-                <TableCell className="text-center font-medium">{dispute.id}</TableCell>
+                <TableCell className="text-center font-medium">{indexOfFirstDispute + index + 1}</TableCell>
                 <TableCell>{dispute.orderNumber}</TableCell>
                 <TableCell>
                   <div className="flex items-center">
                     <Avatar className="h-8 w-8 mr-2">
                       <AvatarImage src={dispute.supplier.image} alt={dispute.supplier.name} />
-                      <AvatarFallback>{dispute.supplier.name.substring(0, 2)}</AvatarFallback>
+                      <AvatarFallback>
+                        <img src="/Frame 1000008098 (2).jpg" alt="Fallback" className="h-full w-full object-cover" />
+                      </AvatarFallback>
                     </Avatar>
                     <span>{dispute.supplier.name}</span>
                   </div>
@@ -191,7 +198,7 @@ export const DisputeTable = () => {
                 <TableCell>{dispute.category}</TableCell>
                 <TableCell>{dispute.date}</TableCell>
                 <TableCell>
-                  <span className="bg-[#FFD85D] text-white text-xs px-3 py-1 rounded-full">
+                  <span className="bg-[#FDC721] text-white text-xs px-3 py-1 rounded-full">
                     {dispute.status}
                   </span>
                 </TableCell>
@@ -219,51 +226,13 @@ export const DisputeTable = () => {
 
       {/* Pagination */}
       <div className="flex justify-center mt-6">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                href="#" 
-                className="border border-[#E6E6E6] rounded-md"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (currentPage > 1) handlePageChange(currentPage - 1);
-                }}
-                aria-disabled={currentPage === 1}
-                tabIndex={currentPage === 1 ? -1 : undefined}
-              />
-            </PaginationItem>
-            {Array.from({length: totalPages}, (_, i) => i + 1).map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink 
-                  href="#" 
-                  isActive={currentPage === page}
-                  className={`${
-                    currentPage === page ? "bg-[#6B047C] text-white" : "border border-[#E6E6E6]"
-                  } rounded-md h-8 w-8 p-0 flex items-center justify-center`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(page);
-                  }}
-                >
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationNext 
-                href="#" 
-                className="border border-[#E6E6E6] rounded-md"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (currentPage < totalPages) handlePageChange(currentPage + 1);
-                }}
-                aria-disabled={currentPage === totalPages}
-                tabIndex={currentPage === totalPages ? -1 : undefined}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        {totalPages > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
     </div>
   );
