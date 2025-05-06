@@ -7,6 +7,8 @@ import { OrdersTable } from "../components/orders/OrdersTable";
 import type { Order, OrderStats } from "../types/orders";
 import { ChevronDown, ChevronUp, Check } from "lucide-react";
 import { FilterProvider, useFilter } from "../context/FilterContext";
+import "../animations.css";
+import { motion } from 'framer-motion';
 
 const mockStats: OrderStats = {
   totalOrders: 56,
@@ -110,9 +112,18 @@ const OrdersContent = () => {
                 </p>
               </div>
 
-            <button className="bg-[#6B047C] text-white px-5 py-3 rounded text-sm font-medium max-md:px-3 max-md:py-2 max-md:text-xs max-md:whitespace-nowrap">
+            <motion.button
+              className="bg-[#6B047C] text-white px-5 py-3 rounded text-sm font-medium max-md:px-3 max-md:py-2 max-md:text-xs max-md:whitespace-nowrap"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 17
+              }}
+            >
               Order an item
-            </button>
+            </motion.button>
           </div>
 
           <OrderStatsDisplay stats={mockStats} />

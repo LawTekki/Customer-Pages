@@ -17,7 +17,7 @@ export const StatusBadge = ({ status, className }: StatusBadgeProps) => {
   return (
     <div
       className={cn(
-        "px-3 py-1 rounded-md text-xs font-medium inline-block text-center w-20",
+        "px-3 py-1 rounded-md text-xs font-medium inline-block text-center w-20 hover-scale transition-all duration-300",
         statusStyles[status],
         className,
       )}

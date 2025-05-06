@@ -138,12 +138,13 @@ export const WorkPackageTable = () => {
   const totalPages = Math.ceil(filteredWorkPackages.length / packagesPerPage);
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 fade-in overflow-x-hidden" style={{ animationDelay: '0.4s' }}>
       <div className="hidden max-md:block">
-        {currentPackages.map((pkg) => (
+        {currentPackages.map((pkg, index) => (
           <div
             key={pkg.id}
-            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors max-w-[360px] mx-auto mt-4"
+            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] fade-in max-w-[360px] mx-auto mt-4"
+            style={{ animationDelay: `${0.5 + index * 0.05}s` }}
           >
             {/* Title Section */}
             <div className="mb-3">
@@ -160,7 +161,7 @@ export const WorkPackageTable = () => {
                       <img
                         src={pkg.talentImage}
                         alt={pkg.talentHired}
-                        className="w-5 h-5 rounded-full mr-1"
+                        className="w-5 h-5 rounded-full mr-1 hover-scale icon-bounce"
                       />
                       <span className="text-[#1A011E] text-xs font-medium">{pkg.talentHired}</span>
                     </div>
@@ -179,7 +180,7 @@ export const WorkPackageTable = () => {
               <div className="w-1/2 pl-10">
                 <div className="mb-2">
                   <p className="text-[#808080] text-xs mb-1">Status</p>
-                  <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full inline-block ${getStatusClass(pkg.status)}`}>
+                  <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full inline-block hover-scale transition-all duration-300 ${getStatusClass(pkg.status)}`}>
                     {pkg.status}
                   </span>
                 </div>
@@ -200,7 +201,7 @@ export const WorkPackageTable = () => {
               <div className="w-[60%]">
                 <Button
                   variant="outline"
-                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors w-full ${
+                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-transform duration-300 w-full hover:scale-105 ${
                     pkg.status === 'Cancelled'
                       ? 'text-[#808080] border-[#808080] hover:bg-gray-50'
                       : 'text-[#6B047C] border-[#6B047C] hover:bg-purple-50'
@@ -214,57 +215,58 @@ export const WorkPackageTable = () => {
         ))}
       </div>
 
-      <div className="rounded-md border max-md:hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-gray-50">
-              <TableHead className="w-[60px] text-left">S/N</TableHead>
-              <TableHead className="text-left">Title</TableHead>
-              <TableHead className="text-left">Responses</TableHead>
-              <TableHead className="text-left">Talent hired</TableHead>
-              <TableHead className="text-left">Posted date</TableHead>
-              <TableHead className="text-left">Status</TableHead>
-              <TableHead className="text-left">Budget</TableHead>
-              <TableHead className="text-left">Action</TableHead>
-            </TableRow>
-          </TableHeader>
+      <div className="rounded-md border max-md:hidden fade-in overflow-x-hidden w-full" style={{ animationDelay: '0.5s' }}>
+        <div className="overflow-x-hidden w-full">
+          <Table className="table-fixed w-full">
+            <TableHeader>
+              <TableRow className="bg-gray-50">
+                <TableHead className="w-[5%] text-left">S/N</TableHead>
+                <TableHead className="w-[20%] text-left">Title</TableHead>
+                <TableHead className="w-[10%] text-left">Responses</TableHead>
+                <TableHead className="w-[15%] text-left">Talent hired</TableHead>
+                <TableHead className="w-[15%] text-left">Posted date</TableHead>
+                <TableHead className="w-[10%] text-left">Status</TableHead>
+                <TableHead className="w-[10%] text-left">Budget</TableHead>
+                <TableHead className="w-[15%] text-left">Action</TableHead>
+              </TableRow>
+            </TableHeader>
           <TableBody>
-            {currentPackages.map((pkg) => (
-              <TableRow key={pkg.id}>
-                <TableCell>{pkg.id}</TableCell>
+            {currentPackages.map((pkg, index) => (
+              <TableRow key={pkg.id} className="table-row-hover fade-in" style={{ animationDelay: `${0.6 + index * 0.05}s` }}>
+                <TableCell className="truncate">{pkg.id}</TableCell>
                 <TableCell>
                   <div className="max-w-[300px]">
                     <p className="line-clamp-2 text-sm">{pkg.title}</p>
                   </div>
                 </TableCell>
-                <TableCell>{pkg.responses}</TableCell>
+                <TableCell className="truncate">{pkg.responses}</TableCell>
                 <TableCell>
                   {pkg.talentHired ? (
                     <div className="flex items-center gap-2">
                       <img
                         src={pkg.talentImage}
                         alt={pkg.talentHired}
-                        className="w-7 h-7 rounded-full"
+                        className="w-7 h-7 rounded-full hover-scale icon-bounce"
                       />
-                      <span>{pkg.talentHired}</span>
+                      <span className="truncate">{pkg.talentHired}</span>
                     </div>
                   ) : (
                     "None yet"
                   )}
                 </TableCell>
                 <TableCell>
-                  <div className="whitespace-nowrap text-sm">{pkg.postedDate}</div>
+                  <div className="whitespace-nowrap text-sm truncate">{pkg.postedDate}</div>
                 </TableCell>
                 <TableCell>
-                  <span className={`rounded-full px-3 py-1 text-xs ${getStatusClass(pkg.status)}`}>
+                  <span className={`rounded-full px-3 py-1 text-xs hover-scale transition-all duration-300 ${getStatusClass(pkg.status)}`}>
                     {pkg.status}
                   </span>
                 </TableCell>
-                <TableCell>{pkg.budget}</TableCell>
+                <TableCell className="truncate">{pkg.budget}</TableCell>
                 <TableCell>
                   <Button
                     variant="outline"
-                    className={`${
+                    className={`transition-transform duration-300 hover:scale-105 ${
                       pkg.status === 'Cancelled'
                         ? 'text-[#808080] border-[#808080] hover:bg-gray-50'
                         : 'text-[#6B047C] border-[#6B047C] hover:bg-[#6B047C] hover:text-white'
@@ -276,10 +278,11 @@ export const WorkPackageTable = () => {
               </TableRow>
             ))}
           </TableBody>
-        </Table>
+          </Table>
+        </div>
       </div>
 
-      <div className="mt-4 flex justify-center">
+      <div className="mt-4 flex justify-center fade-in" style={{ animationDelay: '0.7s' }}>
         {totalPages > 0 && (
           <Pagination
             currentPage={currentPage}
