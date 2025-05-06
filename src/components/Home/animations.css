@@ -1,0 +1,222 @@
+/* Animation utilities for Home components */
+
+/* Mobile detection */
+@media (max-width: 640px) {
+  :root {
+    --animation-scale: 0.7;  /* Reduce animation scale on mobile */
+  }
+}
+
+@media (min-width: 641px) {
+  :root {
+    --animation-scale: 1;    /* Full animation scale on desktop */
+  }
+}
+
+/* Hover animations */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover, .hover-lift:active {
+  transform: translateY(calc(-4px * var(--animation-scale)));
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover, .hover-scale:active {
+  transform: scale(calc(1.03 * var(--animation-scale)));
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.hover-glow:hover, .hover-glow:active {
+  box-shadow: 0 0 15px rgba(107, 4, 124, 0.3);
+  transform: translateY(calc(-2px * var(--animation-scale)));
+}
+
+.hover-border {
+  transition: border-color 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.hover-border:hover, .hover-border:active {
+  border-color: #6B047C;
+}
+
+/* Button animations */
+.button-pulse {
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.button-pulse:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity; /* Performance optimization */
+}
+
+.button-pulse:hover:after, .button-pulse:active:after {
+  animation: ripple 1.2s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(calc(30 * var(--animation-scale)), calc(30 * var(--animation-scale)));
+    opacity: 0;
+  }
+}
+
+/* Click animations */
+.click-shrink {
+  transition: transform 0.1s ease;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.click-shrink:active {
+  transform: scale(calc(0.96 * var(--animation-scale)));
+}
+
+.click-bounce {
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.click-bounce:active {
+  transform: scale(calc(0.94 * var(--animation-scale)));
+}
+
+/* Card animations */
+.card-hover {
+  transition: all 0.3s ease;
+  border: 1px solid #F2F2F2;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.card-hover:hover, .card-hover:active {
+  border-color: #6B047C;
+  box-shadow: 0 8px 16px rgba(107, 4, 124, 0.1);
+  transform: translateY(calc(-4px * var(--animation-scale)));
+}
+
+/* Table row animations */
+.table-row-hover {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.table-row-hover:hover, .table-row-hover:active {
+  background-color: #F9F5FA;
+  transform: translateX(calc(4px * var(--animation-scale)));
+}
+
+/* Icon animations */
+.icon-spin {
+  transition: transform 0.5s ease;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.icon-spin:hover, .icon-spin:active {
+  transform: rotate(calc(15deg * var(--animation-scale)));
+}
+
+.icon-bounce {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.icon-bounce:hover, .icon-bounce:active {
+  transform: scale(calc(1.2 * var(--animation-scale)));
+}
+
+/* Status indicator animations */
+.status-pulse {
+  animation: status-pulse 2s infinite;
+  will-change: opacity, transform; /* Performance optimization */
+}
+
+@keyframes status-pulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(calc(0.9 * var(--animation-scale)));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(calc(1.1 * var(--animation-scale)));
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(calc(0.9 * var(--animation-scale)));
+  }
+}
+
+/* Fade-in animation for elements */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+  will-change: opacity, transform; /* Performance optimization */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(calc(10px * var(--animation-scale)));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide-in animation */
+.slide-in {
+  animation: slideIn 0.4s ease-out;
+  will-change: opacity, transform; /* Performance optimization */
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-20px * var(--animation-scale)));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  /* Shorter animations on mobile */
+  .fade-in {
+    animation-duration: 0.4s;
+  }
+
+  .slide-in {
+    animation-duration: 0.3s;
+  }
+
+  /* Reduce animation delay staggering on mobile */
+  * {
+    animation-delay: 0s !important;
+  }
+}

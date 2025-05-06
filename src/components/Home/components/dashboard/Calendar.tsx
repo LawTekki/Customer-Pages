@@ -106,38 +106,42 @@ export const Calendar = () => {
   const selectedDateActivities = getActivitiesForDate(selectedDate);
 
   return (
-    <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border" style={{ borderColor: '#F2F2F2' }}>
+    <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border hover-border fade-in" style={{ borderColor: '#F2F2F2', animationDelay: '0.4s' }}>
       <div className="flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <button
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-gray-500 hover:text-gray-700 transition-colors hover-scale click-shrink p-2 rounded-full"
             onClick={goToPreviousWeek}
           >
-            <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon-bounce">
               <path d="M5 1L1 5L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <div className="font-semibold text-gray-900">{dateRangeText}</div>
+          <div className="font-semibold text-gray-900 hover-scale">{dateRangeText}</div>
           <button
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-gray-500 hover:text-gray-700 transition-colors hover-scale click-shrink p-2 rounded-full"
             onClick={goToNextWeek}
           >
-            <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg" className="icon-bounce">
               <path d="M1 9L5 5L1 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
         </div>
 
         <div className="grid grid-cols-7 gap-1 text-center mb-2">
-          {weekDays.map((day) => (
-            <div key={day} className="text-xs font-medium text-gray-900">
+          {weekDays.map((day, index) => (
+            <div
+              key={day}
+              className="text-xs font-medium text-gray-900 hover-scale fade-in"
+              style={{ animationDelay: `${0.1 + index * 0.05}s` }}
+            >
               {day}
             </div>
           ))}
         </div>
 
         <div className="grid grid-cols-7 gap-1 text-center mb-4">
-          {dates.map((dateObj) => {
+          {dates.map((dateObj, index) => {
             const isSelected = format(selectedDate, 'yyyy-MM-dd') === format(dateObj.date, 'yyyy-MM-dd');
             const isToday = format(new Date(), 'yyyy-MM-dd') === format(dateObj.date, 'yyyy-MM-dd');
             const hasActivity = hasActivities(dateObj.date);
@@ -146,17 +150,18 @@ export const Calendar = () => {
               <div
                 key={dateObj.dayNumber}
                 onClick={() => handleDateSelect(dateObj.date)}
-                className={`relative text-sm py-1 cursor-pointer hover:bg-purple-50 transition-colors ${
+                className={`relative text-sm py-1 cursor-pointer hover-scale click-shrink transition-all duration-200 fade-in ${
                   isSelected
-                    ? "bg-[#6B047C] text-white rounded-md"
+                    ? "bg-[#6B047C] text-white rounded-md shadow-md"
                     : isToday
                       ? "text-[#6B047C] font-semibold"
-                      : "text-gray-500"
+                      : "text-gray-500 hover:bg-purple-50"
                 }`}
+                style={{ animationDelay: `${0.2 + index * 0.05}s` }}
               >
                 {dateObj.dayNumber}
                 {hasActivity && !isSelected && (
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-[#6B047C] rounded-full"></div>
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-[#6B047C] rounded-full status-pulse"></div>
                 )}
               </div>
             );
@@ -219,8 +224,9 @@ export const Calendar = () => {
         )}
 
         <button
-          className="text-[#6B047C] text-sm font-medium"
+          className="text-[#6B047C] text-sm font-medium hover-scale click-bounce button-pulse fade-in"
           onClick={() => setIsModalOpen(true)}
+          style={{ animationDelay: '0.5s' }}
         >
           <span className="border-b-2 border-[#6B047C]">Book an activity</span>
         </button>

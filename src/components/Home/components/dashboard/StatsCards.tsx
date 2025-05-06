@@ -28,15 +28,16 @@ export const StatsCards = () => {
   // Mobile view (separate cards stacked vertically)
   const mobileView = (
     <div className="flex flex-col w-11/12 mx-auto mb-5 gap-2 sm:hidden">
-      {stats.map((stat) => (
+      {stats.map((stat, index) => (
         <div
           key={stat.label}
-          className="w-full bg-white rounded-lg p-3 shadow-sm"
+          className="w-full bg-white rounded-lg p-3 shadow-sm hover-lift click-shrink card-hover fade-in"
+          style={{ animationDelay: `${index * 0.1}s` }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center mr-3"
+                className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 icon-bounce"
                 style={{ backgroundColor: stat.bgColor }}
               >
                 <img
@@ -85,13 +86,13 @@ export const StatsCards = () => {
 
   // Desktop view (original layout)
   const desktopView = (
-    <div className="hidden sm:block w-full mb-5 bg-white rounded-lg shadow-sm p-4 border" style={{ borderColor: '#F2F2F2' }}>
+    <div className="hidden sm:block w-full mb-5 bg-white rounded-lg shadow-sm p-4 border hover-border fade-in" style={{ borderColor: '#F2F2F2' }}>
       <div className="flex gap-4">
-        {stats.map((stat) => (
-          <div key={stat.label} className="flex-1 border-r last:border-r-0 px-3">
+        {stats.map((stat, index) => (
+          <div key={stat.label} className="flex-1 border-r last:border-r-0 px-3 hover-scale" style={{ animationDelay: `${index * 0.15}s` }}>
             <div className="flex gap-4">
               <div
-                className="w-12 h-12 rounded-lg flex items-center justify-center"
+                className="w-12 h-12 rounded-lg flex items-center justify-center icon-bounce"
                 style={{ backgroundColor: stat.bgColor }}
               >
                 <img

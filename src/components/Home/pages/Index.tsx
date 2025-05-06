@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
 import { PremiumBanner } from "@/components/Home/components/dashboard/PremiumBanner";
@@ -7,6 +7,7 @@ import { TransactionTable } from "@/components/Home/components/dashboard/Transac
 import { Calendar } from "@/components/Home/components/dashboard/Calendar";
 import { RecentMessages } from "@/components/Home/components/dashboard/RecentMessages";
 import { TalentsList } from "@/components/Home/components/dashboard/TalentsList";
+import "../animations.css";
 
 const Home = () => {
   return (
