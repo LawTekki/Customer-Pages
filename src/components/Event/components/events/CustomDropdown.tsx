@@ -90,8 +90,10 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
             // Firefox/Edge scrollbar hide
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
+            minWidth: '120px',
+            maxWidth: '180px',
           }}
-          className="bg-white border border-[#E4E7EC] rounded-md shadow-lg overflow-hidden component-container fade-in"
+          className="bg-white border border-[#E4E7EC] rounded-md shadow-lg overflow-hidden component-container fade-in max-md:min-w-[60px] max-md:max-w-[110px]"
         >
           <style>
             {`
@@ -139,15 +141,15 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         }}
         className={`
           relative flex items-center justify-between
-          w-full min-w-[120px]
+          w-full max-w-[180px] min-w-[120px]
           border border-[#E4E7EC] rounded-lg
           py-2 px-3 pr-8
           text-sm font-normal text-[#667085]
           bg-white
           hover:border-[#6B047C] focus:border-[#6B047C] active:border-[#6B047C]
           focus:outline-none
-          max-md:min-w-[80px] max-md:text-[9px]
-          max-md:py-0.5 max-md:px-1.5 max-md:pr-4
+          max-md:max-w-[110px] max-md:min-w-[60px] max-md:text-[9px]
+          max-md:py-0.5 max-md:px-1 max-md:pr-2
           cursor-pointer touch-manipulation
           transition-colors duration-200
           ${className}

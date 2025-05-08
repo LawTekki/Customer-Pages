@@ -18,23 +18,23 @@ const Events = () => {
         <div className="flex w-full items-stretch gap-0" style={{ overflow: 'hidden' }}>
           <Sidebar />
           <main className="flex flex-col flex-grow px-2 py-8 max-w-[1500px] w-full" style={{ overflow: 'hidden', marginLeft: 0 }}>
-            <div className="flex justify-between items-start w-full">
-              <div className="fade-in" style={{ animationDelay: '0.1s' }}>
-                <h1 className="text-[32px] font-semibold text-[#1A011E] slide-in" style={{ animationDelay: '0.2s' }}>
-                  Events
-                </h1>
-                <p className="text-sm text-gray-500 mt-2 max-w-[900px] slide-in" style={{ animationDelay: '0.25s' }}>
-                  This is the list of all the jobs you have posted to the
-                  community for freelancers, institutions, organizations and
-                  others to propose for
+            <div className="flex justify-between items-start max-md:gap-0">
+              <div className="max-md:flex max-md:flex-col max-md:w-full fade-in" style={{ animationDelay: '0.1s' }}>
+                <div className="max-md:flex max-md:justify-between max-md:items-center">
+                  <h1 className="text-[#1A011E] text-[32px] font-semibold leading-[1.3] max-md:text-2xl max-md:leading-[1.3]">
+                    Events
+                  </h1>
+                  <button className="bg-[#6B047C] hover:bg-[#5A036B] text-white px-4 py-2 rounded-md font-medium hidden max-md:block max-md:text-xs max-md:py-1.5 max-md:px-3 transition-transform duration-300 hover:scale-105">
+                    Explore events
+                  </button>
+                </div>
+                <p className="text-[#808080] text-sm font-medium max-w-[650px] max-md:text-xs mt-2">
+                  This is the list of all the jobs you have posted to the community for freelancers, institutions, organizations and others to propose for
                 </p>
               </div>
-              <Button className="bg-[#6B047C] hover:bg-[#5A036B] text-white px-6 py-2 rounded-md font-medium" style={{ transition: 'transform 0.2s ease', transform: 'scale(1)' }}
-                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-              >
+              <button className="bg-[#6B047C] hover:bg-[#5A036B] text-white px-4 py-2 rounded-md font-medium max-md:hidden transition-transform duration-300 hover:scale-105">
                 Explore events
-              </Button>
+              </button>
             </div>
             <div className="w-full mt-4">
               <EventsStats />

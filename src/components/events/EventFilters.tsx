@@ -211,6 +211,15 @@ export const EventFilters: React.FC<EventFiltersProps> = ({ onViewChange }) => {
 
   return (
     <div className="w-[280px] bg-[#F4EDF5] text-[#1A011E] pb-4">
+      <div className="flex items-center justify-between max-md:pl-4 mb-4 w-full">
+        <span className="text-sm font-medium text-[#808080]">Filter Status</span>
+        <button type="button" className="relative flex items-center justify-between w-full max-w-[180px] min-w-[120px] border border-[#E4E7EC] rounded-lg py-2 px-3 pr-8 text-sm font-normal text-[#667085] bg-white hover:border-[#6B047C] focus:border-[#6B047C] active:border-[#6B047C] focus:outline-none max-md:max-w-[110px] max-md:min-w-[60px] max-md:text-[9px] max-md:py-0.5 max-md:px-1 max-md:pr-2 cursor-pointer touch-manipulation transition-colors duration-200" style={{ transition: 'border-color 0.2s' }}>
+          <span className="truncate">Select All</span>
+          <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none max-md:right-1">
+            <img src="/mynaui_filter.svg" alt="Filter" className="w-4 h-4 max-md:w-2.5 max-md:h-2.5 icon-spin" />
+          </div>
+        </button>
+      </div>
       <FilterHeader appliedCount={appliedCount} onClearAll={clearAll} />
 
       <div className="text-[10px] uppercase font-medium text-[#666666] px-4 mb-2">

@@ -191,7 +191,7 @@ export const Header: React.FC = () => {
       onClick={() => { setMobileMenuOpen(false); setMobileTab('none'); }}
     >
       <div
-        className={`fixed top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-2xl p-0 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} sm:hidden`}
+        className={`fixed top-0 left-0 h-full w-11/12 max-w-xs bg-white shadow-2xl p-0 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} sm:hidden`}
         style={{ borderRadius: 0 }}
         onClick={e => e.stopPropagation()}
       >
@@ -258,38 +258,10 @@ export const Header: React.FC = () => {
             </div>
           )}
           {/* Profile */}
-          <button className={`flex items-center gap-3 px-5 py-4 w-full text-left bg-white transition-colors ${mobileTab==='profile' ? 'bg-[#F9F5FA]' : 'hover:bg-[#FAFAFA]'}`} onClick={() => openMobileTab('profile')}>
+          <div className="flex items-center gap-3 px-5 py-4 w-full text-left bg-white transition-colors cursor-default select-none">
             <img src="/Frame 106.png" alt="Profile" className="w-7 h-7 rounded-lg object-cover" />
             <span className="text-[#1A011E] text-base font-semibold flex-1">Wisdom Umanah</span>
-            <svg className={`w-4 h-4 ml-auto transition-transform ${mobileTab==='profile' ? 'rotate-90' : ''}`} fill="none" stroke="#808080" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-          </button>
-          {mobileTab==='profile' && (
-            <div className="bg-[#F9F5FA] px-5 pb-4 animate-fadein" style={{ borderRadius: 0 }}>
-              <div className="flex flex-col gap-2 mt-6">
-                <div
-                  className="flex items-center gap-3 p-3 bg-white shadow-sm cursor-pointer"
-                  style={{ borderRadius: 0 }}
-                  onClick={() => {
-                    setShowProfileModal(true);
-                    setMobileMenuOpen(false);
-                    setMobileTab('none');
-                  }}
-                >
-                  <img src="/Frame 106.png" alt="Profile" className="w-8 h-8 rounded-lg object-cover" />
-                  <div className="flex flex-col">
-                    <span className="text-[#1A011E] text-sm font-semibold">Wisdom Umanah</span>
-                    <span className="text-[#808080] text-xs">My profile</span>
-                  </div>
-                </div>
-                {profileActions.map((item, idx) => (
-                  <div key={idx} className="flex items-center p-3 bg-white shadow-sm cursor-pointer gap-3" style={{ borderRadius: 0 }}>
-                    <img src={item.icon} alt={item.label + ' icon'} className="w-6 h-6" />
-                    <span className="text-[#808080] text-sm font-medium">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          </div>
           {/* Quick Actions */}
           <button className={`flex items-center gap-3 px-5 py-4 w-full text-left bg-white transition-colors ${mobileTab==='quick' ? 'bg-[#F9F5FA]' : 'hover:bg-[#FAFAFA]'}`} onClick={() => openMobileTab('quick')}>
             <svg className={`w-4 h-4 mr-2 transition-transform ${mobileTab==='quick' ? 'rotate-90' : ''}`} fill="none" stroke="#6B047C" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>

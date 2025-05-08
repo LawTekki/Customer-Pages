@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReactDOM from 'react-dom';
 
 interface ProfileDropdownProps {
   isOpen: boolean;
@@ -39,10 +40,10 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClos
     { label: "Log out", icon: "/Frame 1000007971 (3).svg" },
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" onClick={onClose}>
+  const dropdownContent = (
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-30 flex items-center justify-center" onClick={onClose}>
       <div
-        className="bg-white rounded-lg shadow-lg py-2 px-3 w-64 sm:w-[290px] max-w-[90vw]"
+        className="bg-white rounded-lg shadow-lg py-2 px-3 w-full max-w-xs mx-2"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the dropdown
       >
         <div className="space-y-2">
@@ -79,4 +80,6 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClos
       </div>
     </div>
   );
+
+  return ReactDOM.createPortal(dropdownContent, document.body);
 };
