@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import {
   Table,
@@ -126,13 +125,14 @@ export const EventsTable = () => {
   const totalPages = Math.ceil(filteredEvents.length / packagesPerPage);
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 fade-in" style={{ animationDelay: '0.4s' }}>
 
       <div className="hidden max-md:block">
-        {currentEvents.map((event) => (
+        {currentEvents.map((event, index) => (
           <div
             key={event.id}
-            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors w-full max-w-[360px] mx-auto mt-4"
+            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors w-full max-w-[360px] mx-auto mt-4 hover-lift card-hover click-shrink fade-in"
+            style={{ animationDelay: `${0.1 + index * 0.05}s` }}
           >
             {/* Title Section */}
             <div className="mb-3">
@@ -212,7 +212,7 @@ export const EventsTable = () => {
               <div className="w-[60%]">
                 <Button
                   variant="outline"
-                  className="px-4 py-1.5 rounded-md text-sm font-medium transition-colors w-full text-[#6B047C] border-[#6B047C] hover:bg-purple-50"
+                  className="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-300 w-full text-[#6B047C] border-[#6B047C] hover:bg-purple-50 hover-scale click-shrink"
                 >
                   View
                 </Button>
@@ -221,58 +221,66 @@ export const EventsTable = () => {
           </div>
         ))}
       </div>
-      <div className="rounded-md border border-[#F2F2F2] overflow-x-hidden max-md:hidden">
-        <Table className="table-fixed">
+      <div className="rounded-[12px] border border-[#F2F2F2] max-md:hidden fade-in w-full" style={{ animationDelay: '0.3s', background: '#fff', overflowX: 'hidden' }}>
+        <Table className="table-fixed w-full" style={{ minWidth: 0 }}>
           <TableHeader>
-            <TableRow className="bg-[#FAFAFA]">
-              <TableHead className="text-[#808080] font-medium w-12 text-center">S/N</TableHead>
-              <TableHead className="text-[#808080] font-medium w-[180px] whitespace-nowrap overflow-hidden text-ellipsis">Title</TableHead>
-              <TableHead className="text-[#808080] font-medium w-[140px]">Host</TableHead>
-              <TableHead className="text-[#808080] font-medium w-[160px] whitespace-nowrap">Date</TableHead>
-              <TableHead className="text-[#808080] font-medium w-[100px]">Event type</TableHead>
-              <TableHead className="text-[#808080] font-medium w-[120px]">Venue</TableHead>
-              <TableHead className="text-[#808080] font-medium w-[80px]">Fee</TableHead>
-              <TableHead className="text-[#808080] font-medium w-[100px]">Time</TableHead>
-              <TableHead className="text-[#808080] font-medium w-[100px]">Attendees</TableHead>
-              <TableHead className="text-[#808080] font-medium w-[100px]">Action</TableHead>
+            <TableRow className="bg-[#FAFAFA] h-[48px]">
+              <TableHead className="text-[#808080] font-medium w-[36px] text-center align-middle px-2 py-0 text-[14px] hover:bg-gray-100 transition-colors">S/N</TableHead>
+              <TableHead className="text-[#808080] font-medium w-[120px] align-middle px-2 py-0 whitespace-nowrap text-ellipsis text-[14px] hover:bg-gray-100 transition-colors">Title</TableHead>
+              <TableHead className="text-[#808080] font-medium w-[120px] align-middle px-2 py-0 text-[14px] hover:bg-gray-100 transition-colors">Host</TableHead>
+              <TableHead className="text-[#808080] font-medium w-[120px] align-middle px-2 py-0 whitespace-nowrap text-[14px] hover:bg-gray-100 transition-colors">Date</TableHead>
+              <TableHead className="text-[#808080] font-medium w-[90px] align-middle px-2 py-0 text-[14px] hover:bg-gray-100 transition-colors">Event type</TableHead>
+              <TableHead className="text-[#808080] font-medium w-[100px] align-middle px-2 py-0 text-[14px] hover:bg-gray-100 transition-colors">Venue</TableHead>
+              <TableHead className="text-[#808080] font-medium w-[60px] align-middle px-2 py-0 text-[14px] hover:bg-gray-100 transition-colors">Fee</TableHead>
+              <TableHead className="text-[#808080] font-medium w-[80px] align-middle px-2 py-0 text-[14px] hover:bg-gray-100 transition-colors">Time</TableHead>
+              <TableHead className="text-[#808080] font-medium w-[100px] align-middle px-2 py-0 text-[14px] hover:bg-gray-100 transition-colors">Attendees</TableHead>
+              <TableHead className="text-[#808080] font-medium w-[80px] align-middle px-2 py-0 text-[14px] hover:bg-gray-100 transition-colors">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentEvents.map((event) => (
-              <TableRow key={event.id} className="hover:bg-[#FAFAFA]">
-                <TableCell className="text-center font-medium py-3">{event.id}</TableCell>
-                <TableCell className="whitespace-nowrap overflow-hidden text-ellipsis py-3">
-                  <span className="block truncate max-w-[180px]">{event.title}</span>
+            {currentEvents.map((event, index) => (
+              <TableRow
+                key={event.id}
+                className="h-[56px] align-middle border-b border-[#F2F2F2] hover:bg-[#F9F5FF] table-row-hover click-shrink fade-in"
+                style={{ animationDelay: `${0.1 + index * 0.05}s` }}
+              >
+                <TableCell className="text-center font-medium px-2 py-0 align-middle text-[#808080] text-[14px]">{event.id}</TableCell>
+                <TableCell className="px-2 py-0 align-middle text-[#808080] text-[14px] whitespace-nowrap text-ellipsis max-w-[120px]">
+                  <span className="block truncate">{event.title}</span>
                 </TableCell>
-                <TableCell className="py-3">
-                  <div className="flex items-center">
-                    <Avatar className="h-8 w-8 mr-2">
+                <TableCell className="px-2 py-0 align-middle text-[#808080] text-[14px]">
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-7 w-7">
                       <AvatarImage src={event.host.image} alt={event.host.name} />
                       <AvatarFallback>{event.host.name.substring(0, 2)}</AvatarFallback>
                     </Avatar>
                     <span className="whitespace-nowrap">{event.host.name}</span>
                   </div>
                 </TableCell>
-                <TableCell className="whitespace-nowrap py-3">{event.date}</TableCell>
-                <TableCell className="whitespace-nowrap py-3">{event.eventType}</TableCell>
-                <TableCell className="whitespace-nowrap py-3">{event.venue}</TableCell>
-                <TableCell className="whitespace-nowrap py-3">{event.fee}</TableCell>
-                <TableCell className="whitespace-nowrap py-3">{event.time}</TableCell>
-                <TableCell className="py-3">
-                  <div className="flex items-center">
-                    <div className="flex -space-x-2 mr-2">
+                <TableCell className="px-2 py-0 align-middle text-[#808080] text-[14px] whitespace-nowrap">{event.date}</TableCell>
+                <TableCell className="px-2 py-0 align-middle text-[#808080] text-[14px] whitespace-nowrap">{event.eventType}</TableCell>
+                <TableCell className="px-2 py-0 align-middle text-[#808080] text-[14px] whitespace-nowrap">{event.venue}</TableCell>
+                <TableCell className="px-2 py-0 align-middle text-[#808080] text-[14px] whitespace-nowrap">{event.fee}</TableCell>
+                <TableCell className="px-2 py-0 align-middle text-[#808080] text-[14px] whitespace-nowrap">{event.time}</TableCell>
+                <TableCell className="px-2 py-0 align-middle text-[#808080] text-[14px]">
+                  <div className="flex items-center gap-1">
+                    <div className="flex -space-x-2">
                       {event.attendees.images.map((img, idx) => (
-                        <Avatar key={idx} className="h-6 w-6 border-2 border-white">
+                        <Avatar key={idx} className="h-5 w-5 border-2 border-white">
                           <AvatarImage src={img} />
                           <AvatarFallback>A</AvatarFallback>
                         </Avatar>
                       ))}
                     </div>
-                    <span className="text-sm text-[#6B047C] whitespace-nowrap">{event.attendees.count} +</span>
+                    <span className="whitespace-nowrap">{event.attendees.count} +</span>
                   </div>
                 </TableCell>
-                <TableCell className="py-3">
-                  <Button variant="outline" size="sm" className="border-[#6B047C] text-[#6B047C] hover:bg-[#F5EDFC] hover:text-[#6B047C] whitespace-nowrap">
+                <TableCell className="px-2 py-0 align-middle">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-[#6B047C] text-[#6B047C] hover:bg-[#F5EDFC] hover:text-[#6B047C] whitespace-nowrap rounded-md px-3 py-2 text-[14px] font-medium min-w-[60px] min-h-[32px]"
+                  >
                     View
                   </Button>
                 </TableCell>
@@ -283,7 +291,7 @@ export const EventsTable = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center mt-6 fade-in" style={{ animationDelay: '0.7s' }}>
         {totalPages > 0 && (
           <Pagination
             currentPage={currentPage}

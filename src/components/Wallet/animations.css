@@ -1,14 +1,4 @@
-/* Animation utilities for Contacts components */
-
-/* Hide scrollbars for tables */
-.overflow-hidden::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
-}
-
-.overflow-hidden {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
+/* Animation utilities for Wallet components */
 
 /* Mobile detection */
 @media (max-width: 640px) {
@@ -218,4 +208,4 @@
   * {
     animation-delay: 0s !important;
   }
-}
+} 

@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -12,6 +11,7 @@ import { Pagination } from "@/components/Dispute/components/common/Pagination";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
+import "../../animations.css";
 
 interface Dispute {
   id: number;
@@ -26,8 +26,29 @@ interface Dispute {
   document: string;
 }
 
+// Custom hook for mobile detection
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
+
+  return isMobile;
+};
+
 export const DisputeTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const isMobile = useIsMobile();
 
   const disputes: Dispute[] = [
     {
@@ -100,12 +121,13 @@ export const DisputeTable = () => {
   };
 
   return (
-    <div className="mt-6 max-md:px-4">
-      <div className="hidden max-md:block">
-        {currentDisputes.map((dispute) => (
+    <div className="mt-6 max-md:px-4 fade-in" style={{ animationDelay: '0.1s', overflow: 'hidden' }}>
+      <div className="hidden max-md:block" style={{ overflow: 'hidden' }}>
+        {currentDisputes.map((dispute, index) => (
           <div
             key={dispute.id}
-            className="bg-white rounded-lg p-3 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors max-w-[360px] mx-auto mt-4"
+            className="bg-white rounded-lg p-3 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors hover-lift card-hover click-shrink fade-in max-w-[360px] mx-auto mt-4"
+            style={{ animationDelay: `${0.1 + index * 0.05}s`, overflow: 'hidden' }}
           >
             <div className="flex items-center gap-4 mb-3">
               <span className="text-[#1A011E] font-medium text-base">#{dispute.id}</span>
@@ -115,7 +137,7 @@ export const DisputeTable = () => {
               <div>
                 <p className="text-[#808080] text-xs pl-2">Supplier</p>
                 <div className="flex items-center pl-2">
-                  <Avatar className="h-8 w-8 mr-2">
+                  <Avatar className="h-8 w-8 mr-2 hover-scale icon-bounce">
                     <AvatarImage src={dispute.supplier.image} alt={dispute.supplier.name} />
                     <AvatarFallback>
                       <img src="/Frame 1000008098 (2).jpg" alt="Fallback" className="h-full w-full object-cover" />
@@ -157,7 +179,7 @@ export const DisputeTable = () => {
                 </div>
               </div>
               <div className="pl-2 flex justify-end">
-                <Button variant="outline" size="sm" className="border-[#6B047C] text-[#6B047C] hover:bg-[#F5EDFC] hover:text-[#6B047C] whitespace-nowrap">
+                <Button variant="outline" size="sm" className="border-[#6B047C] text-[#6B047C] hover:bg-[#F5EDFC] hover:text-[#6B047C] whitespace-nowrap hover-scale click-shrink button-pulse">
                   View
                 </Button>
               </div>
@@ -165,28 +187,28 @@ export const DisputeTable = () => {
           </div>
         ))}
       </div>
-      <div className="rounded-md border border-[#F2F2F2] max-md:hidden">
-        <Table>
+      <div className="rounded-md border border-[#F2F2F2] max-md:hidden fade-in table-container" style={{ animationDelay: '0.3s', overflow: 'hidden' }}>
+        <Table className="table-fixed">
           <TableHeader>
-            <TableRow className="bg-[#FAFAFA]">
-              <TableHead className="text-[#808080] font-medium w-12 text-center">S/N</TableHead>
-              <TableHead className="text-[#808080] font-medium">Order</TableHead>
-              <TableHead className="text-[#808080] font-medium">Supplier name</TableHead>
-              <TableHead className="text-[#808080] font-medium">Dispute category</TableHead>
-              <TableHead className="text-[#808080] font-medium">Created date</TableHead>
-              <TableHead className="text-[#808080] font-medium">Status</TableHead>
-              <TableHead className="text-[#808080] font-medium">Documents</TableHead>
-              <TableHead className="text-[#808080] font-medium">Action</TableHead>
+            <TableRow className="bg-[#FAFAFA] fade-in" style={{ animationDelay: '0.3s' }}>
+              <TableHead className="text-[#808080] font-medium w-12 text-center hover:bg-gray-100 transition-colors">S/N</TableHead>
+              <TableHead className="text-[#808080] font-medium hover:bg-gray-100 transition-colors">Order</TableHead>
+              <TableHead className="text-[#808080] font-medium hover:bg-gray-100 transition-colors">Supplier name</TableHead>
+              <TableHead className="text-[#808080] font-medium hover:bg-gray-100 transition-colors">Dispute category</TableHead>
+              <TableHead className="text-[#808080] font-medium hover:bg-gray-100 transition-colors">Created date</TableHead>
+              <TableHead className="text-[#808080] font-medium hover:bg-gray-100 transition-colors">Status</TableHead>
+              <TableHead className="text-[#808080] font-medium hover:bg-gray-100 transition-colors">Documents</TableHead>
+              <TableHead className="text-[#808080] font-medium hover:bg-gray-100 transition-colors">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {currentDisputes.map((dispute, index) => (
-              <TableRow key={dispute.id} className="hover:bg-[#FAFAFA]">
+              <TableRow key={dispute.id} className="hover:bg-[#FAFAFA] table-row-hover click-shrink fade-in" style={{ animationDelay: `${0.1 + index * 0.05}s` }}>
                 <TableCell className="text-center font-medium">{indexOfFirstDispute + index + 1}</TableCell>
                 <TableCell>{dispute.orderNumber}</TableCell>
                 <TableCell>
                   <div className="flex items-center">
-                    <Avatar className="h-8 w-8 mr-2">
+                    <Avatar className="h-8 w-8 mr-2 hover-scale icon-bounce">
                       <AvatarImage src={dispute.supplier.image} alt={dispute.supplier.name} />
                       <AvatarFallback>
                         <img src="/Frame 1000008098 (2).jpg" alt="Fallback" className="h-full w-full object-cover" />
@@ -214,7 +236,7 @@ export const DisputeTable = () => {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Button variant="outline" className="border-[#6B047C] text-[#6B047C] hover:bg-[#F5EDFC] hover:text-[#6B047C]">
+                  <Button variant="outline" className="border-[#6B047C] text-[#6B047C] hover:bg-[#F5EDFC] hover:text-[#6B047C] hover-scale click-shrink button-pulse">
                     View
                   </Button>
                 </TableCell>
@@ -225,7 +247,7 @@ export const DisputeTable = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center mt-6 fade-in" style={{ animationDelay: '0.4s', overflow: 'hidden' }}>
         {totalPages > 0 && (
           <Pagination
             currentPage={currentPage}

@@ -6,7 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from "@/components/ui/table";
+} from "../../components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Pagination } from './Pagination';
 
@@ -74,7 +74,7 @@ export const DraftTable = () => {
   const totalPages = Math.ceil(draftPackages.length / packagesPerPage);
 
   return (
-    <div className="mt-6 fade-in overflow-x-hidden" style={{ animationDelay: '0.4s' }}>
+    <div className="mt-6 fade-in" style={{ animationDelay: '0.4s' }}>
       <div className="hidden max-md:block">
         {currentPackages.map((pkg, index) => (
           <div
@@ -124,8 +124,8 @@ export const DraftTable = () => {
         ))}
       </div>
 
-      <div className="rounded-md border max-md:hidden fade-in overflow-x-hidden w-full" style={{ animationDelay: '0.5s' }}>
-        <div className="overflow-x-hidden w-full">
+      <div className="rounded-md border max-md:hidden fade-in w-full" style={{ animationDelay: '0.5s' }}>
+        <div className="w-full">
           <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow className="bg-gray-50">

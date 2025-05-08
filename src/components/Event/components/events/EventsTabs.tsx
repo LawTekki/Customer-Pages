@@ -13,12 +13,13 @@ interface TabProps {
 const Tab = ({ title, count, active = false, onClick }: TabProps) => (
   <button
     onClick={onClick}
-    className={`px-4 py-2 font-medium relative max-md:px-1.5 max-md:py-1 max-md:text-xs min-w-[100px] max-md:min-w-0 ${
-      active ? 'text-[#6B047C] border-b-2 border-[#6B047C] max-md:border-b max-md:border-[#6B047C]' : 'text-gray-600 max-md:border-b-0'
+    className={`px-4 py-2 font-medium relative max-md:px-1.5 max-md:py-1 max-md:text-xs min-w-[100px] max-md:min-w-0 hover-scale transition-all duration-200 ${
+      active ? 'text-[#6B047C] border-b-2 border-[#6B047C] max-md:border-b max-md:border-[#6B047C]' : 'text-gray-600 max-md:border-b-0 hover:text-[#6B047C]'
     }`}
+    style={{ overflow: 'hidden' }}
   >
     <span className="max-md:inline max-md:text-[9px] whitespace-nowrap">{title}</span>
-    <span className="ml-1 bg-[#F2F2F2] px-1.5 py-0.5 rounded-[4px] text-xs max-md:ml-0.5 max-md:text-[9px] max-md:px-1 max-md:py-0">{count}</span>
+    <span className="ml-1 bg-[#F2F2F2] px-1.5 py-0.5 rounded-[4px] text-xs max-md:ml-0.5 max-md:text-[9px] max-md:px-1 max-md:py-0 hover-scale">{count}</span>
   </button>
 );
 
@@ -34,8 +35,8 @@ export const EventsTabs: React.FC<EventsTabsProps> = ({
   const { filterStatus, setFilterStatus } = useFilter();
 
   return (
-    <div className="flex items-center justify-between w-full mt-4 max-md:flex-wrap max-md:gap-2">
-      <div className="flex items-center border-b border-[#E6E6E6] overflow-x-auto whitespace-nowrap flex-nowrap max-md:w-full">
+    <div className="flex items-center justify-between w-full mt-4 max-md:flex-wrap max-md:gap-2 slide-in" style={{ animationDelay: '0.1s', overflow: 'hidden' }}>
+      <div className="flex items-center border-b border-[#E6E6E6] whitespace-nowrap flex-nowrap max-md:w-full" style={{ overflow: 'hidden' }}>
         <Tab
           title="Upcoming"
           count={124}
@@ -68,9 +69,9 @@ export const EventsTabs: React.FC<EventsTabsProps> = ({
         />
       </div>
 
-      <div className="flex items-center gap-1 ml-4 flex-shrink-0 max-md:ml-0 max-md:mt-2 max-md:w-full max-md:justify-between">
-        <span className="text-[#98A2B3] text-sm font-normal max-md:text-xs whitespace-nowrap md:hidden">Filter Status</span>
-        <span className="text-[#98A2B3] text-sm font-normal max-md:hidden whitespace-nowrap">Filter:</span>
+      <div className="flex items-center gap-1 ml-4 flex-shrink-0 max-md:ml-0 max-md:mt-2 max-md:w-full max-md:justify-between fade-in" style={{ animationDelay: '0.2s' }}>
+        <span className="text-[#98A2B3] text-sm font-normal max-md:text-xs whitespace-nowrap md:hidden slide-in" style={{ animationDelay: '0.25s' }}>Filter Status</span>
+        <span className="text-[#98A2B3] text-sm font-normal max-md:hidden whitespace-nowrap slide-in" style={{ animationDelay: '0.25s' }}>Filter:</span>
         <CustomDropdown
           options={[
             { value: 'Any', label: 'Select All' },

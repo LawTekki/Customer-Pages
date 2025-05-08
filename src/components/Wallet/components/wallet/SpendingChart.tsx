@@ -9,6 +9,7 @@ import {
   ResponsiveContainer
 } from "recharts";
 import { ChevronDown } from "lucide-react";
+import "../../animations.css";
 
 interface SpendingData {
   name: string;
@@ -124,7 +125,7 @@ export const SpendingChart: React.FC = () => {
     <div className="w-full p-4 pt-0">
       {/* HEADER - Desktop */}
       {!isMobile && (
-        <div className="flex items-center mb-4">
+        <div className="flex items-center mb-4 fade-in" style={{ animationDelay: '0.1s' }}>
           <h2 className="text-2xl font-semibold text-[#1A011E] w-1/3">
             Spending
           </h2>
@@ -132,7 +133,7 @@ export const SpendingChart: React.FC = () => {
           <div className="flex-grow flex justify-center">
             <div className="inline-flex bg-[#F5F5F5] rounded-lg">
               <button
-                className={`px-4 py-2 text-sm rounded-md ${
+                className={`px-4 py-2 text-sm rounded-md button-pulse ${
                   activeTab === "wallet"
                     ? "bg-white shadow-sm text-[#808080]"
                     : "text-[#808080]"
@@ -142,7 +143,7 @@ export const SpendingChart: React.FC = () => {
                 Wallet
               </button>
               <button
-                className={`px-4 py-2 text-sm rounded-md ${
+                className={`px-4 py-2 text-sm rounded-md button-pulse ${
                   activeTab === "credit"
                     ? "bg-white shadow-sm text-[#808080]"
                     : "text-[#808080]"
@@ -156,21 +157,21 @@ export const SpendingChart: React.FC = () => {
 
           <div className="w-1/3 flex justify-end relative">
             <div
-              className="flex items-center gap-2 px-3 py-2 cursor-pointer border border-[#E6E6E6] rounded-lg"
+              className="flex items-center gap-2 px-3 py-2 cursor-pointer border border-[#E6E6E6] rounded-lg hover-scale"
               onClick={() => setTimeFilterOpen((o) => !o)}
             >
               <span className="text-[#808080] text-sm">{timeFilter}</span>
-              <ChevronDown className="h-4 w-4 text-[#808080]" />
+              <ChevronDown className="h-4 w-4 text-[#808080] icon-spin" />
             </div>
             {timeFilterOpen && (
               <>
                 {/* Backdrop */}
                 <div className="fixed inset-0 z-30 bg-black bg-opacity-0" />
-                <div ref={dropdownRef} className="absolute right-0 mt-2 bg-white rounded-lg shadow-md z-40 w-40 transition-opacity opacity-100">
+                <div ref={dropdownRef} className="absolute right-0 mt-2 bg-white rounded-lg shadow-md z-40 w-40 transition-opacity opacity-100 slide-in">
                   {timeFilterOptions.map((opt) => (
                     <div
                       key={opt}
-                      className={`px-4 py-2 text-sm cursor-pointer ${
+                      className={`px-4 py-2 text-sm cursor-pointer hover-scale ${
                         timeFilter === opt
                           ? "text-[#6B047C]"
                           : "text-[#808080] hover:bg-[#F5F5F5]"
@@ -192,24 +193,24 @@ export const SpendingChart: React.FC = () => {
 
       {/* HEADER - Mobile */}
       {isMobile && (
-        <div className="mb-4">
+        <div className="mb-4 fade-in" style={{ animationDelay: '0.1s' }}>
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-xl font-semibold text-[#1A011E]">
               Spending
             </h2>
             <div
-              className="flex items-center gap-1 px-2 py-1 cursor-pointer border border-[#E6E6E6] rounded-lg"
+              className="flex items-center gap-1 px-2 py-1 cursor-pointer border border-[#E6E6E6] rounded-lg hover-scale"
               onClick={() => setTimeFilterOpen((o) => !o)}
             >
               <span className="text-[#808080] text-xs">{timeFilter}</span>
-              <ChevronDown className="h-3 w-3 text-[#808080]" />
+              <ChevronDown className="h-3 w-3 text-[#808080] icon-spin" />
             </div>
           </div>
 
           <div className="flex justify-center w-full mb-3">
             <div className="inline-flex bg-[#F5F5F5] rounded-lg w-full justify-center">
               <button
-                className={`flex-1 py-1.5 text-xs rounded-md ${
+                className={`flex-1 py-1.5 text-xs rounded-md button-pulse ${
                   activeTab === "wallet"
                     ? "bg-white shadow-sm text-[#808080]"
                     : "text-[#808080]"
@@ -219,7 +220,7 @@ export const SpendingChart: React.FC = () => {
                 Wallet
               </button>
               <button
-                className={`flex-1 py-1.5 text-xs rounded-md ${
+                className={`flex-1 py-1.5 text-xs rounded-md button-pulse ${
                   activeTab === "credit"
                     ? "bg-white shadow-sm text-[#808080]"
                     : "text-[#808080]"
@@ -235,11 +236,11 @@ export const SpendingChart: React.FC = () => {
             <>
               {/* Backdrop */}
               <div className="fixed inset-0 z-30 bg-black bg-opacity-0" />
-              <div ref={dropdownRef} className="absolute left-0 right-0 mt-1 mx-4 bg-white rounded-lg shadow-md z-40 border border-[#E6E6E6] transition-opacity opacity-100">
+              <div ref={dropdownRef} className="absolute left-0 right-0 mt-1 mx-4 bg-white rounded-lg shadow-md z-40 border border-[#E6E6E6] transition-opacity opacity-100 slide-in">
                 {timeFilterOptions.map((opt) => (
                   <div
                     key={opt}
-                    className={`px-4 py-2 text-sm cursor-pointer ${
+                    className={`px-4 py-2 text-sm cursor-pointer hover-scale ${
                       timeFilter === opt
                         ? "text-[#6B047C]"
                         : "text-[#808080] hover:bg-[#F5F5F5]"
@@ -259,10 +260,7 @@ export const SpendingChart: React.FC = () => {
       )}
 
       {/* CHART */}
-      <div
-        className={`h-[200px] -mb-6 ${isMobile ? 'mx-[-4px] px-0' : ''}`}
-        style={{ zIndex: 30, position: 'relative', overflow: 'visible' }}
-      >
+      <div className="w-full h-[200px] fade-in" style={{ animationDelay: '0.2s' }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={data}

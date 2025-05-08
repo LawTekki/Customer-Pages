@@ -1,4 +1,3 @@
-
 import React, { useMemo, useState } from 'react';
 import {
   Table,
@@ -7,7 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from "@/components/ui/table";
+} from "../../components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useFilter } from '../../context/FilterContext';
 import { Pagination } from './Pagination';
@@ -138,13 +137,13 @@ export const WorkPackageTable = () => {
   const totalPages = Math.ceil(filteredWorkPackages.length / packagesPerPage);
 
   return (
-    <div className="mt-6 fade-in overflow-x-hidden" style={{ animationDelay: '0.4s' }}>
+    <div className="mt-6 fade-in" style={{ animationDelay: '0.4s' }}>
       <div className="hidden max-md:block">
         {currentPackages.map((pkg, index) => (
           <div
             key={pkg.id}
-            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] fade-in max-w-[360px] mx-auto mt-4"
-            style={{ animationDelay: `${0.5 + index * 0.05}s` }}
+            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors w-full max-w-[360px] mx-auto mt-4 hover-lift card-hover click-shrink fade-in"
+            style={{ animationDelay: `${0.1 + index * 0.05}s` }}
           >
             {/* Title Section */}
             <div className="mb-3">
@@ -215,24 +214,24 @@ export const WorkPackageTable = () => {
         ))}
       </div>
 
-      <div className="rounded-md border max-md:hidden fade-in overflow-x-hidden w-full" style={{ animationDelay: '0.5s' }}>
-        <div className="overflow-x-hidden w-full">
+      <div className="rounded-md border max-md:hidden fade-in w-full" style={{ animationDelay: '0.3s' }}>
+        <div className="w-full">
           <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow className="bg-gray-50">
-                <TableHead className="w-[5%] text-left">S/N</TableHead>
-                <TableHead className="w-[20%] text-left">Title</TableHead>
-                <TableHead className="w-[10%] text-left">Responses</TableHead>
-                <TableHead className="w-[15%] text-left">Talent hired</TableHead>
-                <TableHead className="w-[15%] text-left">Posted date</TableHead>
-                <TableHead className="w-[10%] text-left">Status</TableHead>
-                <TableHead className="w-[10%] text-left">Budget</TableHead>
-                <TableHead className="w-[15%] text-left">Action</TableHead>
+                <TableHead className="w-[5%] text-left hover:bg-gray-100 transition-colors">S/N</TableHead>
+                <TableHead className="w-[20%] text-left hover:bg-gray-100 transition-colors">Title</TableHead>
+                <TableHead className="w-[10%] text-left hover:bg-gray-100 transition-colors">Responses</TableHead>
+                <TableHead className="w-[15%] text-left hover:bg-gray-100 transition-colors">Talent hired</TableHead>
+                <TableHead className="w-[15%] text-left hover:bg-gray-100 transition-colors">Posted date</TableHead>
+                <TableHead className="w-[10%] text-left hover:bg-gray-100 transition-colors">Status</TableHead>
+                <TableHead className="w-[10%] text-left hover:bg-gray-100 transition-colors">Budget</TableHead>
+                <TableHead className="w-[15%] text-left hover:bg-gray-100 transition-colors">Action</TableHead>
               </TableRow>
             </TableHeader>
           <TableBody>
             {currentPackages.map((pkg, index) => (
-              <TableRow key={pkg.id} className="table-row-hover fade-in" style={{ animationDelay: `${0.6 + index * 0.05}s` }}>
+              <TableRow key={pkg.id} className="table-row-hover click-shrink fade-in" style={{ animationDelay: `${0.1 + index * 0.05}s` }}>
                 <TableCell className="truncate">{pkg.id}</TableCell>
                 <TableCell>
                   <div className="max-w-[300px]">

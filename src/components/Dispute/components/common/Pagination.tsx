@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import "../../animations.css";
 
 interface PaginationProps {
   currentPage: number;
@@ -24,7 +25,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           <button
             key={i}
             onClick={() => onPageChange(i)}
-            className={`w-9 h-9 text-sm font-normal leading-5 cursor-pointer bg-white rounded-md border ${
+            className={`w-9 h-9 text-sm font-normal leading-5 cursor-pointer bg-white rounded-md border hover-scale click-shrink transition-all duration-300 ${
               currentPage === i
                 ? "text-[#6B047C] border-2 border-[#6B047C] font-medium"
                 : "text-[#808080] border-[#E6E6E6] hover:border-[#6B047C] hover:text-[#6B047C]"
@@ -40,7 +41,8 @@ export const Pagination: React.FC<PaginationProps> = ({
         pages.push(
           <span
             key={i}
-            className="flex items-center justify-center w-9 h-9 text-[#808080]"
+            className="flex items-center justify-center w-9 h-9 text-[#808080] fade-in"
+            style={{ animationDelay: '0.2s' }}
           >
             ...
           </span>
@@ -51,23 +53,23 @@ export const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <div className="flex justify-center items-center gap-2 mt-5 mb-6">
+    <div className="flex justify-center items-center gap-2 mt-5 mb-6 fade-in" style={{ animationDelay: '0.5s', overflow: 'hidden' }}>
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="flex justify-center items-center border cursor-pointer bg-white p-2 rounded-md border-solid border-[#E6E6E6] disabled:opacity-50 hover:border-[#6B047C] disabled:hover:border-[#E6E6E6]"
+        className="flex justify-center items-center border cursor-pointer bg-white p-2 rounded-md border-solid border-[#E6E6E6] disabled:opacity-50 hover:border-[#6B047C] disabled:hover:border-[#E6E6E6] hover-scale click-shrink transition-all duration-300"
         aria-label="Previous page"
       >
-        <ChevronLeft className="h-4 w-4 text-[#808080]" />
+        <ChevronLeft className="h-4 w-4 text-[#808080] icon-spin" />
       </button>
       {renderPageNumbers()}
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="flex justify-center items-center border cursor-pointer bg-white p-2 rounded-md border-solid border-[#E6E6E6] disabled:opacity-50 hover:border-[#6B047C] disabled:hover:border-[#E6E6E6]"
+        className="flex justify-center items-center border cursor-pointer bg-white p-2 rounded-md border-solid border-[#E6E6E6] disabled:opacity-50 hover:border-[#6B047C] disabled:hover:border-[#E6E6E6] hover-scale click-shrink transition-all duration-300"
         aria-label="Next page"
       >
-        <ChevronRight className="h-4 w-4 text-[#808080]" />
+        <ChevronRight className="h-4 w-4 text-[#808080] icon-spin" />
       </button>
     </div>
   );

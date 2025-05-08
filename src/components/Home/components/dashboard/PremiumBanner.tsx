@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export const PremiumBanner = () => {
   return (
-    <div className="px-[12px] sm:px-0 mb-2 sm:mb-6 mt-2 sm:mt-0 fade-in">
+    <div className="px-4 sm:px-0 mb-2 sm:mb-6 mt-2 sm:mt-0 fade-in">
       <motion.div
         className="w-full box-border relative bg-[#6B047C] rounded-[1rem] px-4 sm:px-6 py-4 sm:py-5 flex flex-row items-center justify-between overflow-hidden"
         whileHover={{

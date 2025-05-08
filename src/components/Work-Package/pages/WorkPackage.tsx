@@ -8,17 +8,18 @@ import { WorkPackageTabs } from "../components/workpackage/WorkPackageTabs";
 import { WorkPackageTable } from "../components/workpackage/WorkPackageTable";
 import { DraftTable } from "../components/workpackage/DraftTable";
 import { FilterProvider } from "../context/FilterContext";
+import "../animations.css";
 
 const WorkPackage = () => {
   const [activeTab, setActiveTab] = useState('posted');
 
   return (
     <FilterProvider>
-      <div className="bg-white w-full overflow-hidden">
+      <div className="bg-white w-full" style={{ overflow: 'hidden' }}>
         <Header />
-        <div className="flex w-full items-stretch gap-[31px]">
+        <div className="flex w-full items-stretch gap-[31px]" style={{ overflow: 'hidden' }}>
           <Sidebar />
-          <main className="flex flex-col flex-grow px-6 py-8 max-w-[1200px]">
+          <main className="flex flex-col flex-grow px-6 py-8 max-w-[1200px]" style={{ overflow: 'hidden' }}>
           <div className="flex justify-between items-start max-md:flex-col max-md:gap-4">
             <div>
               <h1 className="text-[32px] font-semibold text-[#1A011E] max-md:text-2xl max-md:leading-[1.3]">

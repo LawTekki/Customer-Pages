@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import WorkPackage from "./pages/WorkPackage";
 import Events from "./pages/Events";
 import NotFound from "./pages/NotFound";
+import "./animations.css";
 
 const queryClient = new QueryClient();
 

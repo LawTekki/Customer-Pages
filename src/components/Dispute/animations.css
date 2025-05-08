@@ -1,14 +1,4 @@
-/* Animation utilities for Contacts components */
-
-/* Hide scrollbars for tables */
-.overflow-hidden::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
-}
-
-.overflow-hidden {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
+/* Animation utilities for Dispute components */
 
 /* Mobile detection */
 @media (max-width: 640px) {
@@ -76,6 +66,14 @@
   animation: ripple 1.2s ease-out;
 }
 
+/* Special button scale animation that preserves border radius */
+.preserve-radius {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
 @keyframes ripple {
   0% {
     transform: scale(0, 0);
@@ -109,10 +107,12 @@
 /* Card animations */
 .card-hover {
   transition: all 0.3s ease;
+  border: 1px solid #F2F2F2;
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 
 .card-hover:hover, .card-hover:active {
+  border-color: #6B047C;
   box-shadow: 0 8px 16px rgba(107, 4, 124, 0.1);
   transform: translateY(calc(-4px * var(--animation-scale)));
 }
@@ -120,7 +120,7 @@
 /* Table row animations */
 .table-row-hover {
   transition: background-color 0.2s ease, transform 0.2s ease;
-  overflow: hidden; /* Prevent horizontal overflow */
+  overflow: hidden;
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 
@@ -218,4 +218,42 @@
   * {
     animation-delay: 0s !important;
   }
+}
+
+/* Hide scrollbars for specific components only */
+/* For Webkit browsers (Chrome, Safari) */
+.table-container::-webkit-scrollbar,
+.component-container::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* For Firefox */
+.table-container,
+.component-container {
+  scrollbar-width: none;
+}
+
+/* For IE and Edge */
+.table-container,
+.component-container {
+  -ms-overflow-style: none;
+}
+
+/* Ensure no scrollbars on tables and containers */
+.table-container {
+  overflow: hidden !important;
+}
+
+.table-fixed {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Prevent content overflow */
+.truncate-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

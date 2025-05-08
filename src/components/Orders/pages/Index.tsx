@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -16,6 +15,33 @@ const mockStats: OrderStats = {
   pendingOrders: 56,
   cashSpent: "$40,00",
 };
+
+// Memoized fixed header section (no stats)
+const FixedHeader = React.memo(() => (
+  <div className="flex justify-between items-center mt-8 max-md:mt-4">
+    <div className="min-w-60 w-[583px] max-md:w-[65%] max-md:min-w-0 max-md:ml-0 fade-in" style={{ animationDelay: '0.1s' }}>
+      <h1 className="text-[#1A011E] text-[32px] font-semibold leading-[1.3] tracking-[-0.64px] max-md:text-xl max-md:leading-[1.3]">
+        Orders
+      </h1>
+      <p className="text-[#808080] text-sm font-medium leading-[18px] tracking-[-0.28px] mt-2 max-md:text-xs">
+        All your orders are been showed here
+      </p>
+    </div>
+    <motion.button
+      className="bg-[#6B047C] text-white px-5 py-3 rounded text-sm font-medium max-md:px-3 max-md:py-2 max-md:text-xs max-md:whitespace-nowrap button-pulse fade-in"
+      style={{ animationDelay: '0.2s' }}
+      whileHover={{ scale: 1.05, y: -2 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 17
+      }}
+    >
+      Order an item
+    </motion.button>
+  </div>
+));
 
 const mockOrders: Order[] = [
   {
@@ -101,43 +127,25 @@ const OrdersContent = () => {
         <Header />
         <div className="flex w-full max-w-[1416px] items-stretch gap-[31px] flex-wrap max-md:max-w-full">
           <Sidebar />
-          <main className="flex flex-col items-stretch grow shrink-0 basis-0 w-fit my-auto max-md:max-w-full max-md:px-4 mr-4">
-            <div className="flex justify-between items-center mt-12 max-md:mt-6">
-              <div className="min-w-60 w-[583px] max-md:w-[65%] max-md:min-w-0 max-md:ml-0">
-                <h1 className="text-[#1A011E] text-[32px] font-semibold leading-[1.3] tracking-[-0.64px] max-md:text-xl max-md:leading-[1.3]">
-                  Orders
-                </h1>
-                <p className="text-[#808080] text-sm font-medium leading-[18px] tracking-[-0.28px] mt-2 max-md:text-xs">
-                  All your orders are been showed here
-                </p>
-              </div>
+          <main className="flex flex-col items-stretch grow shrink-0 basis-0 w-fit max-md:max-w-full max-md:px-4 mr-4">
+            <FixedHeader />
+            {/* Stats row below header */}
+            <div className="w-full mt-4 mb-2">
+              <OrderStatsDisplay stats={mockStats} />
+            </div>
 
-            <motion.button
-              className="bg-[#6B047C] text-white px-5 py-3 rounded text-sm font-medium max-md:px-3 max-md:py-2 max-md:text-xs max-md:whitespace-nowrap"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{
-                type: "spring",
-                stiffness: 400,
-                damping: 17
-              }}
-            >
-              Order an item
-            </motion.button>
-          </div>
-
-          <OrderStatsDisplay stats={mockStats} />
-
-          <div className="w-full mt-8">
+          {/* Table area: remove min-height and reduce margin for tighter layout */}
+          <div className="w-full mt-2">
             <div className="flex items-center justify-between max-md:flex-col max-md:items-start">
-              <div className="flex items-center max-md:w-full max-md:pb-0 max-md:overflow-visible max-md:justify-between border-b border-[#E6E6E6]">
+              <div className="flex items-center max-md:w-full max-md:pb-0 max-md:overflow-visible max-md:justify-between border-b border-[#E6E6E6] slide-in fade-in" style={{ animationDelay: '0.4s', overflow: 'hidden' }}>
                 <button
                   onClick={() => setActiveTab("all")}
-                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap max-md:mr-2 ${
+                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap max-md:mr-2 hover-scale click-shrink transition-all duration-200 ${
                     activeTab === "all"
                       ? "border-[#6B047C] text-[#6B047C]"
                       : "border-transparent text-[#808080]"
                   }`}
+                  style={{ overflow: 'hidden' }}
                 >
                   <span className="font-medium max-md:text-[10px]">All</span>
                   <span className={`text-xs px-2 py-0.5 rounded max-md:text-[8px] max-md:px-1 max-md:py-0 max-md:inline-flex max-md:items-center max-md:justify-center ${
@@ -149,11 +157,12 @@ const OrdersContent = () => {
 
                 <button
                   onClick={() => setActiveTab("active")}
-                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap max-md:mr-2 ${
+                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap max-md:mr-2 hover-scale click-shrink transition-all duration-200 ${
                     activeTab === "active"
                       ? "border-[#6B047C] text-[#6B047C]"
                       : "border-transparent text-[#808080]"
                   }`}
+                  style={{ overflow: 'hidden' }}
                 >
                   <span className="font-medium max-md:text-[10px]">Active</span>
                   <span className={`text-xs px-2 py-0.5 rounded max-md:text-[8px] max-md:px-1 max-md:py-0 max-md:inline-flex max-md:items-center max-md:justify-center ${
@@ -165,11 +174,12 @@ const OrdersContent = () => {
 
                 <button
                   onClick={() => setActiveTab("received")}
-                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap max-md:mr-2 ${
+                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap max-md:mr-2 hover-scale click-shrink transition-all duration-200 ${
                     activeTab === "received"
                       ? "border-[#6B047C] text-[#6B047C]"
                       : "border-transparent text-[#808080]"
                   }`}
+                  style={{ overflow: 'hidden' }}
                 >
                   <span className="font-medium max-md:text-[10px]">Received</span>
                   <span className={`text-xs px-2 py-0.5 rounded max-md:text-[8px] max-md:px-1 max-md:py-0 max-md:inline-flex max-md:items-center max-md:justify-center ${
@@ -181,11 +191,12 @@ const OrdersContent = () => {
 
                 <button
                   onClick={() => setActiveTab("cancelled")}
-                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap ${
+                  className={`flex items-center gap-1 px-4 py-3 border-b-2 max-md:px-1 max-md:py-2 max-md:pb-3 max-md:whitespace-nowrap hover-scale click-shrink transition-all duration-200 ${
                     activeTab === "cancelled"
                       ? "border-[#6B047C] text-[#6B047C]"
                       : "border-transparent text-[#808080]"
                   }`}
+                  style={{ overflow: 'hidden' }}
                 >
                   <span className="font-medium max-md:text-[10px]">Cancelled</span>
                   <span className={`text-xs px-2 py-0.5 rounded max-md:text-[8px] max-md:px-1 max-md:py-0 max-md:inline-flex max-md:items-center max-md:justify-center ${

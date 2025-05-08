@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import WorkPackage from "./pages/WorkPackage";
 import NotFound from "./pages/NotFound";
+import "./animations.css";
 
 const queryClient = new QueryClient();
 

@@ -27,7 +27,7 @@ const stats = [
 export const StatsCards = () => {
   // Mobile view (separate cards stacked vertically)
   const mobileView = (
-    <div className="flex flex-col w-11/12 mx-auto mb-5 gap-2 sm:hidden">
+    <div className="flex flex-col w-full px-4 mb-5 gap-2 sm:hidden">
       {stats.map((stat, index) => (
         <div
           key={stat.label}

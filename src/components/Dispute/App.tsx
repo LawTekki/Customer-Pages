@@ -9,6 +9,7 @@ import WorkPackage from "./pages/WorkPackage";
 import Events from "./pages/Events";
 import Dispute from "./pages/Dispute";
 import NotFound from "./pages/NotFound";
+import "./animations.css";
 
 const queryClient = new QueryClient();
 

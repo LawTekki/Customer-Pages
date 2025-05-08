@@ -3,9 +3,6 @@ import React, { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Button } from "@/components/ui/button";
-import { EventsStats } from "@/components/events/EventsStats";
-import { EventsTabs } from "@/components/events/EventsTabs";
-import { EventsTable } from "@/components/events/EventsTable";
 
 const Events = () => {
   return (
@@ -29,10 +26,6 @@ const Events = () => {
               Explore events
             </Button>
           </div>
-
-          <EventsStats />
-          <EventsTabs />
-          <EventsTable />
         </main>
       </div>
     </div>

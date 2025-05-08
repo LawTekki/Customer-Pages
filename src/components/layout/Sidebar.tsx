@@ -46,7 +46,7 @@ const navItems = [
         className="w-5 h-5 transition-colors duration-300"
       >
         <path
-          d="M0.6604 7.63333C0.6604 6.50167 0.660401 5.93583 0.888734 5.43833C1.1179 4.94083 1.54707 4.57333 2.40623 3.83667L3.23957 3.1225C4.79373 1.79167 5.56873 1.125 6.49373 1.125C7.41873 1.125 8.19457 1.79083 9.7479 3.12167L10.5812 3.83583C11.4396 4.5725 11.8696 4.94 12.0979 5.4375C12.3271 5.935 12.3271 6.50083 12.3271 7.6325V11.1667C12.3271 12.7383 12.3271 13.5233 11.8387 14.0117C11.3504 14.5 10.5654 14.5 8.99373 14.5H3.99373C2.42207 14.5 1.63707 14.5 1.14873 14.0117C0.6604 13.5233 0.6604 12.7383 0.6604 11.1667V7.63333Z"
+          d="M0.6604 7.63333C0.660401 6.50167 0.660401 5.93583 0.888734 5.43833C1.1179 4.94083 1.54707 4.57333 2.40623 3.83667L3.23957 3.1225C4.79373 1.79167 5.56873 1.125 6.49373 1.125C7.41873 1.125 8.19457 1.79083 9.7479 3.12167L10.5812 3.83583C11.4396 4.5725 11.8696 4.94 12.0979 5.4375C12.3271 5.935 12.3271 6.50083 12.3271 7.6325V11.1667C12.3271 12.7383 12.3271 13.5233 11.8387 14.0117C11.3504 14.5 10.5654 14.5 8.99373 14.5H3.99373C2.42207 14.5 1.63707 14.5 1.14873 14.0117C0.6604 13.5233 0.6604 12.7383 0.6604 11.1667V7.63333Z"
           stroke="currentColor"
         />
         <path
@@ -236,6 +236,8 @@ export const Sidebar = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const navigate = useNavigate();
+  const [showMobileBar, setShowMobileBar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   // Function to get the active item based on the current route
   const getActiveItemFromRoute = (path: string): string => {
@@ -311,6 +313,19 @@ export const Sidebar = () => {
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY) {
+        setShowMobileBar(false); // Hide on scroll down
+      } else {
+        setShowMobileBar(true); // Show on scroll up
+      }
+      setLastScrollY(window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
     <>
       {/* Desktop Sidebar */}
@@ -374,57 +389,59 @@ export const Sidebar = () => {
       </nav>
 
       {/* Mobile Sidebar (bottom, icons only) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#E6E6E6] flex justify-between items-center px-2 py-1 sm:hidden h-14" style={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}>
-        {navItems.map((item) => {
-          const isActive = activeItem === item.label;
-          if (item.label === "More") {
+      <nav className={`fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#E6E6E6] flex justify-between items-center px-2 py-1 sm:hidden h-14 transition-transform duration-300 ${showMobileBar ? 'translate-y-0' : 'translate-y-full'} shadow-[0_-2px_10px_rgba(0,0,0,0.05)]`}>
+        <div className="flex justify-between items-center w-full px-2">
+          {navItems.map((item) => {
+            const isActive = activeItem === item.label;
+            if (item.label === "More") {
+              return (
+                <div key={item.label} className="flex-1 flex flex-col items-center justify-center">
+                  <button
+                    onClick={() => handleNav(item.label)}
+                    className={`flex flex-col items-center justify-center w-full transition-all duration-300 px-1 ${
+                      isActive ? "text-[#6B047C]" : "text-[#808080] hover:text-[#6B047C]"
+                    }`}
+                    style={{ minWidth: 0 }}
+                    aria-label={item.label}
+                  >
+                    <span className={`flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-300 ${
+                      isActive ? "bg-[rgba(107,4,124,0.1)]" : "hover:bg-[rgba(107,4,124,0.08)]"
+                    }`}>
+                      {React.cloneElement(item.svg, {
+                        className: `w-5 h-5 ${isActive ? 'stroke-[#6B047C]' : 'stroke-[#808080]'}`,
+                      })}
+                    </span>
+                  </button>
+                  {/* Show dropdown on mobile if More is active */}
+                  <ProfileDropdown
+                    isOpen={showProfileDropdown}
+                    onClose={() => setShowProfileDropdown(false)}
+                    onProfileClick={() => setShowProfileModal(true)}
+                  />
+                </div>
+              );
+            }
             return (
-              <div key={item.label} className="flex-1 flex flex-col items-center justify-center">
-                <button
-                  onClick={() => handleNav(item.label)}
-                  className={`flex flex-col items-center justify-center w-full transition-all duration-300 px-1 ${
-                    isActive ? "text-[#6B047C]" : "text-[#808080] hover:text-[#6B047C]"
-                  }`}
-                  style={{ minWidth: 0 }}
-                  aria-label={item.label}
-                >
-                  <span className={`flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-300 ${
-                    isActive ? "bg-[rgba(107,4,124,0.1)]" : "hover:bg-[rgba(107,4,124,0.08)]"
-                  }`}>
-                    {React.cloneElement(item.svg, {
-                      className: `w-5 h-5 ${isActive ? 'stroke-[#6B047C]' : 'stroke-[#808080]'}`,
-                    })}
-                  </span>
-                </button>
-                {/* Show dropdown on mobile if More is active */}
-                <ProfileDropdown
-                  isOpen={showProfileDropdown}
-                  onClose={() => setShowProfileDropdown(false)}
-                  onProfileClick={() => setShowProfileModal(true)}
-                />
-              </div>
+              <button
+                key={item.label}
+                onClick={() => handleNav(item.label)}
+                className={`flex flex-col items-center justify-center flex-1 transition-all duration-300 px-1 ${
+                  isActive ? "text-[#6B047C]" : "text-[#808080] hover:text-[#6B047C]"
+                }`}
+                style={{ minWidth: 0 }}
+                aria-label={item.label}
+              >
+                <span className={`flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-300 ${
+                  isActive ? "bg-[rgba(107,4,124,0.1)]" : "hover:bg-[rgba(107,4,124,0.08)]"
+                }`}>
+                  {React.cloneElement(item.svg, {
+                    className: `w-5 h-5 ${isActive ? 'stroke-[#6B047C]' : 'stroke-[#808080]'}`,
+                  })}
+                </span>
+              </button>
             );
-          }
-          return (
-            <button
-              key={item.label}
-              onClick={() => handleNav(item.label)}
-              className={`flex flex-col items-center justify-center flex-1 transition-all duration-300 px-1 ${
-                isActive ? "text-[#6B047C]" : "text-[#808080] hover:text-[#6B047C]"
-              }`}
-              style={{ minWidth: 0 }}
-              aria-label={item.label}
-            >
-              <span className={`flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-300 ${
-                isActive ? "bg-[rgba(107,4,124,0.1)]" : "hover:bg-[rgba(107,4,124,0.08)]"
-              }`}>
-                {React.cloneElement(item.svg, {
-                  className: `w-5 h-5 ${isActive ? 'stroke-[#6B047C]' : 'stroke-[#808080]'}`,
-                })}
-              </span>
-            </button>
-          );
-        })}
+          })}
+        </div>
       </nav>
 
       {/* Profile Modal */}
