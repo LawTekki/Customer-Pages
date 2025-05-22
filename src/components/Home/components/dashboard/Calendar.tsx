@@ -106,7 +106,7 @@ export const Calendar = () => {
   const selectedDateActivities = getActivitiesForDate(selectedDate);
 
   return (
-    <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border hover-border fade-in" style={{ borderColor: '#F2F2F2', animationDelay: '0.4s' }}>
+    <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border hover-border fade-in" style={{ borderColor: '#F2F2F2' }}>
       <div className="flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <button

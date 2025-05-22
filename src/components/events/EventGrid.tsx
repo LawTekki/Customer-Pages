@@ -73,7 +73,7 @@ const eventData = [
 
 export const EventGrid: React.FC<EventGridProps> = ({ viewMode = "grid" }) => {
   return (
-    <div className="w-full font-medium mt-12 max-md:mt-10">
+    <div className="w-full font-medium mt-12 max-md:mt-10 fade-in">
       <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" : "flex flex-col gap-4"}>
         {eventData.map((event, index) => (
           <EventCard key={index} {...event} viewMode={viewMode} />

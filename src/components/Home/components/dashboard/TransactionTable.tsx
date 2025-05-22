@@ -49,7 +49,7 @@ export const TransactionTable = () => {
   return (
     <>
       {/* Desktop view with container */}
-      <div className="hidden sm:block bg-white rounded-lg p-4 shadow-sm mb-6 mx-[12px] sm:mx-0 border hover-border fade-in overflow-hidden" style={{ borderColor: '#F2F2F2', animationDelay: '0.3s' }}>
+      <div className="hidden sm:block bg-white rounded-lg p-4 shadow-sm mb-6 mx-[12px] sm:mx-0 border hover-border fade-in overflow-hidden" style={{ borderColor: '#F2F2F2' }}>
         <h3 className="text-gray-900 font-semibold text-base mb-4">
           Transaction history
         </h3>

@@ -1,0 +1,72 @@
+import React, { useState } from "react";
+import { SettingsSidebar } from "@/components/Settings/SettingsSidebar";
+import { ProfileSettings } from "@/components/Settings/ProfileSettings";
+import { SecuritySettings } from "@/components/Settings/SecuritySettings";
+import { NotificationSettings } from "@/components/Settings/NotificationSettings";
+import { SecurityQuestionSettings } from "@/components/Settings/SecurityQuestionSettings";
+import { TwoFactorSettings } from "@/components/Settings/TwoFactorSettings";
+import { DeactivateModal } from "@/components/Settings/DeactivateModal";
+
+const SettingsPage: React.FC = () => {
+  const [activeSection, setActiveSection] = useState("profile");
+  const [isDeactivateModalOpen, setIsDeactivateModalOpen] = useState(false);
+
+  const handleDeactivate = () => {
+    // TODO: Implement account deactivation logic
+    setIsDeactivateModalOpen(false);
+  };
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case "profile":
+        return <ProfileSettings />;
+      case "security":
+        return <SecuritySettings />;
+      case "notification":
+        return <NotificationSettings />;
+      case "security-question":
+        return <SecurityQuestionSettings />;
+      case "two-factor":
+        return <TwoFactorSettings />;
+      case "deactivate":
+        return (
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold mb-4">Deactivate Account</h2>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to deactivate your account? This action cannot be undone.
+            </p>
+            <button
+              onClick={() => setIsDeactivateModalOpen(true)}
+              className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Deactivate Account
+            </button>
+            <DeactivateModal
+              isOpen={isDeactivateModalOpen}
+              onClose={() => setIsDeactivateModalOpen(false)}
+              onConfirm={handleDeactivate}
+            />
+          </div>
+        );
+      default:
+        return <ProfileSettings />;
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen bg-white pl-[60px]">
+      {/* Settings Sidebar */}
+      <div className="w-64 mt-[48px]">
+        <SettingsSidebar activeId={activeSection} onChange={setActiveSection} />
+      </div>
+      {/* Main Content */}
+      <div className="flex-1 flex items-start mt-[48px] ml-8">
+        <div className="max-w-4xl mx-auto w-full">
+          {renderContent()}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SettingsPage; 

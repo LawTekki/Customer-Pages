@@ -49,7 +49,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   if (viewMode === "list") {
     return (
       <article 
-        className="w-full bg-[#F9F5FA] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:transform hover:scale-[1.02] cursor-pointer"
+        className="w-full bg-[#F9F5FA] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:transform hover:scale-[1.02] cursor-pointer fade-in"
         onClick={onClick}
       >
         <div className="flex flex-row w-full items-stretch">
@@ -121,7 +121,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   // Grid View
   return (
     <article 
-      className="w-full bg-[#F9F5FA] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:transform hover:scale-[1.02] cursor-pointer"
+      className="w-full bg-[#F9F5FA] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:transform hover:scale-[1.02] cursor-pointer fade-in"
       onClick={onClick}
     >
       <div className="flex flex-col w-full">

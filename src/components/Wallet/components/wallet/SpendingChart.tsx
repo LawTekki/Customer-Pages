@@ -122,10 +122,10 @@ export const SpendingChart: React.FC = () => {
   );
 
   return (
-    <div className="w-full p-4 pt-0">
+    <div className="w-full p-4 pt-0 max-md:p-2 max-md:pt-0">
       {/* HEADER - Desktop */}
       {!isMobile && (
-        <div className="flex items-center mb-4 fade-in" style={{ animationDelay: '0.1s' }}>
+        <div className="flex items-center mb-4 fade-in">
           <h2 className="text-2xl font-semibold text-[#1A011E] w-1/3">
             Spending
           </h2>
@@ -193,7 +193,7 @@ export const SpendingChart: React.FC = () => {
 
       {/* HEADER - Mobile */}
       {isMobile && (
-        <div className="mb-4 fade-in" style={{ animationDelay: '0.1s' }}>
+        <div className="mb-4 fade-in">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-xl font-semibold text-[#1A011E]">
               Spending
@@ -260,7 +260,7 @@ export const SpendingChart: React.FC = () => {
       )}
 
       {/* CHART */}
-      <div className="w-full h-[200px] fade-in" style={{ animationDelay: '0.2s' }}>
+      <div className="w-full h-[200px] fade-in max-md:h-[140px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={data}

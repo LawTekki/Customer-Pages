@@ -23,7 +23,7 @@ const talents = [
 
 export const TalentsList = () => {
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm border hover-border fade-in" style={{ borderColor: '#F2F2F2', animationDelay: '0.5s' }}>
+    <div className="bg-white rounded-lg p-4 shadow-sm border hover-border fade-in" style={{ borderColor: '#F2F2F2' }}>
       <h3 className="text-gray-900 font-semibold text-base mb-4 hover-scale">
         My talents
       </h3>
@@ -40,7 +40,7 @@ export const TalentsList = () => {
                 className="w-10 h-10 rounded-full object-cover hover-scale icon-bounce"
                 alt={talent.name}
               />
-              <div className="slide-in" style={{ animationDelay: `${0.6 + index * 0.1}s` }}>
+              <div className="slide-in">
                 <div className="text-gray-900 text-sm font-medium">
                   {talent.name}
                 </div>

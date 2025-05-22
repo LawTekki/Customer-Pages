@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { useFilter } from '../../context/FilterContext';
 import { CustomDropdown } from './CustomDropdown';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface TabProps {
   title: string;
@@ -26,47 +26,70 @@ const Tab = ({ title, count, active = false, onClick }: TabProps) => (
 interface EventsTabsProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  events: Array<{ status: string }>;
 }
 
 export const EventsTabs: React.FC<EventsTabsProps> = ({
   activeTab,
-  setActiveTab
+  setActiveTab,
+  events
 }) => {
   const { filterStatus, setFilterStatus } = useFilter();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Map tab keys to filter values and routes
+  const tabToFilter = {
+    upcoming: 'Ongoing',
+    pending: 'Pending',
+    recurring: 'Ongoing', // or whatever status you want
+    past: 'Concluded',
+    cancelled: 'Cancelled'
+  };
+
+  const tabToRoute = {
+    upcoming: '/events/upcoming',
+    pending: '/events/pending',
+    recurring: '/events/recurring',
+    past: '/events/past',
+    cancelled: '/events/cancelled'
+  };
+
+  // Calculate counts dynamically
+  const counts = {
+    upcoming: events.filter(e => e.status === 'Ongoing').length,
+    pending: events.filter(e => e.status === 'Pending').length,
+    recurring: events.filter(e => e.status === 'Ongoing').length, // adjust if needed
+    past: events.filter(e => e.status === 'Concluded').length,
+    cancelled: events.filter(e => e.status === 'Cancelled').length
+  };
+
+  const tabs = [
+    { key: 'upcoming', title: 'Upcoming', count: counts.upcoming },
+    { key: 'pending', title: 'Pending', count: counts.pending },
+    { key: 'recurring', title: 'Recurring', count: counts.recurring },
+    { key: 'past', title: 'Past', count: counts.past },
+    { key: 'cancelled', title: 'Cancelled', count: counts.cancelled }
+  ];
 
   return (
     <div className="flex items-center justify-between w-full mt-4 max-md:flex-wrap max-md:gap-2 slide-in" style={{ animationDelay: '0.1s', overflow: 'hidden' }}>
       <div className="flex items-center border-b border-[#E6E6E6] whitespace-nowrap flex-nowrap max-md:w-full" style={{ overflow: 'hidden' }}>
-        <Tab
-          title="Upcoming"
-          count={124}
-          active={activeTab === 'upcoming'}
-          onClick={() => setActiveTab('upcoming')}
+        {tabs.map(tab => (
+          <Tab
+            key={tab.key}
+            title={tab.title}
+            count={tab.count}
+            active={activeTab === tab.key}
+            onClick={() => {
+              setActiveTab(tab.key);
+              setFilterStatus(tabToFilter[tab.key]);
+              if (location.pathname !== tabToRoute[tab.key]) {
+                navigate(tabToRoute[tab.key]);
+              }
+            }}
         />
-        <Tab
-          title="Pending"
-          count={43}
-          active={activeTab === 'pending'}
-          onClick={() => setActiveTab('pending')}
-        />
-        <Tab
-          title="Recurring"
-          count={43}
-          active={activeTab === 'recurring'}
-          onClick={() => setActiveTab('recurring')}
-        />
-        <Tab
-          title="Past"
-          count={43}
-          active={activeTab === 'past'}
-          onClick={() => setActiveTab('past')}
-        />
-        <Tab
-          title="Cancelled"
-          count={43}
-          active={activeTab === 'cancelled'}
-          onClick={() => setActiveTab('cancelled')}
-        />
+        ))}
       </div>
 
       <div className="flex items-center gap-1 ml-4 flex-shrink-0 max-md:ml-0 max-md:mt-2 max-md:w-full max-md:justify-between fade-in" style={{ animationDelay: '0.2s' }}>

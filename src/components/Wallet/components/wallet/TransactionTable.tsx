@@ -139,9 +139,9 @@ export const TransactionTable: React.FC = () => {
     : null;
 
   return (
-    <div className="w-full bg-white rounded-lg border border-[#E6E6E6] overflow-hidden fade-in" style={{ animationDelay: "0.1s" }}>
+    <div className="w-full bg-white rounded-lg border border-[#E6E6E6] overflow-hidden fade-in max-md:px-0">
       {/* Filter Header */}
-      <div className="flex justify-end items-center p-4 border-b border-[#E6E6E6] slide-in" style={{ animationDelay: "0.2s" }}>
+      <div className="flex justify-end items-center p-4 border-b border-[#E6E6E6] slide-in max-md:p-2">
         <div className="flex items-center gap-2 text-sm">
           <span className="text-[#CCC]">Filter By :</span>
           <div ref={triggerRef} className="relative">
@@ -177,7 +177,7 @@ export const TransactionTable: React.FC = () => {
           <style>{`.table-container::-webkit-scrollbar { display: none; }`}</style>
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-[#E6E6E6] text-[#808080] text-sm fade-in" style={{ animationDelay: "0.25s" }}>
+              <tr className="bg-[#E6E6E6] text-[#808080] text-sm fade-in">
                 {["S/N","Account name","Bank name","Account number","Transaction type","Amount","Date","Status"].map(h => (
                   <th key={h} className="py-3 px-4 text-left font-medium border-b border-[#E6E6E6] hover:bg-gray-100 transition-colors">{h}</th>
                 ))}
@@ -185,7 +185,7 @@ export const TransactionTable: React.FC = () => {
             </thead>
             <tbody>
               {pageData.map((tx, idx) => (
-                <tr key={idx} className="border-b border-[#E6E6E6] table-row-hover click-shrink fade-in" style={{ animationDelay: `${0.1 + idx * 0.05}s` }}>
+                <tr key={idx} className="border-b border-[#E6E6E6] table-row-hover click-shrink fade-in">
                   {tx ? (
                     <>
                       <td className="py-4 px-4 text-sm text-[#808080]">{tx.id}</td>
@@ -215,10 +215,10 @@ export const TransactionTable: React.FC = () => {
 
       {/* Mobile Cards */}
       {isMobile && (
-        <div className="px-4 py-2 space-y-3 overflow-x-hidden">
+        <div className="px-4 py-2 space-y-3 overflow-x-hidden max-md:px-2">
           {pageData.map((tx, idx) => (
             tx ? (
-              <div key={tx.id} className="border border-[#E6E6E6] rounded-lg p-3 hover-lift card-hover click-shrink fade-in" style={{ animationDelay: `${0.1 + idx * 0.05}s` }}>
+              <div key={tx.id} className="border border-[#E6E6E6] rounded-lg p-3 hover-lift card-hover click-shrink fade-in">
                 <div className="flex justify-between mb-2">
                   <span className="text-sm font-medium text-[#1A011E]">{tx.accountName}</span>
                   <span className="text-sm text-[#808080]">{tx.amount}</span>
@@ -244,7 +244,7 @@ export const TransactionTable: React.FC = () => {
       )}
 
       {/* Pagination */}
-      <div className="p-4 fade-in" style={{ animationDelay: "0.5s" }}>
+      <div className="p-4 fade-in">
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
       </div>
     </div>

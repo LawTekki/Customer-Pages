@@ -1,4 +1,3 @@
-
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -49,7 +48,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <div className="flex justify-center items-center gap-2 mt-5 mb-6 fade-in" style={{ animationDelay: '0.5s' }}>
+    <div className="flex justify-center items-center gap-2 mt-5 mb-6 fade-in">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}

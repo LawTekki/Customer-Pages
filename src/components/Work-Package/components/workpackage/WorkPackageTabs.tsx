@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFilter } from '../../context/FilterContext';
+import { useCount } from '../../context/CountContext';
 import { CustomDropdown } from './CustomDropdown';
 import '../../animations.css';
 
@@ -33,29 +34,31 @@ export const WorkPackageTabs: React.FC<WorkPackageTabsProps> = ({
   setActiveTab
 }) => {
   const { filterStatus, setFilterStatus } = useFilter();
+  const { postedCount, draftCount } = useCount();
 
   return (
-    <div className="flex items-center justify-between w-full max-md:flex-wrap max-md:gap-2 fade-in" style={{ animationDelay: '0.3s', overflow: 'hidden' }}>
-      <div className="flex items-center border-b border-[#E6E6E6] whitespace-nowrap flex-nowrap max-md:w-full slide-in" style={{ animationDelay: '0.4s', overflow: 'hidden' }}>
+    <div className="flex items-center justify-between w-full max-md:flex-wrap max-md:gap-2 fade-in" style={{ overflow: 'hidden' }}>
+      <div className="flex items-center border-b border-[#E6E6E6] whitespace-nowrap flex-nowrap max-md:w-full slide-in" style={{ overflow: 'hidden' }}>
         <div className="flex">
           <Tab
             title="Posted work package"
-            count={124}
+            count={postedCount}
             active={activeTab === 'posted'}
             onClick={() => setActiveTab('posted')}
           />
           <Tab
             title="Draft"
-            count={43}
+            count={draftCount}
             active={activeTab === 'draft'}
             onClick={() => setActiveTab('draft')}
           />
         </div>
       </div>
 
-      <div className="flex items-center gap-1 max-md:w-full max-md:justify-between max-md:px-2 max-md:mt-2 slide-in" style={{ animationDelay: '0.5s', overflow: 'hidden' }}>
-        <span className="text-[#98A2B3] text-sm font-normal max-md:text-xs whitespace-nowrap md:hidden ml-2 max-md:ml-2 slide-in" style={{ animationDelay: '0.55s' }}>Filter Status</span>
-        <span className="text-[#98A2B3] text-sm font-normal max-md:hidden whitespace-nowrap slide-in" style={{ animationDelay: '0.55s' }}>Filter:</span>
+      {activeTab === 'posted' && (
+      <div className="flex items-center gap-1 max-md:w-full max-md:justify-between max-md:px-2 max-md:mt-2 slide-in" style={{ overflow: 'hidden' }}>
+        <span className="text-[#98A2B3] text-sm font-normal max-md:text-xs whitespace-nowrap md:hidden ml-2 max-md:ml-2 slide-in">Filter Status</span>
+        <span className="text-[#98A2B3] text-sm font-normal max-md:hidden whitespace-nowrap slide-in">Filter:</span>
         <div className="flex-1 flex justify-end min-w-0">
           <CustomDropdown
             options={[
@@ -70,6 +73,7 @@ export const WorkPackageTabs: React.FC<WorkPackageTabsProps> = ({
           />
         </div>
       </div>
+      )}
     </div>
   );
 };

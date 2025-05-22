@@ -1,9 +1,13 @@
-
 import { StatusBadge } from "../common/StatusBadge";
 import { Pagination } from "../common/Pagination";
 import { Order } from "../../types/orders";
 import { useState, useMemo, useEffect } from "react";
 import { useFilter } from "../../context/FilterContext";
+import { activeOrders } from "./active/ActiveOrdersTable";
+import { receivedOrders } from "./received/ReceivedOrdersTable";
+import { cancelledOrders } from "./cancelled/CancelledOrdersTable";
+import { Dialog, DialogContent } from "../../../ui/dialog";
+import { OrderDetailsDialog } from "./OrderDetailsDialog";
 
 interface OrdersTableProps {
   orders: Order[];
@@ -34,20 +38,10 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 5;
   const isMobile = useIsMobile();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  
   const mockOrders: Order[] = [
-    {
-      id: "1",
-      item: {
-        name: "The 4 keys of law",
-        image: "/Frame 1000007972.jpg",
-      },
-      orderId: "HG324235",
-      amount: "$24,000",
-      category: "Books | Soft copy",
-      status: "active",
-      orderDate: "July 27, 2024",
-      dueDate: "Nov 12, 2024",
-    },
     {
       id: "2",
       item: {
@@ -88,19 +82,6 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
       dueDate: "$300",
     },
     {
-      id: "5",
-      item: {
-        name: "The 4 keys of law",
-        image: "/Frame 1000007972.jpg",
-      },
-      orderId: "HG324235",
-      amount: "$24,000",
-      category: "Books | Soft copy",
-      status: "active",
-      orderDate: "$300",
-      dueDate: "$300",
-    },
-    {
       id: "6",
       item: {
         name: "The 4 keys of law",
@@ -118,7 +99,7 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
   // Filter orders based on selected filter status
   const filteredOrders = useMemo(() => {
     if (filterStatus === 'All') {
-      return mockOrders;
+      return [...mockOrders, ...activeOrders, ...receivedOrders, ...cancelledOrders];
     }
 
     // Map the filter status to the corresponding order status
@@ -130,6 +111,19 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
     };
 
     const orderStatus = statusMap[filterStatus] || '';
+    
+    if (orderStatus === 'active') {
+      return activeOrders;
+    }
+    
+    if (orderStatus === 'received') {
+      return receivedOrders;
+    }
+
+    if (orderStatus === 'cancelled') {
+      return cancelledOrders;
+    }
+    
     return mockOrders.filter(order => order.status === orderStatus);
   }, [filterStatus]);
 
@@ -140,7 +134,8 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
   const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
   return (
-    <div className={`w-full ${!isMobile ? "rounded-lg overflow-hidden bg-white mt-6 shadow-sm border border-[#F2F2F2] fade-in" : "mt-6 fade-in"}`} style={{ animationDelay: '0.2s' }}>
+    <>
+    <div className={`w-full ${!isMobile ? "rounded-lg overflow-hidden bg-white mt-6 shadow-sm border border-[#F2F2F2] fade-in" : "mt-6 fade-in"}`}>
       {/* Desktop Table View */}
       {!isMobile && (
         <div className="w-full overflow-hidden">
@@ -163,7 +158,6 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
                 <tr
                   key={order.id}
                   className="border-b border-[#F2F2F2] table-row-hover click-shrink fade-in"
-                  style={{ animationDelay: `${0.3 + index * 0.05}s` }}
                 >
                   <td className="p-4 text-xs text-[#808080] truncate">{indexOfFirstOrder + index + 1}</td>
                   <td className="p-4">
@@ -187,7 +181,13 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
                   <td className="p-4 text-xs text-[#808080] truncate">{order.orderDate}</td>
                   <td className="p-4 text-xs text-[#808080] truncate">{order.dueDate}</td>
                   <td className="p-4">
-                    <button className="text-[#6B047C] border border-[#6B047C] px-4 py-1.5 rounded-lg text-sm font-medium w-20 hover-scale click-bounce button-pulse transition-all duration-300">
+                      <button
+                        className="text-[#6B047C] border border-[#6B047C] px-4 py-1.5 rounded-lg text-sm font-medium w-20 hover-scale click-bounce button-pulse transition-all duration-300"
+                        onClick={() => {
+                          setSelectedOrder(order);
+                          setDialogOpen(true);
+                        }}
+                      >
                       {order.status === "received" ? "Reorder" : "View"}
                     </button>
                   </td>
@@ -205,7 +205,6 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
             <div
               key={order.id}
               className="bg-white border border-[#F2F2F2] rounded-lg p-3 mb-3 mx-auto hover-lift card-hover click-shrink fade-in"
-              style={{ animationDelay: `${0.3 + idx * 0.05}s` }}
             >
               <div className="flex justify-between items-center mb-3">
                 <div className="flex items-center gap-2">
@@ -253,7 +252,12 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
                     : order.status === "cancelled"
                       ? "text-[#808080] border-[#E6E6E6]"
                       : "text-[#6B047C] border-[#6B047C]"
-                }`}>
+                  }`} 
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setDialogOpen(true);
+                    }}
+                  >
                   {order.status === "received" ? "Reorder" : "View"}
                 </button>
               </div>
@@ -268,5 +272,13 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
         onPageChange={setCurrentPage}
       />
     </div>
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-lg max-w-xs w-full mx-auto p-0 rounded-xl shadow-2xl">
+          {selectedOrder && (
+            <OrderDetailsDialog order={selectedOrder} onClose={() => setDialogOpen(false)} />
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

@@ -12,7 +12,7 @@ const Contacts = () => {
         <Sidebar />
         <main className="flex flex-col items-stretch grow shrink-0 basis-0 max-w-[calc(100%-150px)] my-auto max-md:max-w-full">
           <div className="flex justify-between mt-12">
-            <div className="min-w-60 w-[583px] max-w-full max-md:w-[360px] max-md:ml-[12px] fade-in" style={{ animationDelay: '0.1s' }}>
+            <div className="min-w-60 w-[583px] max-w-full max-md:w-[360px] max-md:ml-[12px] fade-in">
               <h1 className="text-[#1A011E] text-[32px] font-semibold leading-[1.3] tracking-[-0.64px] max-md:text-2xl max-md:leading-[1.3]">
                 Contacts
               </h1>
@@ -23,7 +23,7 @@ const Contacts = () => {
           </div>
 
           <div className="w-full pr-4 max-md:pr-0">
-            <h2 className="text-[#1A011E] text-xl font-medium leading-[1.3] tracking-[-0.4px] mt-8 mb-2 max-md:text-lg max-md:mx-3 slide-in" style={{ animationDelay: '0.2s' }}>
+            <h2 className="text-[#1A011E] text-xl font-medium leading-[1.3] tracking-[-0.4px] mt-8 mb-2 max-md:text-lg max-md:mx-3 slide-in">
               Talents you've dealt with
             </h2>
 

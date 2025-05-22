@@ -34,7 +34,6 @@ export const DisputeStatsDisplay = ({ stats }: DisputeStatsProps) => {
       {/* Total Disputes */}
       <button type="button" role="button" tabIndex={0}
         className="flex items-center px-5 py-5 max-md:border max-md:border-gray-100 max-md:rounded-md max-md:bg-white flex-1 hover-scale click-shrink transition-all duration-300 active:bg-gray-100 focus:outline-none"
-        style={{ animationDelay: '0.1s' }}
         aria-label="Total Disputes"
       >
         <div className="flex items-center">
@@ -49,7 +48,6 @@ export const DisputeStatsDisplay = ({ stats }: DisputeStatsProps) => {
       {/* Pending Disputes */}
       <button type="button" role="button" tabIndex={0}
         className="flex items-center px-5 py-5 max-md:border max-md:border-gray-100 max-md:rounded-md max-md:bg-white flex-1 hover-scale click-shrink transition-all duration-300 active:bg-gray-100 focus:outline-none"
-        style={{ animationDelay: '0.2s' }}
         aria-label="Pending Disputes"
       >
         <div className="flex items-center">
@@ -64,7 +62,6 @@ export const DisputeStatsDisplay = ({ stats }: DisputeStatsProps) => {
       {/* Cleared Disputes */}
       <button type="button" role="button" tabIndex={0}
         className="flex items-center px-5 py-5 max-md:border max-md:border-gray-100 max-md:rounded-md max-md:bg-white flex-1 hover-scale click-shrink transition-all duration-300 active:bg-gray-100 focus:outline-none"
-        style={{ animationDelay: '0.3s' }}
         aria-label="Cleared Disputes"
       >
         <div className="flex items-center">
@@ -79,7 +76,6 @@ export const DisputeStatsDisplay = ({ stats }: DisputeStatsProps) => {
       {/* Lost Disputes */}
       <button type="button" role="button" tabIndex={0}
         className="flex items-center px-5 py-5 max-md:border max-md:border-gray-100 max-md:rounded-md max-md:bg-white flex-1 hover-scale click-shrink transition-all duration-300 active:bg-gray-100 focus:outline-none"
-        style={{ animationDelay: '0.4s' }}
         aria-label="Lost Disputes"
       >
         <div className="flex items-center">
@@ -104,7 +100,7 @@ export const DisputeStats = () => {
   };
 
   return (
-    <div className="fade-in" style={{ animationDelay: '0.1s', overflow: 'hidden' }}>
+    <div className="fade-in" style={{ overflow: 'hidden' }}>
       <DisputeStatsDisplay stats={mockStats} />
     </div>
   );

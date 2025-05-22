@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -11,6 +11,7 @@ import { Pagination } from "@/components/Dispute/components/common/Pagination";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import "../../animations.css";
 
 interface Dispute {
@@ -46,152 +47,116 @@ const useIsMobile = () => {
   return isMobile;
 };
 
-export const DisputeTable = () => {
+export const DisputeTable = ({ disputes, activeTab, filter, onFilterChange, filters }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [showImage, setShowImage] = useState(null); // id of row to show image popup
   const isMobile = useIsMobile();
-
-  const disputes: Dispute[] = [
-    {
-      id: 1,
-      orderNumber: "ED283424",
-      supplier: { name: "Morgan Jules", image: "/lovable-uploads/52a08325-7a38-4c29-ba32-4296fc2ec744.png" },
-      category: "Order not recieved",
-      date: "July 27 - July 31, 2024",
-      status: "Pending",
-      document: "Certificate"
-    },
-    {
-      id: 2,
-      orderNumber: "ED283424",
-      supplier: { name: "Morgan Jules", image: "/lovable-uploads/52a08325-7a38-4c29-ba32-4296fc2ec744.png" },
-      category: "Order not recieved",
-      date: "July 27 - July 31, 2024",
-      status: "Pending",
-      document: "Certificate"
-    },
-    {
-      id: 3,
-      orderNumber: "ED283424",
-      supplier: { name: "Morgan Jules", image: "/lovable-uploads/52a08325-7a38-4c29-ba32-4296fc2ec744.png" },
-      category: "Order not recieved",
-      date: "July 27 - July 31, 2024",
-      status: "Pending",
-      document: "Certificate"
-    },
-    {
-      id: 4,
-      orderNumber: "ED283424",
-      supplier: { name: "Morgan Jules", image: "/lovable-uploads/52a08325-7a38-4c29-ba32-4296fc2ec744.png" },
-      category: "Order not recieved",
-      date: "July 27 - July 31, 2024",
-      status: "Pending",
-      document: "Certificate"
-    },
-    {
-      id: 5,
-      orderNumber: "ED283424",
-      supplier: { name: "Morgan Jules", image: "/lovable-uploads/52a08325-7a38-4c29-ba32-4296fc2ec744.png" },
-      category: "Order not recieved",
-      date: "July 27 - July 31, 2024",
-      status: "Pending",
-      document: "Certificate"
-    },
-    {
-      id: 6,
-      orderNumber: "ED283424",
-      supplier: { name: "Morgan Jules", image: "/lovable-uploads/52a08325-7a38-4c29-ba32-4296fc2ec744.png" },
-      category: "Order not recieved",
-      date: "July 27 - July 31, 2024",
-      status: "Pending",
-      document: "Certificate"
-    },
-  ];
-
-  // Items per page
   const disputesPerPage = 5;
-
-  // Calculate pagination
   const indexOfLastDispute = currentPage * disputesPerPage;
   const indexOfFirstDispute = indexOfLastDispute - disputesPerPage;
   const currentDisputes = disputes.slice(indexOfFirstDispute, indexOfLastDispute);
   const totalPages = Math.ceil(disputes.length / disputesPerPage);
+  const handlePageChange = (page) => setCurrentPage(page);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  // Helper for date display
+  const renderDate = (date) => (
+    <span
+      className="block max-w-[180px] whitespace-nowrap overflow-hidden text-ellipsis"
+      style={{
+        display: "inline-block",
+        verticalAlign: "middle",
+      }}
+      title={date}
+    >
+      {date}
+    </span>
+  );
+
+  // Helper for remark badge
+  const renderRemark = (remark) => (
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
+        remark === "Won"
+          ? "bg-green-50 text-green-600 border border-green-200"
+          : remark === "Lost"
+          ? "bg-red-50 text-red-500 border border-red-200"
+          : "bg-gray-100 text-gray-500 border border-gray-200"
+      } animate-fade-in`}
+    >
+      {remark}
+    </span>
+  );
+
+  // Helper for status button
+  const renderStatus = (status, id) => (
+    <button
+      className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-300 shadow-sm focus:outline-none ${
+        status === "Cleared"
+          ? "bg-green-700 text-white hover:scale-105 hover:shadow-lg animate-fade-in"
+          : status === "Pending"
+          ? "bg-yellow-400 text-black"
+          : "bg-gray-200 text-gray-700"
+      }`}
+      onClick={() => status === "Cleared" && setShowImage(showImage === id ? null : id)}
+      style={{ cursor: status === "Cleared" ? "pointer" : "default" }}
+      type="button"
+    >
+      {status}
+    </button>
+  );
+
+  // Helper for image popup
+  const renderImagePopup = (row) => (
+    <div
+      className="absolute z-50 left-1/2 top-12 -translate-x-1/2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 flex flex-col items-center animate-fade-in"
+      style={{ minWidth: 220 }}
+    >
+      <img
+        src={row.supplier.image}
+        alt={row.supplier.name}
+        className="w-20 h-20 rounded-full mb-2 border-2 border-[#6B047C] animate-pop"
+      />
+      <div className="font-semibold text-[#1A011E] mb-1">{row.supplier.name}</div>
+      <div className="text-xs text-gray-500 mb-2">Order: {row.orderNumber}</div>
+      <Button
+        size="sm"
+        className="bg-[#6B047C] hover:bg-[#4A0356] text-white w-full mt-2"
+        onClick={() => setShowImage(null)}
+      >
+        Close
+      </Button>
+    </div>
+  );
 
   return (
-    <div className="mt-6 max-md:px-4 fade-in" style={{ animationDelay: '0.1s', overflow: 'hidden' }}>
-      <div className="hidden max-md:block" style={{ overflow: 'hidden' }}>
-        {currentDisputes.map((dispute, index) => (
-          <div
-            key={dispute.id}
-            className="bg-white rounded-lg p-3 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors hover-lift card-hover click-shrink fade-in max-w-[360px] mx-auto mt-4"
-            style={{ animationDelay: `${0.1 + index * 0.05}s`, overflow: 'hidden' }}
-          >
-            <div className="flex items-center gap-4 mb-3">
-              <span className="text-[#1A011E] font-medium text-base">#{dispute.id}</span>
-              <h3 className="text-[#1A011E] font-medium text-base">{dispute.orderNumber}</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mb-3">
-              <div>
-                <p className="text-[#808080] text-xs pl-2">Supplier</p>
-                <div className="flex items-center pl-2">
-                  <Avatar className="h-8 w-8 mr-2 hover-scale icon-bounce">
-                    <AvatarImage src={dispute.supplier.image} alt={dispute.supplier.name} />
-                    <AvatarFallback>
-                      <img src="/Frame 1000008098 (2).jpg" alt="Fallback" className="h-full w-full object-cover" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="whitespace-nowrap">{dispute.supplier.name}</span>
-                </div>
-              </div>
-              <div>
-                <p className="text-[#808080] text-xs pl-2">Category</p>
-                <p className="text-[#1A011E] text-sm pl-2">{dispute.category}</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mb-3">
-              <div>
-                <p className="text-[#808080] text-xs pl-2">Date</p>
-                <p className="text-[#1A011E] text-sm pl-2">{dispute.date}</p>
-              </div>
-              <div>
-                <p className="text-[#808080] text-xs pl-2">Status</p>
-                <div className="pl-2">
-                  <span className="bg-[#FDC721] text-white text-xs px-4 py-1.5 rounded-full">
-                    {dispute.status}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mb-3">
-              <div>
-                <p className="text-[#808080] text-xs pl-2">Documents</p>
-                <div className="flex items-center pl-2">
-                  <div className="bg-[#F44336] p-1 rounded mr-2">
-                    <FileText className="h-4 w-4 text-white" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-xs font-medium">{dispute.document}</span>
-                    <span className="text-[10px] text-gray-500">PDF FILE</span>
-                  </div>
-                </div>
-              </div>
-              <div className="pl-2 flex justify-end">
-                <Button variant="outline" size="sm" className="border-[#6B047C] text-[#6B047C] hover:bg-[#F5EDFC] hover:text-[#6B047C] whitespace-nowrap hover-scale click-shrink button-pulse">
-                  View
-                </Button>
-              </div>
-            </div>
-          </div>
-        ))}
+    <div className="mt-6 max-md:px-4 fade-in relative" style={{ overflow: 'hidden' }}>
+      {/* Filter box for Cleared */}
+      {activeTab === "cleared" && (
+        <div className="flex items-center gap-3 mb-4 animate-fade-in">
+          <span className="text-gray-500 text-sm font-medium">Filter:</span>
+          <Select value={filter} onValueChange={onFilterChange}>
+            <SelectTrigger className="w-[160px] bg-white border-[#E6E6E6] text-[#6B047C] focus:border-[#6B047C] focus:ring-[#6B047C]">
+              <SelectValue placeholder="Select filter" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border border-[#E6E6E6]">
+              {filters.map(opt => (
+                <SelectItem
+                  key={opt.value}
+                  value={opt.value}
+                  className="hover:bg-[#F5EDFC] text-[#6B047C] border-b border-[#E6E6E6] last:border-b-0"
+                >
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
       </div>
-      <div className="rounded-md border border-[#F2F2F2] max-md:hidden fade-in table-container" style={{ animationDelay: '0.3s', overflow: 'hidden' }}>
+      )}
+      <div className="rounded-md border border-[#F2F2F2] max-md:hidden fade-in table-container relative" style={{ overflow: 'hidden' }}>
         <Table className="table-fixed">
           <TableHeader>
-            <TableRow className="bg-[#FAFAFA] fade-in" style={{ animationDelay: '0.3s' }}>
-              <TableHead className="text-[#808080] font-medium w-12 text-center hover:bg-gray-100 transition-colors">S/N</TableHead>
+            <TableRow className="bg-[#FAFAFA] fade-in">
+              <TableHead className="text-[#808080] font-normal w-12 text-center hover:bg-gray-100 transition-colors">S/N</TableHead>
               <TableHead className="text-[#808080] font-medium hover:bg-gray-100 transition-colors">Order</TableHead>
               <TableHead className="text-[#808080] font-medium hover:bg-gray-100 transition-colors">Supplier name</TableHead>
               <TableHead className="text-[#808080] font-medium hover:bg-gray-100 transition-colors">Dispute category</TableHead>
@@ -203,24 +168,24 @@ export const DisputeTable = () => {
           </TableHeader>
           <TableBody>
             {currentDisputes.map((dispute, index) => (
-              <TableRow key={dispute.id} className="hover:bg-[#FAFAFA] table-row-hover click-shrink fade-in" style={{ animationDelay: `${0.1 + index * 0.05}s` }}>
-                <TableCell className="text-center font-medium">{indexOfFirstDispute + index + 1}</TableCell>
-                <TableCell>{dispute.orderNumber}</TableCell>
+              <TableRow key={dispute.id} className="hover:bg-[#FAFAFA] table-row-hover click-shrink fade-in relative" style={{ overflow: 'hidden' }}>
+                <TableCell className="text-center font-normal text-[#808080]">{indexOfFirstDispute + index + 1}</TableCell>
+                <TableCell className="font-normal text-[#808080]">{dispute.orderNumber}</TableCell>
                 <TableCell>
                   <div className="flex items-center">
                     <Avatar className="h-8 w-8 mr-2 hover-scale icon-bounce">
                       <AvatarImage src={dispute.supplier.image} alt={dispute.supplier.name} />
                       <AvatarFallback>
-                        <img src="/Frame 1000008098 (2).jpg" alt="Fallback" className="h-full w-full object-cover" />
+                        <img src="/Frame 1000008098 (2).jpg" alt="Fallback" className="h-full w-full object-cover font-normal text-[#808080]" />
                       </AvatarFallback>
                     </Avatar>
-                    <span>{dispute.supplier.name}</span>
+                    <span className="font-normal text-[#808080]">{dispute.supplier.name}</span>
                   </div>
                 </TableCell>
-                <TableCell>{dispute.category}</TableCell>
-                <TableCell>{dispute.date}</TableCell>
-                <TableCell>
-                  <span className="bg-[#FDC721] text-white text-xs px-3 py-1 rounded-full">
+                <TableCell className="font-normal text-[#808080]">{dispute.category}</TableCell>
+                <TableCell className="font-normal text-[#808080]">{renderDate(dispute.date)}</TableCell>
+                <TableCell style={{ position: 'relative' }}>
+                  <span className="bg-[#FDC721] text-white text-xs font-semibold px-6 py-2 rounded-full flex items-center justify-center w-fit mx-auto">
                     {dispute.status}
                   </span>
                 </TableCell>
@@ -231,23 +196,22 @@ export const DisputeTable = () => {
                     </div>
                     <div className="flex flex-col">
                       <span className="text-xs font-medium">{dispute.document}</span>
-                      <span className="text-[10px] text-gray-500">PDF FILE</span>
+                      <span className="text-[10px] text-[#808080]">PDF FILE</span>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Button variant="outline" className="border-[#6B047C] text-[#6B047C] hover:bg-[#F5EDFC] hover:text-[#6B047C] hover-scale click-shrink button-pulse">
+                  <button className="border border-[#6B047C] text-[#6B047C] font-semibold rounded-lg px-6 py-2 bg-white hover:bg-white hover:text-[#6B047C] hover:border-[#6B047C] transition">
                     View
-                  </Button>
+                  </button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
-
       {/* Pagination */}
-      <div className="flex justify-center mt-6 fade-in" style={{ animationDelay: '0.4s', overflow: 'hidden' }}>
+      <div className="flex justify-center mt-6 fade-in" style={{ overflow: 'hidden' }}>
         {totalPages > 0 && (
           <Pagination
             currentPage={currentPage}

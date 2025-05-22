@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -9,6 +9,7 @@ import {
 } from "../../components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useFilter } from '../../context/FilterContext';
+import { useCount } from '../../context/CountContext';
 import { Pagination } from './Pagination';
 
 type StatusType = 'Ongoing' | 'Concluded' | 'Cancelled' | 'Pending';
@@ -120,6 +121,7 @@ const workPackages: WorkPackage[] = [
 
 export const WorkPackageTable = () => {
   const { filterStatus } = useFilter();
+  const { setPostedCount } = useCount();
   const [currentPage, setCurrentPage] = useState(1);
   const packagesPerPage = 5;
 
@@ -130,6 +132,11 @@ export const WorkPackageTable = () => {
     return workPackages.filter(pkg => pkg.status === filterStatus);
   }, [filterStatus]);
 
+  // Update the count whenever the filtered packages change
+  useEffect(() => {
+    setPostedCount(filteredWorkPackages.length);
+  }, [filteredWorkPackages, setPostedCount]);
+
   // Calculate pagination
   const indexOfLastPackage = currentPage * packagesPerPage;
   const indexOfFirstPackage = indexOfLastPackage - packagesPerPage;
@@ -137,12 +144,12 @@ export const WorkPackageTable = () => {
   const totalPages = Math.ceil(filteredWorkPackages.length / packagesPerPage);
 
   return (
-    <div className="mt-6 fade-in" style={{ animationDelay: '0.4s' }}>
+    <div className="mt-6 fade-in">
       <div className="hidden max-md:block">
         {currentPackages.map((pkg, index) => (
           <div
             key={pkg.id}
-            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] hover:bg-gray-50 transition-colors w-full max-w-[360px] mx-auto mt-4 hover-lift card-hover click-shrink fade-in"
+            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] fade-in max-w-[360px] mx-auto mt-4"
             style={{ animationDelay: `${0.1 + index * 0.05}s` }}
           >
             {/* Title Section */}
@@ -214,7 +221,7 @@ export const WorkPackageTable = () => {
         ))}
       </div>
 
-      <div className="rounded-md border max-md:hidden fade-in w-full" style={{ animationDelay: '0.3s' }}>
+      <div className="rounded-md border max-md:hidden fade-in w-full">
         <div className="w-full">
           <Table className="table-fixed w-full">
             <TableHeader>
@@ -231,7 +238,7 @@ export const WorkPackageTable = () => {
             </TableHeader>
           <TableBody>
             {currentPackages.map((pkg, index) => (
-              <TableRow key={pkg.id} className="table-row-hover click-shrink fade-in" style={{ animationDelay: `${0.1 + index * 0.05}s` }}>
+              <TableRow key={pkg.id} className="table-row-hover click-shrink fade-in">
                 <TableCell className="truncate">{pkg.id}</TableCell>
                 <TableCell>
                   <div className="max-w-[300px]">
@@ -281,7 +288,7 @@ export const WorkPackageTable = () => {
         </div>
       </div>
 
-      <div className="mt-4 flex justify-center fade-in" style={{ animationDelay: '0.7s' }}>
+      <div className="mt-4 flex justify-center fade-in">
         {totalPages > 0 && (
           <Pagination
             currentPage={currentPage}

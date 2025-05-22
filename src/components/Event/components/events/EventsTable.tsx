@@ -31,85 +31,10 @@ interface Event {
   status: 'Ongoing' | 'Concluded' | 'Cancelled' | 'Pending';
 }
 
-export const EventsTable = () => {
+export const EventsTable = ({ events }: { events: any[] }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const { filterStatus } = useFilter();
   const packagesPerPage = 5;
-
-  const events: Event[] = [
-    {
-      id: 1,
-      title: "Curating a customize agreement",
-      host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-      date: "July 27 - July 31, 2024",
-      eventType: "Virtual",
-      venue: "Google meet",
-      fee: "Free",
-      time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
-      status: "Ongoing"
-    },
-    {
-      id: 2,
-      title: "Curating a customize agreement",
-      host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-      date: "July 27 - July 31, 2024",
-      eventType: "Virtual",
-      venue: "Google meet",
-      fee: "$30",
-      time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
-      status: "Pending"
-    },
-    {
-      id: 3,
-      title: "Curating a customize agreement",
-      host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-      date: "July 27 - July 31, 2024",
-      eventType: "Virtual",
-      venue: "Google meet",
-      fee: "$300",
-      time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
-      status: "Concluded"
-    },
-    {
-      id: 4,
-      title: "Curating a customize agreement",
-      host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-      date: "July 27 - July 31, 2024",
-      eventType: "Virtual",
-      venue: "Google meet",
-      fee: "$300",
-      time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
-      status: "Cancelled"
-    },
-    {
-      id: 5,
-      title: "Curating a customize agreement",
-      host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-      date: "July 27 - July 31, 2024",
-      eventType: "Virtual",
-      venue: "Google meet",
-      fee: "$300",
-      time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
-      status: "Ongoing"
-    },
-    {
-      id: 6,
-      title: "Curating a customize agreement",
-      host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-      date: "July 27 - July 31, 2024",
-      eventType: "Virtual",
-      venue: "Google meet",
-      fee: "$300",
-      time: "9am - 12pm",
-      attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
-      status: "Pending"
-    },
-  ];
 
   const filteredEvents = useMemo(() => {
     if (filterStatus === 'Any') {

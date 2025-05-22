@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Pagination } from "../ui/pagination";
 import { Button } from "@/components/ui/button";
@@ -46,10 +45,8 @@ export const ContactsTable = () => {
     console.log(`Messaging ${contactName}`);
   };
 
-
-
   return (
-    <div className="items-stretch rounded bg-neutral-50 flex flex-col overflow-hidden mt-[21px] pb-2 fade-in max-w-full" style={{ animationDelay: '0.2s' }}>
+    <div className="items-stretch rounded bg-neutral-50 flex flex-col overflow-hidden mt-[21px] pb-2 fade-in max-w-full">
       <div className="flex items-center text-xs text-[#808080] font-medium tracking-[-0.24px] leading-[1.3] flex-wrap">
         <div className="w-full">
           <div className="hidden max-md:block px-3">
@@ -57,7 +54,6 @@ export const ContactsTable = () => {
               <div
                 key={contact.id}
                 className="bg-white rounded-lg p-3 mb-4 border border-[#F2F2F2] hover-lift card-hover click-shrink fade-in max-w-[360px] w-full mt-4"
-                style={{ animationDelay: `${0.3 + index * 0.05}s` }}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <img
@@ -65,7 +61,7 @@ export const ContactsTable = () => {
                     className="aspect-[1] object-contain w-10 h-10 rounded-[100px] hover-scale icon-bounce"
                     alt={contact.name}
                   />
-                  <div className="slide-in" style={{ animationDelay: `${0.4 + index * 0.05}s` }}>
+                  <div className="slide-in">
                     <h3 className="text-[#1A011E] font-medium text-base">{contact.name}</h3>
                     <p className="text-[#808080] text-xs">S/N: {contact.id}</p>
                   </div>
@@ -116,7 +112,6 @@ export const ContactsTable = () => {
                   <tr
                     key={contact.id}
                     className="border-b border-[#F2F2F2] bg-white table-row-hover click-shrink fade-in"
-                    style={{ animationDelay: `${0.3 + index * 0.05}s` }}
                   >
                     <td className="px-[7px] py-6 truncate">{contact.id}</td>
                     <td className="px-6 py-4">
@@ -149,7 +144,7 @@ export const ContactsTable = () => {
         </div>
       </div>
 
-      <div className="mt-6 fade-in" style={{ animationDelay: '0.5s' }}>
+      <div className="mt-6 fade-in">
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

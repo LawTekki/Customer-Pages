@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -8,6 +8,7 @@ import {
   TableRow
 } from "../../components/ui/table";
 import { Button } from "@/components/ui/button";
+import { useCount } from '../../context/CountContext';
 import { Pagination } from './Pagination';
 
 type StatusType = 'Draft' | 'In Progress';
@@ -16,6 +17,7 @@ interface DraftPackage {
   id: number;
   title: string;
   lastEdited: string;
+  budget: string;
   status: StatusType;
 }
 
@@ -51,9 +53,10 @@ const generateDraftPackages = (count: number): DraftPackage[] => {
     packages.push({
       id: i,
       title: i % 3 === 0
-        ? 'Draft agreement between\nlandlord and tenant with additional terms and conditions that might exceed the two-line limit'
-        : 'Draft agreement between\nlandlord and tenant',
+        ? 'Curating a customize agreement between landlord and tenant'
+        : 'Curating a customize agreement between landlord and tenant',
       lastEdited: 'July 27, 2024 | 12:42pm',
+      budget: '$300',
       status: status
     });
   }
@@ -61,11 +64,24 @@ const generateDraftPackages = (count: number): DraftPackage[] => {
   return packages;
 };
 
+// Generate exactly 10 draft packages
 const draftPackages: DraftPackage[] = generateDraftPackages(10);
 
 export const DraftTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const { setDraftCount } = useCount();
   const packagesPerPage = 5;
+
+  // Ensure count is always set to the correct number
+  useEffect(() => {
+    setDraftCount(draftPackages.length);
+    // Set up an interval to ensure the count stays correct
+    const interval = setInterval(() => {
+      setDraftCount(draftPackages.length);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [setDraftCount]);
 
   // Calculate pagination
   const indexOfLastPackage = currentPage * packagesPerPage;
@@ -74,71 +90,61 @@ export const DraftTable = () => {
   const totalPages = Math.ceil(draftPackages.length / packagesPerPage);
 
   return (
-    <div className="mt-6 fade-in" style={{ animationDelay: '0.4s' }}>
+    <div className="mt-6">
       <div className="hidden max-md:block">
         {currentPackages.map((pkg, index) => (
           <div
             key={pkg.id}
-            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] fade-in max-w-[360px] mx-auto mt-4"
-            style={{ animationDelay: `${0.5 + index * 0.05}s` }}
+            className="bg-white rounded-lg p-4 mb-4 border border-[#F2F2F2] fade-in card-hover hover-lift click-shrink max-w-[360px] mx-auto mt-4"
+            style={{ animationDelay: `${0.1 + index * 0.05}s` }}
           >
             {/* Title Section */}
             <div className="mb-3">
-              <h3 className="text-black font-bold text-sm line-clamp-2">#{pkg.id} {pkg.title}</h3>
+              <h3 className="text-black font-bold text-sm line-clamp-2">{pkg.id} {pkg.title}</h3>
             </div>
-
-            {/* First Row - Status */}
+            {/* Last Edited and Budget Row */}
             <div className="flex justify-between mb-4">
-              <div>
-                <p className="text-[#808080] text-xs mb-1">Status</p>
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full hover-scale transition-all duration-300 ${getStatusClass(pkg.status)}`}>
-                  {pkg.status}
-                </span>
-              </div>
               <div>
                 <p className="text-[#808080] text-xs mb-1">Last edited</p>
                 <p className="text-[#1A011E] text-xs font-medium whitespace-nowrap">{pkg.lastEdited}</p>
               </div>
+              <div>
+                <p className="text-[#808080] text-xs mb-1">Budget</p>
+                <p className="text-[#1A011E] text-xs font-medium whitespace-nowrap">{pkg.budget}</p>
+              </div>
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex justify-between gap-3">
-              <div className="w-1/2">
-                <Button
-                  variant="outline"
-                  className="text-[#6B047C] border-[#6B047C] px-4 py-1.5 rounded-md text-sm font-medium transition-transform duration-300 hover:scale-105 w-full"
-                >
-                  Edit
-                </Button>
-              </div>
-              <div className="w-1/2">
-                <Button
-                  variant="outline"
-                  className="text-[#6B047C] border-[#6B047C] px-4 py-1.5 rounded-md text-sm font-medium transition-transform duration-300 hover:scale-105 w-full"
-                >
-                  Publish
-                </Button>
-              </div>
+            {/* Action Button */}
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                className="text-[#6B047C] border-[#6B047C] px-4 py-1.5 rounded-md text-sm font-medium transition-transform duration-300 hover:scale-105 w-20 button-pulse click-bounce"
+              >
+                Edit
+              </Button>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="rounded-md border max-md:hidden fade-in w-full" style={{ animationDelay: '0.5s' }}>
+      <div className="rounded-md border max-md:hidden w-full fade-in">
         <div className="w-full">
           <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow className="bg-gray-50">
-                <TableHead className="w-[5%] text-left">S/N</TableHead>
-                <TableHead className="w-[30%] text-left">Title</TableHead>
-                <TableHead className="w-[20%] text-left">Last edited</TableHead>
-                <TableHead className="w-[15%] text-left">Status</TableHead>
-                <TableHead className="w-[30%] text-left">Actions</TableHead>
+                <TableHead className="w-[5%] text-left hover:bg-gray-100 transition-colors">S/N</TableHead>
+                <TableHead className="w-[40%] text-left hover:bg-gray-100 transition-colors">Title</TableHead>
+                <TableHead className="w-[25%] text-left hover:bg-gray-100 transition-colors">Last edited</TableHead>
+                <TableHead className="w-[15%] text-left hover:bg-gray-100 transition-colors">Budget</TableHead>
+                <TableHead className="w-[15%] text-left hover:bg-gray-100 transition-colors">Action</TableHead>
               </TableRow>
             </TableHeader>
           <TableBody>
             {currentPackages.map((pkg, index) => (
-              <TableRow key={pkg.id} className="table-row-hover fade-in" style={{ animationDelay: `${0.6 + index * 0.05}s` }}>
+              <TableRow
+                key={pkg.id}
+                className="table-row-hover fade-in click-shrink"
+                style={{ animationDelay: `${0.1 + index * 0.05}s` }}
+              >
                 <TableCell className="truncate">{pkg.id}</TableCell>
                 <TableCell>
                   <div className="max-w-[300px]">
@@ -149,25 +155,15 @@ export const DraftTable = () => {
                   <div className="whitespace-nowrap text-sm truncate">{pkg.lastEdited}</div>
                 </TableCell>
                 <TableCell>
-                  <span className={`rounded-full px-3 py-1 text-xs hover-scale transition-all duration-300 ${getStatusClass(pkg.status)}`}>
-                    {pkg.status}
-                  </span>
+                  <div className="whitespace-nowrap text-sm truncate">{pkg.budget}</div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      className="text-[#6B047C] border-[#6B047C] hover:bg-[#6B047C] hover:text-white transition-transform duration-300 hover:scale-105"
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="text-[#6B047C] border-[#6B047C] hover:bg-[#6B047C] hover:text-white transition-transform duration-300 hover:scale-105"
-                    >
-                      Publish
-                    </Button>
-                  </div>
+                  <Button
+                    variant="outline"
+                    className="text-[#6B047C] border-[#6B047C] hover:bg-[#6B047C] hover:text-white transition-transform duration-300 hover:scale-105 w-20 button-pulse click-bounce"
+                  >
+                    Edit
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -176,7 +172,7 @@ export const DraftTable = () => {
         </div>
       </div>
 
-      <div className="mt-4 flex justify-center fade-in" style={{ animationDelay: '0.7s' }}>
+      <div className="mt-4 flex justify-center">
         {totalPages > 0 && (
           <Pagination
             currentPage={currentPage}

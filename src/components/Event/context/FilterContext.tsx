@@ -16,7 +16,7 @@ const defaultFilterContext: FilterContextType = {
 const FilterContext = createContext<FilterContextType>(defaultFilterContext);
 
 export const FilterProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [filterStatus, setFilterStatus] = useState<StatusType>('Any');
+  const [filterStatus, setFilterStatus] = useState<StatusType>('Ongoing');
 
   return (
     <FilterContext.Provider value={{ filterStatus, setFilterStatus }}>

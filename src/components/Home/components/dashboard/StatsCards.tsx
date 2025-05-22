@@ -32,7 +32,6 @@ export const StatsCards = () => {
         <div
           key={stat.label}
           className="w-full bg-white rounded-lg p-3 shadow-sm hover-lift click-shrink card-hover fade-in"
-          style={{ animationDelay: `${index * 0.1}s` }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -89,7 +88,7 @@ export const StatsCards = () => {
     <div className="hidden sm:block w-full mb-5 bg-white rounded-lg shadow-sm p-4 border hover-border fade-in" style={{ borderColor: '#F2F2F2' }}>
       <div className="flex gap-4">
         {stats.map((stat, index) => (
-          <div key={stat.label} className="flex-1 border-r last:border-r-0 px-3 hover-scale" style={{ animationDelay: `${index * 0.15}s` }}>
+          <div key={stat.label} className="flex-1 border-r last:border-r-0 px-3 hover-scale">
             <div className="flex gap-4">
               <div
                 className="w-12 h-12 rounded-lg flex items-center justify-center icon-bounce"

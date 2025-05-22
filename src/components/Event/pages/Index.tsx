@@ -1,15 +1,111 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Button } from "@/components/ui/button";
 import { EventsStats } from "../components/events/EventsStats";
 import { EventsTabs } from "../components/events/EventsTabs";
 import { EventsTable } from "../components/events/EventsTable";
-import { FilterProvider } from "../context/FilterContext";
+import { FilterProvider, useFilter } from "../context/FilterContext";
 import "../animations.css";
+import { useLocation } from 'react-router-dom';
+
+const events = [
+  {
+    id: 1,
+    title: "Curating a customize agreement",
+    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
+    date: "July 27 - July 31, 2024",
+    eventType: "Virtual",
+    venue: "Google meet",
+    fee: "Free",
+    time: "9am - 12pm",
+    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Ongoing"
+  },
+  {
+    id: 2,
+    title: "Curating a customize agreement",
+    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
+    date: "July 27 - July 31, 2024",
+    eventType: "Virtual",
+    venue: "Google meet",
+    fee: "$30",
+    time: "9am - 12pm",
+    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Pending"
+  },
+  {
+    id: 3,
+    title: "Curating a customize agreement",
+    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
+    date: "July 27 - July 31, 2024",
+    eventType: "Virtual",
+    venue: "Google meet",
+    fee: "$300",
+    time: "9am - 12pm",
+    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Concluded"
+  },
+  {
+    id: 4,
+    title: "Curating a customize agreement",
+    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
+    date: "July 27 - July 31, 2024",
+    eventType: "Virtual",
+    venue: "Google meet",
+    fee: "$300",
+    time: "9am - 12pm",
+    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Cancelled"
+  },
+  {
+    id: 5,
+    title: "Curating a customize agreement",
+    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
+    date: "July 27 - July 31, 2024",
+    eventType: "Virtual",
+    venue: "Google meet",
+    fee: "$300",
+    time: "9am - 12pm",
+    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Ongoing"
+  },
+  {
+    id: 6,
+    title: "Curating a customize agreement",
+    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
+    date: "July 27 - July 31, 2024",
+    eventType: "Virtual",
+    venue: "Google meet",
+    fee: "$300",
+    time: "9am - 12pm",
+    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Pending"
+  },
+];
 
 const Events = () => {
   const [activeTab, setActiveTab] = useState('upcoming');
+  const { setFilterStatus } = useFilter();
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname.split('/').pop();
+    const tabToFilter = {
+      upcoming: 'Ongoing',
+      pending: 'Pending',
+      recurring: 'Ongoing',
+      past: 'Concluded',
+      cancelled: 'Cancelled'
+    };
+    if (!path || path === 'events' || path === 'upcoming') {
+      setActiveTab('upcoming');
+      setFilterStatus('Ongoing');
+    } else if (tabToFilter[path]) {
+      setActiveTab(path);
+      setFilterStatus(tabToFilter[path]);
+    }
+  }, [location.pathname, setFilterStatus]);
 
   return (
     <FilterProvider>
@@ -41,10 +137,11 @@ const Events = () => {
               <EventsTabs
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                events={events}
               />
             </div>
             <div className="fade-in max-md:pl-4" style={{ animationDelay: '0.4s', overflow: 'hidden' }}>
-              <EventsTable />
+              <EventsTable events={events} />
             </div>
           </main>
         </div>
