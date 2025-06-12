@@ -42,7 +42,7 @@ export const EventsTabs: React.FC<EventsTabsProps> = ({
   const tabToFilter = {
     upcoming: 'Ongoing',
     pending: 'Pending',
-    recurring: 'Ongoing', // or whatever status you want
+    recurring: 'Ongoing', // Recurring events are also Ongoing events
     past: 'Concluded',
     cancelled: 'Cancelled'
   };
@@ -59,7 +59,7 @@ export const EventsTabs: React.FC<EventsTabsProps> = ({
   const counts = {
     upcoming: events.filter(e => e.status === 'Ongoing').length,
     pending: events.filter(e => e.status === 'Pending').length,
-    recurring: events.filter(e => e.status === 'Ongoing').length, // adjust if needed
+    recurring: events.filter(e => e.status === 'Ongoing').length, // Recurring events are also Ongoing events
     past: events.filter(e => e.status === 'Concluded').length,
     cancelled: events.filter(e => e.status === 'Cancelled').length
   };

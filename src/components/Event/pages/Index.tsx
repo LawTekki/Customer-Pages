@@ -8,6 +8,11 @@ import { EventsTable } from "../components/events/EventsTable";
 import { FilterProvider, useFilter } from "../context/FilterContext";
 import "../animations.css";
 import { useLocation } from 'react-router-dom';
+import UpcomingEventsTable from '../components/events/upcoming/UpcomingEventsTable';
+import PendingEventsTable from '../components/events/pending/PendingEventsTable';
+import RecurringEventsTable from '../components/events/recurring/RecurringEventsTable';
+import PastEventsTable from '../components/events/past/PastEventsTable';
+import CancelledEventsTable from '../components/events/cancelled/CancelledEventsTable';
 
 const events = [
   {
@@ -24,64 +29,88 @@ const events = [
   },
   {
     id: 2,
-    title: "Curating a customize agreement",
-    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-    date: "July 27 - July 31, 2024",
-    eventType: "Virtual",
-    venue: "Google meet",
-    fee: "$30",
-    time: "9am - 12pm",
-    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
-    status: "Pending"
+    title: "Legal Tech Conference 2024",
+    host: { name: "Sarah Smith", image: "/Frame 1000008098 (1).jpg" },
+    date: "August 1 - August 3, 2024",
+    eventType: "Hybrid",
+    venue: "Convention Center",
+    fee: "$299",
+    time: "10am - 4pm",
+    attendees: { count: 120, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Ongoing"
   },
   {
     id: 3,
-    title: "Curating a customize agreement",
-    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-    date: "July 27 - July 31, 2024",
-    eventType: "Virtual",
-    venue: "Google meet",
-    fee: "$300",
-    time: "9am - 12pm",
-    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
-    status: "Concluded"
+    title: "Contract Law Workshop",
+    host: { name: "John Doe", image: "/Frame 1000008098 (1).jpg" },
+    date: "August 15, 2024",
+    eventType: "In-person",
+    venue: "Law Center",
+    fee: "$199",
+    time: "9am - 5pm",
+    attendees: { count: 45, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Pending"
   },
   {
     id: 4,
-    title: "Curating a customize agreement",
-    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-    date: "July 27 - July 31, 2024",
+    title: "IP Rights Seminar",
+    host: { name: "Emily Brown", image: "/Frame 1000008098 (1).jpg" },
+    date: "August 20, 2024",
     eventType: "Virtual",
-    venue: "Google meet",
-    fee: "$300",
-    time: "9am - 12pm",
-    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
-    status: "Cancelled"
+    venue: "Zoom",
+    fee: "$149",
+    time: "2pm - 6pm",
+    attendees: { count: 75, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Pending"
   },
   {
     id: 5,
-    title: "Curating a customize agreement",
-    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-    date: "July 27 - July 31, 2024",
-    eventType: "Virtual",
-    venue: "Google meet",
-    fee: "$300",
-    time: "9am - 12pm",
-    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    title: "Legal Writing Masterclass",
+    host: { name: "David Wilson", image: "/Frame 1000008098 (1).jpg" },
+    date: "September 1, 2024",
+    eventType: "Hybrid",
+    venue: "Education Center",
+    fee: "$249",
+    time: "10am - 3pm",
+    attendees: { count: 30, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
     status: "Ongoing"
   },
   {
     id: 6,
-    title: "Curating a customize agreement",
-    host: { name: "Morgan Jules", image: "/Frame 1000008098 (1).jpg" },
-    date: "July 27 - July 31, 2024",
-    eventType: "Virtual",
-    venue: "Google meet",
-    fee: "$300",
-    time: "9am - 12pm",
-    attendees: { count: 56, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
-    status: "Pending"
+    title: "Corporate Law Symposium",
+    host: { name: "Lisa Chen", image: "/Frame 1000008098 (1).jpg" },
+    date: "September 15, 2024",
+    eventType: "In-person",
+    venue: "Business Center",
+    fee: "$399",
+    time: "9am - 5pm",
+    attendees: { count: 50, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Ongoing"
   },
+  {
+    id: 7,
+    title: "Legal Ethics Workshop",
+    host: { name: "Michael Johnson", image: "/Frame 1000008098 (1).jpg" },
+    date: "June 15, 2024",
+    eventType: "Virtual",
+    venue: "Microsoft Teams",
+    fee: "$179",
+    time: "1pm - 4pm",
+    attendees: { count: 25, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Concluded"
+  },
+  {
+    id: 8,
+    title: "International Law Conference",
+    host: { name: "Maria Garcia", image: "/Frame 1000008098 (1).jpg" },
+    date: "May 20, 2024",
+    eventType: "Hybrid",
+    venue: "International Center",
+    fee: "$349",
+    time: "9am - 6pm",
+    attendees: { count: 100, images: ["/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg", "/Frame 1000008098 (1).jpg"] },
+    status: "Cancelled"
+  }
 ];
 
 const Events = () => {
@@ -141,7 +170,11 @@ const Events = () => {
               />
             </div>
             <div className="fade-in max-md:pl-4" style={{ animationDelay: '0.4s', overflow: 'hidden' }}>
-              <EventsTable events={events} />
+              {activeTab === 'upcoming' && <UpcomingEventsTable />}
+              {activeTab === 'pending' && <PendingEventsTable />}
+              {activeTab === 'recurring' && <RecurringEventsTable />}
+              {activeTab === 'past' && <PastEventsTable />}
+              {activeTab === 'cancelled' && <CancelledEventsTable />}
             </div>
           </main>
         </div>
